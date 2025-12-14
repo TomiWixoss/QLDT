@@ -1,8 +1,8 @@
 ---
 stepsCompleted: [1, 2, 3, 4, 5, 6, 7]
 inputDocuments:
-    - "docs/prd.md"
-    - "docs/ux-design-specification.md"
+    - "docs/1-planning/prd.md"
+    - "docs/1-planning/ux-design-specification.md"
 workflowType: "architecture"
 lastStep: 7
 completed: true
@@ -2858,7 +2858,7 @@ This architecture provides a comprehensive, coherent, and implementation-ready f
 **Architecture Decision Workflow:** ✅ COMPLETED
 **Total Steps Completed:** 8
 **Date Completed:** 2025-12-14
-**Document Location:** docs/architecture.md
+**Document Location:** docs/2-solutioning/architecture.md
 
 ### Final Architecture Deliverables
 

@@ -13,7 +13,7 @@
 *sprint-planning
 ```
 
-**Kết quả:** Tạo file `docs/sprint-artifacts/sprint-status.yaml` với 47 stories
+**Kết quả:** Tạo file `docs/3-implementation/sprint-status.yaml` với 47 stories
 
 ---
 
@@ -30,7 +30,7 @@
 
 **Kết quả:**
 
--   Tạo file story: `docs/sprint-artifacts/X-Y-story-name.md`
+-   Tạo file story: `docs/3-implementation/X-Y-story-name.md`
 -   Update status: `backlog` → `ready-for-dev`
 
 ---
@@ -141,7 +141,7 @@
 
 ## 📊 TRACKING
 
-**Xem tiến độ:** Mở file `docs/sprint-artifacts/sprint-status.yaml`
+**Xem tiến độ:** Mở file `docs/3-implementation/sprint-status.yaml`
 
 **Story Status:**
 

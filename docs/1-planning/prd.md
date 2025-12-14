@@ -1,12 +1,12 @@
 ---
 stepsCompleted: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
 inputDocuments:
-    - "docs/analysis/product-brief-Tact-2025-12-14.md"
-    - "docs/analysis/brainstorming-session-2025-12-14.md"
-    - "docs/analysis/research/inventory-management-phone-retail-2025-12-14.md"
-    - "docs/analysis/research/market-vietnam-mobile-phone-retail-2025-12-14.md"
-    - "docs/analysis/research/o2o-model-retail-2025-12-14.md"
-    - "docs/analysis/research/pos-system-phone-retail-2025-12-14.md"
+    - "docs/0-discovery/product-brief-Tact-2025-12-14.md"
+    - "docs/0-discovery/brainstorming-session-2025-12-14.md"
+    - "docs/0-discovery/research/inventory-management-phone-retail-2025-12-14.md"
+    - "docs/0-discovery/research/market-vietnam-mobile-phone-retail-2025-12-14.md"
+    - "docs/0-discovery/research/o2o-model-retail-2025-12-14.md"
+    - "docs/0-discovery/research/pos-system-phone-retail-2025-12-14.md"
 documentCounts:
     briefs: 1
     research: 4

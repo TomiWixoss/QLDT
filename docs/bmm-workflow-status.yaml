@@ -24,26 +24,27 @@ workflow_path: ".bmad/bmm/workflows/workflow-status/paths/method-greenfield.yaml
 
 workflow_status:
   # Phase 0: Discovery (Optional)
-  brainstorm-project: "docs/analysis/brainstorming-session-2025-12-14.md"
-  research: "docs/analysis/research/"
-  product-brief: "docs/analysis/product-brief-Tact-2025-12-14.md"
+  brainstorm-project: "docs/0-discovery/brainstorming-session-2025-12-14.md"
+  research: "docs/0-discovery/research/"
+  product-brief: "docs/0-discovery/product-brief-Tact-2025-12-14.md"
 
   # Phase 1: Planning (Required)
-  prd: "docs/prd.md"
-  create-ux-design: "docs/ux-design-specification.md"
+  prd: "docs/1-planning/prd.md"
+  create-ux-design: "docs/1-planning/ux-design-specification.md"
 
   # Phase 2: Solutioning (Required)
-  create-architecture: "docs/architecture.md"
-  create-epics-and-stories: "docs/epics.md"
-  test-design: "docs/test-design-system.md"
+  create-architecture: "docs/2-solutioning/architecture.md"
+  create-epics-and-stories: "docs/2-solutioning/epics.md"
+  test-design: "docs/2-solutioning/test-design-system.md"
   validate-architecture: optional
-  implementation-readiness: "docs/implementation-readiness-report-2025-12-14.md"
+  implementation-readiness: "docs/2-solutioning/implementation-readiness-report-2025-12-14.md"
 
   # Phase 2.5: Implementation Guidance (High Priority)
-  ux-implementation-priorities: "docs/ux-implementation-priorities.md"
-  offline-pos-design: "docs/offline-pos-design.md"
-  image-optimization-sla: "docs/image-optimization-sla.md"
-  database-trigger-performance-plan: "docs/database-trigger-performance-plan.md"
+  ux-implementation-priorities: "docs/2-solutioning/ux-implementation-priorities.md"
+  offline-pos-design: "docs/2-solutioning/offline-pos-design.md"
+  image-optimization-sla: "docs/2-solutioning/image-optimization-sla.md"
+  database-trigger-performance-plan: "docs/2-solutioning/database-trigger-performance-plan.md"
 
-  # Phase 3: Implementation (Required)
-  sprint-planning: required
+  # Phase 3: Implementation (In Progress)
+  sprint-planning: "docs/3-implementation/sprint-status.yaml"
+  story-1-1: "docs/3-implementation/1-1-project-setup-database-schema.md"

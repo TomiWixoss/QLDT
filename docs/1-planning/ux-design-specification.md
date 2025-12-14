@@ -3,13 +3,13 @@ stepsCompleted: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
 completed: true
 completedDate: "2025-12-14"
 inputDocuments:
-    - "docs/prd.md"
-    - "docs/analysis/product-brief-Tact-2025-12-14.md"
-    - "docs/analysis/brainstorming-session-2025-12-14.md"
-    - "docs/analysis/research/inventory-management-phone-retail-2025-12-14.md"
-    - "docs/analysis/research/market-vietnam-mobile-phone-retail-2025-12-14.md"
-    - "docs/analysis/research/o2o-model-retail-2025-12-14.md"
-    - "docs/analysis/research/pos-system-phone-retail-2025-12-14.md"
+    - "docs/1-planning/prd.md"
+    - "docs/0-discovery/product-brief-Tact-2025-12-14.md"
+    - "docs/0-discovery/brainstorming-session-2025-12-14.md"
+    - "docs/0-discovery/research/inventory-management-phone-retail-2025-12-14.md"
+    - "docs/0-discovery/research/market-vietnam-mobile-phone-retail-2025-12-14.md"
+    - "docs/0-discovery/research/o2o-model-retail-2025-12-14.md"
+    - "docs/0-discovery/research/pos-system-phone-retail-2025-12-14.md"
 workflowType: "ux-design"
 lastStep: 6
 project_name: "Tact"
@@ -1903,7 +1903,7 @@ xl: 1280px  /* Desktops */
 
 ### Design Directions Explored
 
-6 design directions đã được explore trong `docs/ux-design-directions.html`:
+6 design directions đã được explore trong `docs/1-planning/ux-design-directions.html`:
 
 1. **Nike-Inspired Minimal** - Generous whitespace, dark CTAs, minimal color, product-focused, earthy tones
 2. **Apple-Inspired Premium** - Centered typography, dark hero, text links, ultra-minimal, premium feel

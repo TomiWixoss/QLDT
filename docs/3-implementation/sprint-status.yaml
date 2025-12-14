@@ -2,7 +2,7 @@
 # project: Tact
 # project_key: tact
 # tracking_system: file-system
-# story_location: docs/sprint-artifacts
+# story_location: docs/3-implementation
 
 # STATUS DEFINITIONS:
 # ==================
@@ -38,7 +38,7 @@ generated: 2025-12-14
 project: Tact
 project_key: tact
 tracking_system: file-system
-story_location: docs/sprint-artifacts
+story_location: docs/3-implementation
 
 development_status:
   # Epic 1: Project Foundation & Authentication (8 stories)

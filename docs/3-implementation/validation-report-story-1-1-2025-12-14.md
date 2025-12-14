@@ -1,6 +1,6 @@
 # Validation Report - Story 1.1: Project Setup & Database Schema
 
-**Document:** docs/sprint-artifacts/1-1-project-setup-database-schema.md
+**Document:** docs/3-implementation/1-1-project-setup-database-schema.md
 **Checklist:** .bmad/bmm/workflows/4-implementation/create-story/checklist.md
 **Date:** 2025-12-14
 **Validator:** Bob (Scrum Master Agent)
@@ -205,7 +205,7 @@ Tôi tìm thấy **2 optimization opportunities**:
 │ KEY FILES:                                                   │
 │ • database/db.sql (reference schema)                        │
 │ • project-context.md (critical rules)                       │
-│ • docs/database-trigger-performance-plan.md                 │
+│ • docs/2-solutioning/database-trigger-performance-plan.md   │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -628,8 +628,8 @@ Bạn muốn tôi apply những improvements nào vào story file?
 
 **Files Updated:**
 
--   docs/sprint-artifacts/1-1-project-setup-database-schema.md (enhanced)
--   docs/sprint-artifacts/validation-report-story-1-1-2025-12-14.md (this file)
+-   docs/3-implementation/1-1-project-setup-database-schema.md (enhanced)
+-   docs/3-implementation/validation-report-story-1-1-2025-12-14.md (this file)
 
 ---
 

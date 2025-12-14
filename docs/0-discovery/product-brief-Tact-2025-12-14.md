@@ -1,11 +1,11 @@
 ---
 stepsCompleted: [1, 2, 3, 4, 5]
 inputDocuments:
-    - "docs/analysis/brainstorming-session-2025-12-14.md"
-    - "docs/analysis/research/market-vietnam-mobile-phone-retail-2025-12-14.md"
-    - "docs/analysis/research/o2o-model-retail-2025-12-14.md"
-    - "docs/analysis/research/inventory-management-phone-retail-2025-12-14.md"
-    - "docs/analysis/research/pos-system-phone-retail-2025-12-14.md"
+    - "docs/0-discovery/brainstorming-session-2025-12-14.md"
+    - "docs/0-discovery/research/market-vietnam-mobile-phone-retail-2025-12-14.md"
+    - "docs/0-discovery/research/o2o-model-retail-2025-12-14.md"
+    - "docs/0-discovery/research/inventory-management-phone-retail-2025-12-14.md"
+    - "docs/0-discovery/research/pos-system-phone-retail-2025-12-14.md"
 workflowType: "product-brief"
 lastStep: 5
 project_name: "Tact"

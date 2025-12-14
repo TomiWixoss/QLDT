@@ -6,9 +6,9 @@ stepsCompleted:
         "step-03-create-stories",
     ]
 inputDocuments:
-    - "docs/prd.md"
-    - "docs/architecture.md"
-    - "docs/ux-design-specification.md"
+    - "docs/1-planning/prd.md"
+    - "docs/2-solutioning/architecture.md"
+    - "docs/1-planning/ux-design-specification.md"
 epicCount: 10
 totalFRs: 139
 totalStories: 47

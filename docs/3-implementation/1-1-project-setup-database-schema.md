@@ -143,7 +143,7 @@ BrandSeeder (2 brands):
 │ KEY FILES:                                                   │
 │ • database/db.sql (reference schema)                        │
 │ • project-context.md (critical rules)                       │
-│ • docs/database-trigger-performance-plan.md                 │
+│ • docs/2-solutioning/database-trigger-performance-plan.md   │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -339,12 +339,12 @@ app/Models/
 **Source Documents:**
 
 -   [Database Schema: database/db.sql] - Complete schema with 12 tables and 2 triggers
--   [Architecture: docs/architecture.md#data-architecture] - Database design decisions and patterns
+-   [Architecture: docs/2-solutioning/architecture.md#data-architecture] - Database design decisions and patterns
 -   [Project Context: project-context.md#critical-project-rules] - Naming conventions and critical rules
--   [PRD: docs/prd.md#technical-foundation] - Technical requirements for Epic 1
--   [Epics: docs/epics.md#epic-1-story-1.1] - Story requirements and acceptance criteria
--   [Database Trigger Performance Plan: docs/database-trigger-performance-plan.md] - Performance validation plan
--   [UX Implementation Priorities: docs/ux-implementation-priorities.md] - Core UX priorities for Week 1
+-   [PRD: docs/1-planning/prd.md#technical-foundation] - Technical requirements for Epic 1
+-   [Epics: docs/2-solutioning/epics.md#epic-1-story-1.1] - Story requirements and acceptance criteria
+-   [Database Trigger Performance Plan: docs/2-solutioning/database-trigger-performance-plan.md] - Performance validation plan
+-   [UX Implementation Priorities: docs/2-solutioning/ux-implementation-priorities.md] - Core UX priorities for Week 1
 
 **Key Technical Decisions:**
 

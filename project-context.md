@@ -446,23 +446,23 @@ StockMovement::create([
 
 ## 📚 Key Documents Reference
 
-| Document                                   | Purpose                                  |
-| ------------------------------------------ | ---------------------------------------- |
-| `docs/prd.md`                              | Product Requirements (139 FRs + 76 NFRs) |
-| `docs/architecture.md`                     | Complete technical architecture          |
-| `docs/epics.md`                            | Epic breakdown with stories              |
-| `docs/ux-design-specification.md`          | UX design guidelines                     |
-| `database/db.sql`                          | Reference database schema                |
-| `docs/sprint-artifacts/sprint-status.yaml` | Sprint tracking                          |
+| Document                                     | Purpose                                  |
+| -------------------------------------------- | ---------------------------------------- |
+| `docs/1-planning/prd.md`                     | Product Requirements (139 FRs + 76 NFRs) |
+| `docs/2-solutioning/architecture.md`         | Complete technical architecture          |
+| `docs/2-solutioning/epics.md`                | Epic breakdown with stories              |
+| `docs/1-planning/ux-design-specification.md` | UX design guidelines                     |
+| `database/db.sql`                            | Reference database schema                |
+| `docs/3-implementation/sprint-status.yaml`   | Sprint tracking                          |
 
 ### Week 1 Priority Documents
 
-| Document                                    | Purpose                      |
-| ------------------------------------------- | ---------------------------- |
-| `docs/ux-implementation-priorities.md`      | Core UX vs Polish UX         |
-| `docs/offline-pos-design.md`                | Offline POS architecture     |
-| `docs/image-optimization-sla.md`            | Image optimization standards |
-| `docs/database-trigger-performance-plan.md` | Trigger performance testing  |
+| Document                                                  | Purpose                      |
+| --------------------------------------------------------- | ---------------------------- |
+| `docs/2-solutioning/ux-implementation-priorities.md`      | Core UX vs Polish UX         |
+| `docs/2-solutioning/offline-pos-design.md`                | Offline POS architecture     |
+| `docs/2-solutioning/image-optimization-sla.md`            | Image optimization standards |
+| `docs/2-solutioning/database-trigger-performance-plan.md` | Trigger performance testing  |
 
 ---
 
@@ -470,7 +470,7 @@ StockMovement::create([
 
 **Before implementing any feature:**
 
--   [ ] Read relevant section in docs/architecture.md
+-   [ ] Read relevant section in docs/2-solutioning/architecture.md
 -   [ ] Check database schema in database/db.sql
 -   [ ] Follow naming conventions exactly
 -   [ ] Use correct response format
@@ -551,7 +551,7 @@ OrderItem::belongsTo(Product::class)
 
 ---
 
-**For AI Agents:** This file contains critical rules that MUST be followed for every implementation. When in doubt, refer to docs/architecture.md for complete details.
+**For AI Agents:** This file contains critical rules that MUST be followed for every implementation. When in doubt, refer to docs/2-solutioning/architecture.md for complete details.
 
 **Architecture Status:** ✅ READY FOR IMPLEMENTATION
 **Last Updated:** 2025-12-14
