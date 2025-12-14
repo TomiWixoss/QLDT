@@ -14,7 +14,18 @@ date: system-generated
 
 # Project context
 project_context: "**/project-context.md"
-project_context_header: "**/project_context_header.md"
+project_context2: "**/project_context2.md"
+
+# Smart input file references
+input_file_patterns:
+  project_context:
+    description: "Project context - critical rules and conventions (MUST LOAD)"
+    whole: "**/project-context.md"
+    load_strategy: "FULL_LOAD"
+  project_context2:
+    description: "Project context 2 - document map and references (MUST LOAD)"
+    whole: "**/project_context2.md"
+    load_strategy: "FULL_LOAD"
 
 # Workflow components
 installed_path: "{project-root}/.bmad/bmm/workflows/bmad-quick-flow/quick-dev"

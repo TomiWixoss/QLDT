@@ -21,6 +21,17 @@ story_file: "" # Explicit story path; auto-discovered if empty
 sprint_artifacts: "{config_source}:sprint_artifacts"
 sprint_status: "{sprint_artifacts}/sprint-status.yaml"
 project_context: "**/project-context.md"
-project_context_header: "**/project_context_header.md"
+project_context2: "**/project_context2.md"
+
+# Smart input file references
+input_file_patterns:
+  project_context:
+    description: "Project context - critical rules and conventions (MUST LOAD)"
+    whole: "**/project-context.md"
+    load_strategy: "FULL_LOAD"
+  project_context2:
+    description: "Project context 2 - document map and references (MUST LOAD)"
+    whole: "**/project_context2.md"
+    load_strategy: "FULL_LOAD"
 
 standalone: true

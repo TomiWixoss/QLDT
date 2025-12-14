@@ -28,13 +28,21 @@ variables:
 
 # Project context
 project_context: "**/project-context.md"
-project_context_header: "**/project_context_header.md"
+project_context2: "**/project_context2.md"
 
 default_output_file: "{story_dir}/{{story_key}}.md"
 
 # Smart input file references - Simplified for enhanced approach
 # The epics+stories file should contain everything needed with source hints
 input_file_patterns:
+  project_context:
+    description: "Project context - critical rules and conventions (MUST LOAD)"
+    whole: "**/project-context.md"
+    load_strategy: "FULL_LOAD" # Always load completely
+  project_context2:
+    description: "Project context 2 - document map and references (MUST LOAD)"
+    whole: "**/project_context2.md"
+    load_strategy: "FULL_LOAD" # Always load completely
   prd:
     description: "PRD (fallback - epics file should have most content)"
     whole: "{output_folder}/*prd*.md"

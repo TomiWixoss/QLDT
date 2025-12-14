@@ -1,12 +1,12 @@
 <?php
 /**
- * Script tách Document Map từ project-context.md ra file project_context_header.md
+ * Script tách Document Map từ project-context.md ra file project_context2.md
  * 
  * Usage: php scripts/extract-document-map.php
  */
 
 $sourceFile = __DIR__ . '/../project-context.md';
-$targetFile = __DIR__ . '/../project_context_header.md';
+$targetFile = __DIR__ . '/../project_context2.md';
 
 if (!file_exists($sourceFile)) {
     echo "❌ Không tìm thấy file: $sourceFile\n";

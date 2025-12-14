@@ -20,7 +20,7 @@ validation: "{installed_path}/checklist.md"
 variables:
   # Project context
   project_context: "**/project-context.md"
-  project_context_header: "**/project_context_header.md"
+  project_context2: "**/project_context2.md"
   # Project identification
   project_name: "{config_source}:project_name"
 
@@ -40,6 +40,14 @@ variables:
 # Priority: Whole document first, then sharded version
 # Strategy: FULL LOAD - sprint planning needs ALL epics to build complete status
 input_file_patterns:
+  project_context:
+    description: "Project context - critical rules and conventions (MUST LOAD)"
+    whole: "**/project-context.md"
+    load_strategy: "FULL_LOAD"
+  project_context2:
+    description: "Project context 2 - document map and references (MUST LOAD)"
+    whole: "**/project_context2.md"
+    load_strategy: "FULL_LOAD"
   epics:
     description: "All epics with user stories"
     whole: "{output_folder}/*epic*.md"
