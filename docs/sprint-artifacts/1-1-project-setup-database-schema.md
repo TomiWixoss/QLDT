@@ -72,6 +72,37 @@ So that the foundation is ready for all features to be built upon.
     -   [ ] 4.5: Create BrandSeeder (2 brands: Apple, Samsung)
     -   [ ] 4.6: Update DatabaseSeeder to call all seeders in correct order
 
+**Seeder Data Specifications:**
+
+```
+RoleSeeder (4 roles):
+- Admin: full_access = true
+- Manager: full_access = false, permissions = ['view-all', 'manage-products', 'manage-orders', 'manage-inventory', 'view-reports']
+- Sales: permissions = ['access-pos', 'manage-orders', 'view-products', 'view-customers']
+- Warehouse: permissions = ['manage-inventory', 'view-products']
+
+UserSeeder (1 admin for testing):
+- Email: admin@tact.vn
+- Password: password (will be changed in production)
+- Role: Admin
+- Full Name: Admin User
+
+CustomerSeeder (1 guest customer):
+- Email: guest@tact.vn
+- Full Name: Khách vãng lai
+- Phone: 0000000000
+- Points: 0
+- Purpose: For walk-in sales without customer info
+
+CategorySeeder (2 categories):
+- Điện thoại
+- Phụ kiện
+
+BrandSeeder (2 brands):
+- Apple
+- Samsung
+```
+
 -   [ ] Task 5: Add indexes for performance (AC: Query time < 100ms)
 
     -   [ ] 5.1: Add index on products.sku (unique, for barcode scanning)
@@ -91,6 +122,30 @@ So that the foundation is ready for all features to be built upon.
     -   [ ] 6.6: Verify seeders created correct initial data
 
 ## Dev Notes
+
+### 📋 Quick Reference Card
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│ STORY 1.1 QUICK REFERENCE CARD                              │
+├─────────────────────────────────────────────────────────────┤
+│ MUST DO:                                                     │
+│ ✓ 12 tables + 2 triggers                                    │
+│ ✓ Migration order: roles → users → products → orders       │
+│ ✓ Test triggers: < 100ms for POS transaction               │
+│ ✓ Seed 4 roles + 1 admin + 1 guest customer                │
+│                                                              │
+│ MUST NOT DO:                                                 │
+│ ✗ Raw SQL in controllers                                    │
+│ ✗ Manual stock updates (use triggers)                       │
+│ ✗ Hardcoded values (use config)                             │
+│                                                              │
+│ KEY FILES:                                                   │
+│ • database/db.sql (reference schema)                        │
+│ • project-context.md (critical rules)                       │
+│ • docs/database-trigger-performance-plan.md                 │
+└─────────────────────────────────────────────────────────────┘
+```
 
 ### Critical Project Rules (MUST FOLLOW)
 
@@ -142,6 +197,22 @@ So that the foundation is ready for all features to be built upon.
 -   Keep db.sql as reference documentation
 -   Use migrations for development, db.sql for quick setup
 
+**MIGRATION ORDER (CRITICAL):**
+
+```
+1. Independent tables first: roles, categories, brands, suppliers
+2. Tables with single FK: users (role_id), customers (no FK)
+3. Products table: depends on categories, brands
+4. Product_specs: depends on products
+5. Stock_movements: depends on products, users, suppliers
+6. Promotions: independent
+7. Orders: depends on customers, users
+8. Order_items: depends on orders, products
+9. Triggers: MUST be last (after all tables exist)
+
+REASON: Foreign key constraints will fail if parent tables don't exist yet.
+```
+
 **Eloquent Model Patterns:**
 
 ```php
@@ -180,38 +251,45 @@ DB::unprepared('
 ');
 ```
 
-### Implementation Guidance Documents
+### Implementation Guidance (Story 1.1 Relevant)
 
-**1. Database Trigger Performance Plan (docs/database-trigger-performance-plan.md)**
+**Database Trigger Performance Plan:**
 
--   Performance target: POS transaction < 100ms
--   Test triggers with realistic data in Week 1-2
--   Fallback: Application-level logic or queues if triggers slow
--   Critical testing: Create order + items + stock movement + complete order < 100ms
+Test triggers with realistic data in Week 1-2. Performance target: POS transaction < 100ms.
 
-**2. Image Optimization SLA (docs/image-optimization-sla.md)**
+**Critical Performance Tests (MUST RUN):**
 
--   File size limits: Thumbnail 50KB, Detail 200KB, Banner 300KB
--   Format: WebP required, JPEG fallback
--   Responsive: srcset with 400w, 800w, 1200w breakpoints
--   Lazy loading: All images below fold
+```php
+// Test Scenario 1: Single product order
+$start = microtime(true);
+StockMovement::create(['product_id' => 1, 'type' => 'out', 'quantity' => 1]);
+$duration = (microtime(true) - $start) * 1000;
+// Assert: < 50ms (half of 100ms budget)
 
-**3. UX Implementation Priorities (docs/ux-implementation-priorities.md)**
+// Test Scenario 2: Multi-product order (5 items)
+$start = microtime(true);
+foreach ($items as $item) {
+    StockMovement::create(['product_id' => $item['id'], 'type' => 'out', 'quantity' => $item['qty']]);
+}
+$duration = (microtime(true) - $start) * 1000;
+// Assert: < 100ms total
 
--   Core UX (P0 - Week 1-6): Trust signals, speed, clarity, mobile-first
--   Polish UX (P2-P4 - Week 7-8): Animations, micro-interactions, visual polish
--   Decision framework: Trust/Speed/Clarity = P0, Polish = defer if time constrained
+// Test Scenario 3: Points calculation trigger
+$start = microtime(true);
+$order->update(['order_status' => 'completed']);
+$duration = (microtime(true) - $start) * 1000;
+// Assert: < 20ms
+```
 
-**4. Offline POS Design (docs/offline-pos-design.md)**
+**Fallback Strategy:** If triggers exceed 100ms, use application-level logic or queues.
 
--   Technology: Service Worker + IndexedDB + Background Sync API
--   Data sync: Product catalog (daily), customers (hourly), vouchers (hourly)
--   Transaction queue: Store offline transactions, sync when online
--   Conflict resolution: Server stock validation on sync
+**Other Guidance Documents (Not Relevant for Story 1.1):**
 
-### Project Structure Notes
+-   Image Optimization SLA → Deferred to Story 3.2
+-   UX Implementation Priorities → Not applicable (backend only)
+-   Offline POS Design → Deferred to Epic 8
 
-**Alignment with unified project structure:**
+### Project Structure (Story 1.1 Relevant)
 
 ```
 database/
@@ -252,6 +330,8 @@ app/Models/
 ├── Promotion.php
 ├── Order.php
 └── OrderItem.php
+
+(Other directories not relevant for Story 1.1)
 ```
 
 ### References
@@ -276,56 +356,36 @@ app/Models/
 
 ### Anti-Patterns to Avoid
 
-**From project-context.md:**
-
-❌ **Raw SQL in Controllers**
-
-```php
-// BAD
-$products = DB::select('SELECT * FROM products WHERE category_id = ?', [$id]);
-
-// GOOD
-$products = Product::where('category_id', $id)->get();
-```
-
-❌ **Missing Foreign Key Constraints**
-
-```php
-// BAD - No foreign key
-$table->integer('category_id');
-
-// GOOD - With foreign key
-$table->foreignId('category_id')->constrained()->onDelete('cascade');
-```
-
-❌ **Hardcoded Values**
-
-```php
-// BAD
-$points = floor($total / 100000); // Magic number
-
-// GOOD
-$points = floor($total / config('tact.points_per_100k', 100000));
-```
-
-❌ **Manual Stock Updates**
-
-```php
-// BAD - Bypasses trigger
-$product->quantity -= $quantity;
-$product->save();
-
-// GOOD - Let trigger handle it
-StockMovement::create([
-    'product_id' => $product->id,
-    'type' => 'out',
-    'quantity' => $quantity
-]);
-```
+| ❌ BAD                                                                               | ✅ GOOD                                                                 | WHY                  |
+| ------------------------------------------------------------------------------------ | ----------------------------------------------------------------------- | -------------------- |
+| `DB::select('SELECT * FROM products WHERE category_id = ?', [$id])`                  | `Product::where('category_id', $id)->get()`                             | Use Eloquent ORM     |
+| `$products = Product::all(); foreach ($products as $p) { echo $p->category->name; }` | `Product::with('category')->get()`                                      | Prevent N+1 queries  |
+| `$table->integer('category_id');`                                                    | `$table->foreignId('category_id')->constrained()->onDelete('cascade');` | Enforce foreign keys |
+| `Product::create($request->all())`                                                   | `Product::create($request->validated())`                                | Validate inputs      |
+| `$product->quantity -= $qty; $product->save();`                                      | `StockMovement::create([...])`                                          | Use triggers         |
+| `$points = floor($total / 100000);`                                                  | `$points = floor($total / config('tact.points_per_100k'));`             | No hardcoded values  |
 
 ### Testing Requirements
 
-**Feature Tests:**
+**Required Tests (Story 1.1):**
+
+```php
+// Feature Tests
+✓ test_all_tables_created() - Assert 12 tables exist
+✓ test_update_stock_trigger_works() - Insert stock_movement, check quantity
+✓ test_add_points_trigger_works() - Complete order, check points
+✓ test_foreign_keys_enforced() - Try delete parent, expect error
+
+// Unit Tests
+✓ test_product_belongs_to_category() - Check relationship
+✓ test_product_has_one_product_spec() - Check relationship
+✓ test_order_has_many_order_items() - Check relationship
+
+// Performance Tests
+✓ test_pos_transaction_under_100ms() - Full transaction flow
+```
+
+**Test Implementation Examples:**
 
 ```php
 // tests/Feature/Database/MigrationTest.php
@@ -334,7 +394,6 @@ public function test_all_tables_created()
     $tables = ['roles', 'users', 'customers', 'categories', 'brands',
                'suppliers', 'products', 'product_specs', 'stock_movements',
                'promotions', 'orders', 'order_items'];
-
     foreach ($tables as $table) {
         $this->assertTrue(Schema::hasTable($table));
     }
@@ -343,72 +402,64 @@ public function test_all_tables_created()
 public function test_update_stock_trigger_works()
 {
     $product = Product::factory()->create(['quantity' => 10]);
-
-    StockMovement::create([
-        'product_id' => $product->id,
-        'type' => 'in',
-        'quantity' => 5
-    ]);
-
+    StockMovement::create(['product_id' => $product->id, 'type' => 'in', 'quantity' => 5]);
     $this->assertEquals(15, $product->fresh()->quantity);
 }
 
 public function test_add_points_trigger_works()
 {
     $customer = Customer::factory()->create(['points' => 0]);
-    $order = Order::factory()->create([
-        'customer_id' => $customer->id,
-        'total_money' => 250000,
-        'order_status' => 'pending'
-    ]);
-
+    $order = Order::factory()->create(['customer_id' => $customer->id, 'total_money' => 250000, 'order_status' => 'pending']);
     $order->update(['order_status' => 'completed']);
-
-    $this->assertEquals(2, $customer->fresh()->points); // floor(250000 / 100000) = 2
+    $this->assertEquals(2, $customer->fresh()->points);
 }
 ```
 
-**Unit Tests:**
+### Troubleshooting Guide
 
-```php
-// tests/Unit/Models/ProductTest.php
-public function test_product_belongs_to_category()
-{
-    $product = Product::factory()->create();
-    $this->assertInstanceOf(Category::class, $product->category);
-}
+**Common Issues & Solutions:**
 
-public function test_product_has_one_product_spec()
-{
-    $product = Product::factory()->create();
-    ProductSpec::factory()->create(['product_id' => $product->id]);
-    $this->assertInstanceOf(ProductSpec::class, $product->productSpec);
-}
+```
+Issue 1: Migration fails with "foreign key constraint"
+→ Solution: Check migration order. Parent tables must exist first.
+→ Command: php artisan migrate:fresh (reset and re-run)
+
+Issue 2: Trigger not firing
+→ Solution: Check trigger syntax. Use DB::unprepared() in migration.
+→ Test: Insert stock_movement, check products.quantity updated
+
+Issue 3: Seeder fails with "duplicate entry"
+→ Solution: Run migrate:fresh --seed (not just seed)
+→ Or: Add unique checks in seeder
+
+Issue 4: Performance test fails (> 100ms)
+→ Solution: Check indexes on foreign keys
+→ Add: $table->index('product_id') in stock_movements migration
+
+Issue 5: Eloquent relationships not working
+→ Solution: Check foreign key naming (must be {table}_id)
+→ Check: belongsTo/hasMany definitions in models
 ```
 
 ### Week 1 Implementation Checklist
 
 **Before starting Story 1.1:**
 
--   [x] Read all 4 implementation guidance documents
--   [x] Understand UX priorities (Core vs Polish)
--   [x] Plan offline POS architecture
--   [x] Setup image optimization workflow
--   [x] Prepare database trigger performance tests
+-   [x] Read database trigger performance plan
+-   [x] Understand migration order dependencies
+-   [x] Review seeder data specifications
 
 **During Story 1.1 (Project Setup):**
 
--   [ ] Create database schema with 2 triggers
--   [ ] Test trigger performance with realistic data
--   [ ] Setup image optimization service (deferred to Story 3.2)
--   [ ] Configure Service Worker for offline POS (deferred to Epic 8)
+-   [ ] Create database schema with 2 triggers (follow migration order)
+-   [ ] Test trigger performance with realistic data (< 100ms target)
 -   [ ] Validate all performance targets met
 
 **After Story 1.1:**
 
 -   [ ] Confirm POS transaction < 100ms (test with triggers)
 -   [ ] Document any deviations or issues
--   [ ] Update sprint-status.yaml to ready-for-dev
+-   [ ] Update sprint-status.yaml to in-progress
 
 ## Dev Agent Record
 
