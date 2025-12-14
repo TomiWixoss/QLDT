@@ -2389,3 +2389,285 @@ So that I can save money on my purchases.
 -   Refund: On order cancellation, add points back
 -   Storage: orders.points_used column (integer)
 -   Unified: Works for both online and POS orders
+
+## Epic 7: Order Management (Customer & Staff)
+
+**Goal:** Customers có thể xem orders với timeline visual, cancel pending orders, verify IMEI. Staff có thể approve, ship, complete, cancel orders.
+
+### Story 7.1: Customer Order List and Filtering
+
+As a **Customer**,
+I want to view my order history with filtering options,
+So that I can track all my purchases and find specific orders easily.
+
+**Acceptance Criteria:**
+
+**Given** I am logged in as a customer
+**When** I navigate to /orders or click "Đơn hàng" in my account menu
+**Then** I see a list of all my orders sorted by date (newest first)
+**And** each order card shows: order code, date, total, status badge, product thumbnails
+
+**Given** I view the order list
+**When** I see the status badges
+**Then** each status has a distinct color: Pending (yellow), Confirmed (blue), Shipping (purple), Completed (green), Cancelled (red)
+**And** the status text is clear in Vietnamese
+
+**Given** I want to filter orders by status
+**When** I click on status tabs: "Tất cả", "Chờ xác nhận", "Đã xác nhận", "Đang giao", "Hoàn thành", "Đã hủy"
+**Then** the order list updates to show only orders with that status
+**And** the filter is applied without page reload (AJAX)
+
+**Given** I have many orders
+**When** I scroll down the order list
+**Then** I see pagination (10 orders per page)
+**And** I can navigate between pages
+
+**Given** I click on an order card
+**When** I select an order
+**Then** I am taken to the order detail page (/orders/{id})
+
+**Given** I have no orders yet
+**When** I navigate to /orders
+**Then** I see an empty state with an illustration
+**And** I see a message "Bạn chưa có đơn hàng nào"
+**And** I see a "Khám phá sản phẩm" button
+
+**Technical Details:**
+
+-   Route: GET /orders
+-   Controller: Customer\OrderController@index
+-   Query: WHERE customer_id = auth('customer')->id(), ORDER BY created_at DESC
+-   Eager Load: order_items, products for thumbnails
+-   Status Colors: Pending (#f59e0b), Confirmed (#3b82f6), Shipping (#8b5cf6), Completed (#10b981), Cancelled (#ef4444)
+-   Pagination: 10 orders per page
+
+---
+
+### Story 7.2: Order Detail with Timeline and IMEI
+
+As a **Customer**,
+I want to view detailed order information with a visual timeline and IMEI numbers,
+So that I can track my order status and verify product authenticity.
+
+**Acceptance Criteria:**
+
+**Given** I click on an order
+**When** the order detail page loads
+**Then** I see the order code, date, and current status prominently
+**And** I see a visual timeline showing the order journey: Đã đặt → Đã xác nhận → Đang giao → Hoàn thành
+
+**Given** I view the order timeline
+**When** I look at each step
+**Then** completed steps show a filled circle with green color and timestamp
+**And** the current step shows a filled circle with blue color and pulsing animation
+**And** pending steps show an empty circle with gray color
+**And** lines connecting the steps are colored based on completion
+
+**Given** the order is completed
+**When** I view the timeline
+**Then** all steps show green filled circles
+**And** I see a "Hoàn thành" badge with celebration icon
+
+**Given** the order is cancelled
+**When** I view the timeline
+**Then** I see a red "Đã hủy" badge
+**And** the timeline shows where the cancellation occurred
+**And** I see the cancellation reason
+
+**Given** I scroll down to the order items section
+**When** I view the products
+**Then** I see each product with: image, name, quantity, price, subtotal
+**And** if the order is completed or shipping, I see the IMEI numbers for each device
+**And** IMEI numbers are displayed prominently (large font, easy to copy)
+
+**Given** I view IMEI numbers
+**When** I see the IMEI section
+**Then** each IMEI is displayed with a "Copy" button
+**And** clicking "Copy" copies the IMEI to clipboard
+**And** I see a tooltip "Đã sao chép IMEI"
+
+**Given** I view the order summary
+**When** I scroll to the bottom
+**Then** I see: subtotal, voucher discount, points discount, final total
+**And** I see shipping address and payment method
+**And** I see warranty expiration dates for each product
+
+**Technical Details:**
+
+-   Route: GET /orders/{id}
+-   Controller: Customer\OrderController@show
+-   Authorization: Ensure customer can only view their own orders
+-   Timeline Component: order-timeline.blade.php (vertical, animated)
+-   IMEI Display: Parse order_items.imei_list JSON array
+-   Warranty Calculation: order_date + product.warranty_months
+-   Copy to Clipboard: JavaScript navigator.clipboard.writeText()
+
+---
+
+### Story 7.3: Customer Order Cancellation
+
+As a **Customer**,
+I want to cancel my pending orders,
+So that I can change my mind before the order is processed.
+
+**Acceptance Criteria:**
+
+**Given** I have an order with status 'pending'
+**When** I view the order detail page
+**Then** I see a "Hủy đơn hàng" button (red, outlined)
+
+**Given** I click "Hủy đơn hàng"
+**When** the button is clicked
+**Then** I see a confirmation modal "Bạn có chắc muốn hủy đơn hàng này?"
+**And** I see a text area to enter cancellation reason (optional)
+
+**Given** I confirm the cancellation
+**When** I click "Xác nhận hủy"
+**Then** the order status is changed to 'cancelled'
+**And** if I used loyalty points, they are refunded to my account
+**And** if a voucher was used, the usage count is decremented
+**And** I see a success message "Đã hủy đơn hàng thành công"
+**And** the "Hủy đơn hàng" button disappears
+
+**Given** my order status is 'confirmed', 'shipping', or 'completed'
+**When** I view the order detail page
+**Then** I do NOT see the "Hủy đơn hàng" button
+**And** I see a message "Đơn hàng đã được xác nhận, không thể hủy. Vui lòng liên hệ hỗ trợ"
+
+**Given** I cancelled an order
+**When** I view the order timeline
+**Then** I see a red "Đã hủy" badge
+**And** I see the cancellation reason (if provided)
+**And** I see the cancellation timestamp
+
+**Given** I cancelled an order that used points
+**When** I check my points balance
+**Then** I see the refunded points added back
+**And** I see a notification "Đã hoàn [X] điểm vào tài khoản"
+
+**Technical Details:**
+
+-   Route: POST /orders/{id}/cancel
+-   Controller: Customer\OrderController@cancel
+-   Authorization: Only order owner can cancel, only if status = 'pending'
+-   Refund Logic:
+    -   Points: UPDATE customers SET points = points + order.points_used
+    -   Voucher: UPDATE promotions SET usage_count = usage_count - 1
+-   Status Update: orders.status = 'cancelled', orders.cancel_reason = reason
+-   Notification: Toast message for success
+
+---
+
+### Story 7.4: Staff Order List and Filtering
+
+As a **Staff Member** (Admin, Manager, or Sales),
+I want to view and filter all orders in the system,
+So that I can manage orders efficiently.
+
+**Acceptance Criteria:**
+
+**Given** I am logged in as Admin, Manager, or Sales
+**When** I navigate to /admin/orders
+**Then** I see a list of all orders (not just my own)
+**And** each row shows: order code, customer name, date, total, source (web/store), status, actions
+
+**Given** I want to filter orders by status
+**When** I select a status filter (Pending, Confirmed, Shipping, Completed, Cancelled)
+**Then** the order list updates to show only orders with that status
+
+**Given** I want to filter orders by source
+**When** I select "Web" or "Store" from the source filter
+**Then** the list shows only orders from that channel
+**And** web orders show a globe icon, store orders show a shop icon
+
+**Given** I want to search for a specific order
+**When** I enter an order code or customer name in the search box
+**Then** the list filters to show matching orders
+**And** the search is case-insensitive
+
+**Given** I want to filter by date range
+**When** I select a start date and end date
+**Then** the list shows only orders within that date range
+
+**Given** I click on an order row
+**When** I select an order
+**Then** I am taken to the staff order detail page (/admin/orders/{id})
+**And** I see all order information including customer details
+
+**Given** I am logged in as Warehouse staff
+**When** I try to access /admin/orders
+**Then** I see a 403 Forbidden error
+**And** I cannot view orders (Warehouse only manages inventory)
+
+**Technical Details:**
+
+-   Route: GET /admin/orders
+-   Controller: Admin\OrderController@index
+-   Authorization: Gate 'manage-orders' (Admin, Manager, Sales only)
+-   Query: All orders with eager loading (customer, order_items, products)
+-   Filters: status, source, date_range, search (order_code, customer name)
+-   Pagination: 20 orders per page
+-   Icons: Web (🌐), Store (🏪)
+
+---
+
+### Story 7.5: Staff Order Status Management
+
+As a **Staff Member** (Admin, Manager, or Sales),
+I want to update order statuses and manage the order lifecycle,
+So that customers receive their orders and the system stays up-to-date.
+
+**Acceptance Criteria:**
+
+**Given** I am viewing an order detail page as staff
+**When** the order status is 'pending'
+**Then** I see an "Xác nhận đơn hàng" button
+
+**Given** I click "Xác nhận đơn hàng"
+**When** I confirm the action
+**Then** the order status changes to 'confirmed'
+**And** I see a success message "Đã xác nhận đơn hàng"
+**And** the customer sees the updated status in their order timeline
+
+**Given** the order status is 'confirmed'
+**When** I view the order
+**Then** I see a "Đang giao hàng" button
+**And** I see a field to enter tracking number (optional)
+
+**Given** I click "Đang giao hàng"
+**When** I enter a tracking number and confirm
+**Then** the order status changes to 'shipping'
+**And** the tracking number is saved in orders.tracking_number
+**And** the customer can see the tracking number
+
+**Given** the order status is 'shipping'
+**When** I view the order
+**Then** I see a "Hoàn thành đơn hàng" button
+
+**Given** I click "Hoàn thành đơn hàng"
+**When** I confirm the action
+**Then** the order status changes to 'completed'
+**And** the database trigger 'add_points' fires automatically
+**And** the customer earns loyalty points based on the order total
+**And** I see a success message "Đã hoàn thành đơn hàng"
+
+**Given** I want to cancel an order (any status)
+**When** I click "Hủy đơn hàng"
+**Then** I see a modal asking for cancellation reason (required for staff)
+**And** when I confirm, the order status changes to 'cancelled'
+**And** points and voucher are refunded if applicable
+
+**Given** I view the order timeline as staff
+**When** I look at the timeline
+**Then** I see timestamps for each status change
+**And** I see which staff member performed each action (future: add user_id tracking)
+
+**Technical Details:**
+
+-   Routes: POST /admin/orders/{id}/confirm, POST /admin/orders/{id}/ship, POST /admin/orders/{id}/complete, POST /admin/orders/{id}/cancel
+-   Controller: Admin\OrderController (confirm, ship, complete, cancel methods)
+-   Authorization: Gate 'manage-orders' (Admin, Manager, Sales)
+-   Status Flow: pending → confirmed → shipping → completed (or cancelled at any point)
+-   Trigger: add_points fires when status = 'completed'
+-   Tracking: orders.tracking_number (nullable)
+-   Audit: Log status changes with timestamp and staff user_id (future enhancement)
