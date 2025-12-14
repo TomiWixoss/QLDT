@@ -2171,3 +2171,221 @@ So that I know my order was successful and what to expect next.
 -   Source: 'web' (to distinguish from POS orders)
 -   Success Page: Celebration animation (CSS keyframes)
 -   Email: Optional - send order confirmation email (future enhancement)
+
+## Epic 6: Promotion & Loyalty System
+
+**Goal:** Admin/Manager có thể tạo vouchers. Customers tự động earn và redeem loyalty points.
+
+### Story 6.1: Voucher Creation and Management
+
+As an **Admin or Manager**,
+I want to create and manage promotional vouchers,
+So that I can offer discounts to customers and drive sales.
+
+**Acceptance Criteria:**
+
+**Given** I am logged in as Admin or Manager
+**When** I navigate to /admin/promotions
+**Then** I see a list of all vouchers with: code, type, discount, validity period, usage count, status
+**And** I see a "Tạo voucher mới" button
+
+**Given** I click "Tạo voucher mới"
+**When** I see the voucher creation form
+**Then** I can enter: voucher code, discount type (fixed/percentage), discount value, min order value, max discount (for percentage), start date, end date, usage limit
+
+**Given** I create a fixed discount voucher
+**When** I enter code "GIAM100K", type "Fixed", value "100000", min order "500000", usage limit "100"
+**Then** a new voucher is created in the promotions table
+**And** I see a success message "Tạo voucher thành công"
+
+**Given** I create a percentage discount voucher
+**When** I enter code "GIAM10", type "Percentage", value "10", min order "1000000", max discount "500000"
+**Then** the voucher is created with percentage discount
+**And** the max discount cap is enforced during application
+
+**Given** I try to create a voucher with a code that already exists
+**When** I submit the form
+**Then** I see an error message "Mã voucher đã tồn tại"
+
+**Given** I want to update a voucher
+**When** I click "Sửa" on a voucher row
+**Then** I can modify the voucher details (except code)
+**And** changes are saved successfully
+
+**Given** I want to deactivate a voucher
+**When** I click "Vô hiệu hóa"
+**Then** the voucher status is set to 'inactive'
+**And** customers can no longer use this voucher
+
+**Technical Details:**
+
+-   Routes: GET /admin/promotions, POST /admin/promotions, PUT /admin/promotions/{id}, DELETE /admin/promotions/{id}
+-   Controller: Admin\PromotionController
+-   Validation: Code unique, discount_value > 0, start_date < end_date, usage_limit > 0
+-   Table: promotions (code unique, discount_type enum('fixed','percentage'), discount_value, min_order_value, max_discount, start_date, end_date, usage_limit, usage_count default 0, status)
+-   Authorization: Gate 'manage-promotions' (Admin, Manager)
+
+---
+
+### Story 6.2: Voucher Validation and Application
+
+As a **System**,
+I want to validate voucher codes and apply discounts correctly,
+So that only eligible customers can use vouchers and discounts are calculated accurately.
+
+**Acceptance Criteria:**
+
+**Given** a customer enters a voucher code during checkout
+**When** the system validates the voucher
+**Then** it checks: code exists, status is 'active', current date is between start_date and end_date, usage_count < usage_limit
+
+**Given** a voucher is valid
+**When** the customer's order total is checked
+**Then** the system verifies order total >= min_order_value
+**And** if valid, the discount is calculated
+
+**Given** a fixed discount voucher (e.g., GIAM100K = 100,000đ)
+**When** the discount is calculated
+**Then** discount_amount = discount_value (100,000đ)
+**And** the discount is subtracted from the order total
+
+**Given** a percentage discount voucher (e.g., GIAM10 = 10%)
+**When** the discount is calculated
+**Then** discount_amount = order_total \* (discount_value / 100)
+**And** if discount_amount > max_discount, then discount_amount = max_discount
+**And** the capped discount is applied
+
+**Given** a voucher has reached its usage limit
+**When** a customer tries to apply it
+**Then** the system returns an error "Voucher đã hết lượt sử dụng"
+**And** no discount is applied
+
+**Given** a voucher is expired
+**When** a customer tries to apply it
+**Then** the system returns an error "Voucher đã hết hạn"
+
+**Given** the order total is below the minimum order value
+**When** a customer tries to apply the voucher
+**Then** the system returns an error "Đơn hàng tối thiểu [X]đ để sử dụng voucher này"
+
+**Given** a voucher is successfully applied
+**When** the order is completed
+**Then** the voucher's usage_count is incremented by 1
+**And** the voucher code is stored in the order record
+
+**Technical Details:**
+
+-   Validation Logic: Service layer (VoucherService@validate)
+-   Discount Calculation: Service layer (VoucherService@calculateDiscount)
+-   Usage Increment: On order creation (orders.promotion_id foreign key)
+-   Database: promotions.usage_count incremented atomically
+-   Error Handling: Return specific error messages for each validation failure
+
+---
+
+### Story 6.3: Automatic Loyalty Points Earning
+
+As a **Customer**,
+I want to automatically earn loyalty points when my orders are completed,
+So that I can accumulate points for future discounts.
+
+**Acceptance Criteria:**
+
+**Given** my order is completed (status changed to 'completed')
+**When** the order status is updated
+**Then** the database trigger 'add_points' automatically fires
+**And** loyalty points are calculated as: floor(total_money / 100000)
+**And** the calculated points are added to my customers.points balance
+
+**Given** I place an order with total 24,650,000đ
+**When** the order is marked as completed
+**Then** I earn floor(24650000 / 100000) = 246 points
+**And** my points balance increases by 246
+**And** the points are added atomically (no race conditions)
+
+**Given** I place an order with total 99,000đ (< 100,000đ)
+**When** the order is completed
+**Then** I earn floor(99000 / 100000) = 0 points
+**And** my points balance remains unchanged
+
+**Given** I used loyalty points for discount on an order
+**When** the order is completed
+**Then** I earn points based on the final total_money (after all discounts)
+**And** the points calculation is correct
+
+**Given** I view my account profile
+**When** I check my points balance
+**Then** I see my current points (e.g., "500 điểm")
+**And** I see the equivalent value (e.g., "= 500.000đ")
+**And** I see a brief explanation "Tích 1 điểm cho mỗi 100.000đ mua hàng"
+
+**Given** I want to see my points history
+**When** I navigate to my account page
+**Then** I see a list of recent point transactions: earned from orders, used for discounts
+**And** each transaction shows: date, description, points change, balance
+
+**Technical Details:**
+
+-   Database Trigger: add_points (fires on orders.status = 'completed')
+-   Trigger Logic: UPDATE customers SET points = points + FLOOR(NEW.total_money / 100000) WHERE id = NEW.customer_id
+-   Calculation: 100,000 VND = 1 point
+-   Atomic: Trigger ensures atomic update (no race conditions)
+-   Display: customers.points column
+-   History: Optional - create points_history table for detailed tracking (future enhancement)
+
+---
+
+### Story 6.4: Loyalty Points Redemption
+
+As a **Customer**,
+I want to redeem my loyalty points for discounts,
+So that I can save money on my purchases.
+
+**Acceptance Criteria:**
+
+**Given** I have loyalty points in my account
+**When** I am on the cart or checkout page
+**Then** I see a checkbox "Sử dụng điểm tích lũy ([X] điểm = [Y]đ)"
+**And** I can see my current points balance
+
+**Given** I check the "Sử dụng điểm" checkbox
+**When** I have 250 points
+**Then** the system calculates discount as: 250 points \* 1,000đ = 250,000đ
+**And** the discount is applied to my order total
+**And** I see "Điểm tích lũy: -250.000đ" in the order summary
+
+**Given** I have more points than my order total
+**When** I try to use points
+**Then** only enough points to cover the order total are used
+**And** the remaining points stay in my account
+**And** I see a message "Đã sử dụng [X] điểm (tối đa)"
+
+**Given** I complete an order using points
+**When** the order is created
+**Then** the used points are deducted from my customers.points balance
+**And** the deduction happens atomically
+**And** the points_used amount is stored in the order record
+
+**Given** I cancel an order that used points
+**When** the order is cancelled
+**Then** the used points are refunded to my account
+**And** I see a notification "Đã hoàn [X] điểm vào tài khoản"
+
+**Given** I use points on a POS transaction
+**When** the sales staff applies my points
+**Then** the points work the same way as online (1 point = 1,000đ)
+**And** the points are deducted immediately upon transaction completion
+
+**Given** I want to view my points usage history
+**When** I check my account
+**Then** I see a list of orders where I used points
+**And** each entry shows: order code, points used, date
+
+**Technical Details:**
+
+-   Redemption Rate: 1 point = 1,000 VND
+-   Deduction: On order creation, UPDATE customers SET points = points - points_used WHERE id = customer_id
+-   Validation: Ensure customer has enough points before deduction
+-   Refund: On order cancellation, add points back
+-   Storage: orders.points_used column (integer)
+-   Unified: Works for both online and POS orders
