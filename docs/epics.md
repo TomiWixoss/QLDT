@@ -1310,3 +1310,240 @@ So that I can track where products are sourced from for inventory management.
 -   Authorization: Gate 'manage-products' for write operations (Admin, Manager)
 -   Validation: Name required, phone format, email format
 -   Table: suppliers (name, contact_person, phone, email, address)
+
+## Epic 3: Product Management
+
+**Goal:** Admin/Manager có thể tạo, cập nhật, xóa sản phẩm với specs đầy đủ, upload ảnh, set giá và warranty.
+
+### Story 3.1: Create Product with Basic Information
+
+As an **Admin or Manager**,
+I want to create a new product with basic information,
+So that it can be displayed and sold to customers.
+
+**Acceptance Criteria:**
+
+**Given** I am logged in as Admin or Manager
+**When** I navigate to /admin/products and click "Tạo sản phẩm mới"
+**Then** I see a product creation form with fields: name, SKU, category, brand, price, cost, warranty months, status
+
+**Given** I fill in all required fields with valid data
+**When** I submit the form
+**Then** a new product is created in the products table
+**And** the quantity is set to 0 (will be updated via stock movements)
+**And** I see a success message "Tạo sản phẩm thành công"
+**And** I am redirected to the product list
+
+**Given** I enter a SKU that already exists
+**When** I submit the form
+**Then** I see an error message "Mã SKU đã tồn tại"
+**And** the product is not created
+
+**Given** I enter a price less than or equal to 0
+**When** I submit the form
+**Then** I see an error message "Giá bán phải lớn hơn 0"
+
+**Given** I select a category and brand from dropdowns
+**When** I submit the form
+**Then** the product is associated with the selected category and brand via foreign keys
+
+**Technical Details:**
+
+-   Route: GET /admin/products/create, POST /admin/products
+-   Controller: Admin\ProductController@create, @store
+-   Validation: StoreProductRequest (name required, SKU unique, price > 0, cost >= 0, warranty_months >= 0)
+-   Table: products (category_id, brand_id, sku unique, name, price, cost, quantity default 0, warranty_months, status default 'active')
+-   Authorization: Gate 'manage-products' (Admin, Manager)
+
+---
+
+### Story 3.2: Product Image Upload
+
+As an **Admin or Manager**,
+I want to upload product images,
+So that customers can see what the product looks like.
+
+**Acceptance Criteria:**
+
+**Given** I am creating or editing a product
+**When** I upload an image file (JPG, PNG, or WebP)
+**Then** the image is validated for type and size (< 5MB)
+**And** the image is converted to WebP format for optimization
+**And** the image is stored in storage/app/public/products/{product_id}/
+**And** the image path is saved in the products.image column
+
+**Given** I upload a file larger than 5MB
+**When** I submit the form
+**Then** I see an error message "Kích thước ảnh không được vượt quá 5MB"
+**And** the image is not uploaded
+
+**Given** I upload a file that is not an image (e.g., PDF, TXT)
+**When** I submit the form
+**Then** I see an error message "Chỉ chấp nhận file ảnh (JPG, PNG, WebP)"
+**And** the file is not uploaded
+
+**Given** I am editing a product that already has an image
+**When** I upload a new image
+**Then** the old image is deleted from storage
+**And** the new image replaces it
+
+**Given** a product has an image
+**When** I view the product in the admin list or detail page
+**Then** I see a thumbnail of the image
+**And** clicking the thumbnail opens the full-size image
+
+**Technical Details:**
+
+-   Validation: File type (image/jpeg, image/png, image/webp), max size 5MB
+-   Storage: storage/app/public/products/{product_id}/main.webp
+-   Image Processing: Use Intervention Image or similar to convert to WebP
+-   Symbolic Link: php artisan storage:link (for public access)
+-   Column: products.image (stores relative path)
+
+---
+
+### Story 3.3: Product Technical Specifications Management
+
+As an **Admin or Manager**,
+I want to add and manage technical specifications for products,
+So that customers can see detailed product information.
+
+**Acceptance Criteria:**
+
+**Given** I am viewing a product detail page in admin
+**When** I click "Quản lý thông số kỹ thuật"
+**Then** I see a form to add/edit product specs with fields: screen, processor, RAM, storage, camera, battery, OS
+
+**Given** I enter technical specifications for a product
+**When** I submit the form
+**Then** the specs are saved in the product_specs table (one-to-one with products)
+**And** I see a success message "Cập nhật thông số kỹ thuật thành công"
+
+**Given** a product already has specs
+**When** I update any spec field
+**Then** the existing specs record is updated (not creating a new one)
+**And** I see a success message "Cập nhật thông số kỹ thuật thành công"
+
+**Given** I want to remove all specs for a product
+**When** I click "Xóa thông số kỹ thuật" and confirm
+**Then** the product_specs record is deleted
+**And** I see a success message "Đã xóa thông số kỹ thuật"
+
+**Given** I am viewing a product in the admin list
+**When** I look at the product row
+**Then** I see an indicator showing whether the product has specs (e.g., checkmark icon)
+
+**Technical Details:**
+
+-   Routes: GET /admin/products/{id}/specs, POST /admin/products/{id}/specs, DELETE /admin/products/{id}/specs
+-   Controller: Admin\ProductSpecController
+-   Table: product_specs (product_id unique foreign key, screen, processor, ram, storage, camera, battery, os)
+-   Relationship: Product hasOne ProductSpec
+-   Validation: All fields optional (nullable), but at least one field should be filled
+
+---
+
+### Story 3.4: Product List and Search
+
+As an **Admin, Manager, Sales, or Warehouse staff**,
+I want to view and search the product list,
+So that I can quickly find products I need to manage or sell.
+
+**Acceptance Criteria:**
+
+**Given** I am logged in as any staff role
+**When** I navigate to /admin/products
+**Then** I see a paginated list of products (20 per page)
+**And** each row shows: image thumbnail, name, SKU, category, brand, price, quantity, status
+**And** I see a search box to filter products
+
+**Given** I enter a search term in the search box
+**When** I submit the search
+**Then** the list is filtered to show products matching the term in name or SKU
+**And** the pagination is updated accordingly
+
+**Given** I want to filter by category
+**When** I select a category from the filter dropdown
+**Then** only products in that category are displayed
+
+**Given** I want to filter by brand
+**When** I select a brand from the filter dropdown
+**Then** only products from that brand are displayed
+
+**Given** I want to filter by status
+**When** I select "Active" or "Inactive" from the status filter
+**Then** only products with that status are displayed
+
+**Given** I am viewing the product list
+**When** I click on a product row
+**Then** I am taken to the product detail page showing all information
+
+**Given** I am logged in as Admin or Manager
+**When** I view the product list
+**Then** I see "Sửa" and "Xóa" action buttons for each product
+
+**Given** I am logged in as Sales or Warehouse
+**When** I view the product list
+**Then** I see product information but no edit/delete buttons (read-only)
+
+**Technical Details:**
+
+-   Route: GET /admin/products
+-   Controller: Admin\ProductController@index
+-   Query: Eager load category, brand relationships to prevent N+1
+-   Pagination: 20 items per page (Laravel default)
+-   Search: WHERE name LIKE %term% OR sku LIKE %term%
+-   Filters: category_id, brand_id, status
+-   Authorization: All staff can view, only Admin/Manager can edit/delete
+
+---
+
+### Story 3.5: Update and Delete Products
+
+As an **Admin or Manager**,
+I want to update product information and delete products when needed,
+So that the product catalog stays accurate and up-to-date.
+
+**Acceptance Criteria:**
+
+**Given** I am logged in as Admin or Manager
+**When** I click "Sửa" on a product in the list
+**Then** I see a form pre-filled with the current product information
+**And** I can modify any field (name, SKU, category, brand, price, cost, warranty, status)
+
+**Given** I update product information with valid data
+**When** I submit the form
+**Then** the product is updated in the database
+**And** I see a success message "Cập nhật sản phẩm thành công"
+**And** I am redirected to the product list
+
+**Given** I change the SKU to one that already exists (for another product)
+**When** I submit the form
+**Then** I see an error message "Mã SKU đã tồn tại"
+**And** the product is not updated
+
+**Given** I want to deactivate a product
+**When** I change the status to "Inactive" and submit
+**Then** the product status is updated to 'inactive'
+**And** the product no longer appears in customer-facing product listings
+**And** existing orders with this product are not affected
+
+**Given** I want to delete a product that has no order history
+**When** I click "Xóa" and confirm the deletion
+**Then** the product and its specs are deleted from the database
+**And** the product image is deleted from storage
+**And** I see a success message "Đã xóa sản phẩm"
+
+**Given** I try to delete a product that has order history
+**When** I click "Xóa" and confirm
+**Then** I see an error message "Không thể xóa sản phẩm đã có trong đơn hàng. Vui lòng đặt trạng thái 'Inactive' thay vì xóa"
+**And** the product is not deleted
+
+**Technical Details:**
+
+-   Routes: GET /admin/products/{id}/edit, PUT /admin/products/{id}, DELETE /admin/products/{id}
+-   Controller: Admin\ProductController@edit, @update, @destroy
+-   Validation: UpdateProductRequest (same as create, SKU unique except current product)
+-   Authorization: Gate 'manage-products' (Admin, Manager only)
+-   Cascade Delete: product_specs deleted automatically (foreign key cascade)
+-   Soft Delete Consideration: Use status='inactive' instead of hard delete for products with history
