@@ -1894,3 +1894,280 @@ So that I understand the warranty coverage and feel confident about the purchase
 -   Calculation: For purchased products, warranty_expiration = order_date + warranty_months
 -   Component: warranty-seal.blade.php (reusable)
 -   Colors: Green (#10b981), Yellow (#f59e0b), Red (#ef4444)
+
+## Epic 5: Shopping Cart & Checkout
+
+**Goal:** Khách hàng có thể thêm sản phẩm vào giỏ, apply voucher/points, và hoàn thành checkout.
+
+### Story 5.1: Add to Cart with Animation
+
+As a **Customer**,
+I want to add products to my shopping cart with visual feedback,
+So that I know my action was successful and can continue shopping.
+
+**Acceptance Criteria:**
+
+**Given** I am viewing a product detail page
+**When** I click the "Thêm vào giỏ" button
+**Then** the product is added to my session-based cart
+**And** I see a success toast notification "Đã thêm vào giỏ hàng"
+**And** the cart badge in the navigation updates to show the new item count
+**And** the product image animates flying to the cart icon (< 300ms)
+
+**Given** I add a product that's already in my cart
+**When** I click "Thêm vào giỏ"
+**Then** the quantity of that product in the cart increases by 1
+**And** I see a toast "Đã cập nhật số lượng trong giỏ"
+
+**Given** I try to add more items than available in stock
+**When** I click "Thêm vào giỏ" multiple times
+**Then** I see an error toast "Không đủ hàng trong kho"
+**And** the cart quantity is limited to the available stock
+
+**Given** I am not logged in
+**When** I add products to cart
+**Then** the cart is stored in my session
+**And** the cart persists across page navigations
+**And** the cart is cleared when I close the browser (session ends)
+
+**Given** I am logged in
+**When** I add products to cart
+**Then** the cart is still session-based (not saved to database)
+**And** the cart persists until I complete checkout or manually clear it
+
+**Technical Details:**
+
+-   Storage: Session-based cart (session('cart'))
+-   Structure: ['product_id' => ['quantity' => X, 'product' => Product model]]
+-   Animation: CSS transform + transition (0.3s cubic-bezier)
+-   Toast: DaisyUI toast component (top-right desktop, top-center mobile)
+-   Badge: Update via JavaScript (cart item count)
+-   Validation: Check stock availability before adding
+
+---
+
+### Story 5.2: Shopping Cart Management
+
+As a **Customer**,
+I want to view and manage items in my shopping cart,
+So that I can review my selections before checkout.
+
+**Acceptance Criteria:**
+
+**Given** I have items in my cart
+**When** I click the cart icon or navigate to /cart
+**Then** I see a list of all cart items with: image, name, price, quantity selector, subtotal, remove button
+**And** I see the cart summary: subtotal, estimated total
+**And** I see a "Tiếp tục mua sắm" button and a "Thanh toán" button
+
+**Given** I want to update the quantity of an item
+**When** I change the quantity using the +/- buttons or input field
+**Then** the item quantity is updated in the session
+**And** the subtotal for that item updates immediately
+**And** the cart total updates immediately
+**And** the update happens without page reload (AJAX)
+
+**Given** I increase quantity beyond available stock
+**When** I try to increase the quantity
+**Then** I see an error message "Chỉ còn [X] sản phẩm trong kho"
+**And** the quantity is limited to the available stock
+
+**Given** I want to remove an item from cart
+**When** I click the "Xóa" button (trash icon)
+**Then** I see a confirmation "Bạn có chắc muốn xóa sản phẩm này?"
+**And** when I confirm, the item is removed from the cart
+**And** the cart updates immediately
+**And** I see a toast "Đã xóa sản phẩm khỏi giỏ hàng"
+
+**Given** my cart is empty
+**When** I navigate to /cart
+**Then** I see an empty state with an illustration
+**And** I see a message "Giỏ hàng của bạn đang trống"
+**And** I see a "Khám phá sản phẩm" button linking to the product listing
+
+**Given** I am on mobile
+**When** I view the cart
+**Then** I can swipe left on a cart item to reveal the delete button
+**And** the swipe gesture is smooth and intuitive
+
+**Technical Details:**
+
+-   Route: GET /cart, POST /cart/update, DELETE /cart/remove
+-   Controller: Customer\CartController
+-   Session: Update session('cart') on every action
+-   AJAX: Use Axios for quantity updates and removals
+-   Validation: Check stock availability on quantity increase
+-   Mobile: Touch events for swipe-to-delete
+
+---
+
+### Story 5.3: Apply Voucher and Loyalty Points
+
+As a **Customer**,
+I want to apply voucher codes and use my loyalty points,
+So that I can get discounts on my purchase.
+
+**Acceptance Criteria:**
+
+**Given** I am on the cart page
+**When** I see the cart summary section
+**Then** I see an input field "Nhập mã giảm giá"
+**And** I see a checkbox "Sử dụng điểm tích lũy ([X] điểm = [Y]đ)"
+
+**Given** I enter a valid voucher code
+**When** I click "Áp dụng"
+**Then** the voucher is validated (check expiry, usage limit, min order value)
+**And** the discount is calculated and applied to the total
+**And** I see the discount amount in the cart summary (e.g., "Giảm giá: -100.000đ")
+**And** I see a success message "Đã áp dụng mã giảm giá"
+
+**Given** I enter an invalid or expired voucher code
+**When** I click "Áp dụng"
+**Then** I see an error message "Mã giảm giá không hợp lệ hoặc đã hết hạn"
+**And** no discount is applied
+
+**Given** my order total is below the voucher's minimum order value
+**When** I try to apply the voucher
+**Then** I see an error message "Đơn hàng tối thiểu [X]đ để sử dụng mã này"
+
+**Given** I check the "Sử dụng điểm tích lũy" checkbox
+**When** I have sufficient points
+**Then** my points are converted to discount (1 point = 1,000đ)
+**And** the discount is applied to the total
+**And** I see the points discount in the cart summary (e.g., "Điểm tích lũy: -250.000đ")
+
+**Given** I try to use more points than I have
+**When** I check the points checkbox
+**Then** only my available points are used
+**And** I see a message "Đã sử dụng [X] điểm (tối đa)"
+
+**Given** I have both voucher and points applied
+**When** I view the cart summary
+**Then** I see both discounts listed separately
+**And** the total is calculated as: subtotal - voucher_discount - points_discount
+**And** the final total is displayed prominently
+
+**Technical Details:**
+
+-   Voucher Validation: Check promotions table (code, start_date, end_date, usage_limit, min_order_value)
+-   Points Calculation: floor(points_to_use) \* 1000
+-   Session: Store applied voucher and points in session
+-   Discount Order: Apply voucher first, then points
+-   Maximum Points: Cannot exceed order total after voucher
+
+---
+
+### Story 5.4: Checkout Process
+
+As a **Customer**,
+I want to complete the checkout process smoothly,
+So that I can finalize my purchase quickly.
+
+**Acceptance Criteria:**
+
+**Given** I have items in my cart
+**When** I click "Thanh toán" on the cart page
+**Then** I am taken to the checkout page (/checkout)
+**And** I see a progress indicator showing "Giỏ hàng → Thanh toán → Hoàn tất"
+
+**Given** I am on the checkout page
+**When** the page loads
+**Then** I see a form to enter shipping information: full name, phone, address, city, district
+**And** if I am logged in, my saved information is pre-filled
+**And** I see the order summary on the right (desktop) or below (mobile)
+
+**Given** I fill in the shipping information
+**When** I enter valid data
+**Then** the form validates each field on blur
+**And** I see inline validation messages (green checkmark for valid, red error for invalid)
+
+**Given** I want to select a payment method
+**When** I scroll to the payment section
+**Then** I see two options: "Thanh toán khi nhận hàng (COD)" and "Chuyển khoản ngân hàng"
+**And** COD is selected by default
+**And** I can select one payment method (radio buttons)
+
+**Given** I select "Chuyển khoản ngân hàng"
+**When** I click that option
+**Then** I see bank account details displayed
+**And** I see instructions "Vui lòng chuyển khoản và ghi mã đơn hàng trong nội dung"
+
+**Given** I review my order before submitting
+**When** I look at the order summary
+**Then** I see: list of products, quantities, prices, subtotal, voucher discount, points discount, final total
+**And** I see the shipping address I entered
+**And** I see the selected payment method
+
+**Given** all information is valid
+**When** I click "Đặt hàng" button
+**Then** I see a loading indicator "Đang xử lý..."
+**And** the button is disabled to prevent double submission
+
+**Technical Details:**
+
+-   Route: GET /checkout, POST /checkout
+-   Controller: Customer\CheckoutController
+-   Validation: CheckoutRequest (full_name, phone, address, city, district required)
+-   Session: Retrieve cart, voucher, points from session
+-   Payment Methods: COD (default), Bank Transfer (manual)
+-   Order Creation: Will be handled in next story
+
+---
+
+### Story 5.5: Order Confirmation and Success
+
+As a **Customer**,
+I want to receive clear confirmation after placing my order,
+So that I know my order was successful and what to expect next.
+
+**Acceptance Criteria:**
+
+**Given** I submit a valid checkout form
+**When** the order is processed
+**Then** a new order is created in the orders table with status 'pending'
+**And** order items are created in the order_items table
+**And** the applied voucher usage count is incremented
+**And** my cart session is cleared
+**And** I am redirected to the order success page (/orders/{order_id}/success)
+
+**Given** I am on the order success page
+**When** the page loads
+**Then** I see a success animation (checkmark with subtle confetti CSS-only)
+**And** I see a message "Đặt hàng thành công!"
+**And** I see my order code (e.g., "ORD-20241214-001")
+**And** I see the order total and payment method
+
+**Given** I selected COD payment
+**When** I view the success page
+**Then** I see instructions "Vui lòng chuẩn bị tiền mặt khi nhận hàng"
+**And** I see estimated delivery time "Dự kiến giao trong 2-3 ngày"
+
+**Given** I selected Bank Transfer payment
+**When** I view the success page
+**Then** I see bank account details again
+**And** I see a reminder "Vui lòng chuyển khoản trong 24 giờ để giữ đơn hàng"
+**And** I see the exact amount to transfer
+
+**Given** I want to view my order details
+**When** I click "Xem chi tiết đơn hàng"
+**Then** I am taken to the order detail page
+**And** I see the order timeline starting with "Đã đặt hàng"
+
+**Given** I want to continue shopping
+**When** I click "Tiếp tục mua sắm"
+**Then** I am taken back to the homepage
+
+**Given** the order creation fails (e.g., stock ran out)
+**When** the system tries to create the order
+**Then** I see an error message "Có lỗi xảy ra. Vui lòng thử lại"
+**And** I remain on the checkout page
+**And** my cart is not cleared
+
+**Technical Details:**
+
+-   Order Creation: Database transaction (orders + order_items + voucher usage + clear cart)
+-   Order Code: Generate unique code (ORD-YYYYMMDD-XXX)
+-   Status: 'pending' (will be updated by staff)
+-   Source: 'web' (to distinguish from POS orders)
+-   Success Page: Celebration animation (CSS keyframes)
+-   Email: Optional - send order confirmation email (future enhancement)
