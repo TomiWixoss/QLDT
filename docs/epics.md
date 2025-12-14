@@ -2671,3 +2671,231 @@ So that customers receive their orders and the system stays up-to-date.
 -   Trigger: add_points fires when status = 'completed'
 -   Tracking: orders.tracking_number (nullable)
 -   Audit: Log status changes with timestamp and staff user_id (future enhancement)
+
+## Epic 8: Point of Sale (POS) System
+
+**Goal:** Sales staff có thể bán hàng tại quầy < 5 phút với customer lookup, IMEI scan, voucher/points apply, và invoice printing.
+
+### Story 8.1: POS Interface and Customer Lookup
+
+As a **Sales Staff**,
+I want to quickly find customers by phone number,
+So that I can apply their loyalty points and track their purchase history.
+
+**Acceptance Criteria:**
+
+**Given** I am logged in as Sales staff
+**When** I navigate to /admin/pos
+**Then** I see a POS interface optimized for speed (desktop/tablet 1024px+)
+**And** I see a customer lookup section at the top
+**And** I see a product search section
+**And** I see a cart summary section on the right
+
+**Given** I want to find a customer
+**When** I enter a phone number in the customer lookup field
+**Then** the system searches as I type (debounced 300ms)
+**And** I see autocomplete suggestions showing matching customers
+**And** each suggestion shows: name, phone, points balance
+
+**Given** I select a customer from suggestions
+**When** I click on a customer
+**Then** the customer is selected for this transaction
+**And** I see their name and points balance displayed prominently
+**And** I see their recent order history (last 3 orders)
+
+**Given** the phone number doesn't exist
+**When** I finish typing and no results are found
+**Then** I see a "Tạo khách hàng mới" button
+**And** clicking it opens a quick create form
+
+**Given** I click "Tạo khách hàng mới"
+**When** the form opens
+**Then** I see fields: full name, phone (pre-filled), email (optional)
+**And** I can quickly create the customer (< 10 seconds)
+**And** the new customer is automatically selected
+
+**Given** I want to proceed without selecting a customer
+**When** I skip customer lookup
+**Then** I can still create an order (guest purchase)
+**And** no points can be applied or earned
+
+**Technical Details:**
+
+-   Route: GET /admin/pos
+-   Controller: Admin\POSController@index
+-   Authorization: Gate 'access-pos' (Sales, Admin, Manager)
+-   Customer Search: AJAX endpoint /api/customers/search?phone={phone}
+-   Response Time: < 3 seconds for customer lookup (NFR target)
+-   UI: Split-screen layout (products left, cart right)
+-   Quick Create: Modal with minimal fields
+
+---
+
+### Story 8.2: POS Product Search and Cart Management
+
+As a **Sales Staff**,
+I want to quickly search and add products to the POS cart,
+So that I can process transactions efficiently.
+
+**Acceptance Criteria:**
+
+**Given** I am on the POS interface
+**When** I type in the product search field
+**Then** I see autocomplete suggestions showing matching products (by name or SKU)
+**And** each suggestion shows: image thumbnail, name, SKU, price, stock quantity
+**And** the search is fast (< 500ms response time)
+
+**Given** I select a product from suggestions
+**When** I click on a product
+**Then** the product is added to the POS cart with quantity 1
+**And** I see the cart update immediately
+**And** I hear a subtle success sound (optional)
+
+**Given** I want to add multiple quantities
+**When** I add the same product again
+**Then** the quantity increases by 1
+**And** the subtotal updates automatically
+
+**Given** I want to scan a barcode
+**When** I use a barcode scanner (simulated by typing SKU + Enter)
+**Then** the product is found by SKU and added to cart instantly
+**And** the process is seamless (< 1 second)
+
+**Given** I view the POS cart
+**When** I look at the cart section
+**Then** I see each item with: image, name, price, quantity selector, subtotal, remove button
+**And** I see the cart total at the bottom
+
+**Given** I want to update quantity
+**When** I use the +/- buttons or type a number
+**Then** the quantity updates immediately
+**And** the subtotal and total recalculate instantly
+
+**Given** I try to add more than available stock
+**When** I increase quantity beyond stock
+**Then** I see an error "Chỉ còn [X] sản phẩm trong kho"
+**And** the quantity is limited to available stock
+
+**Given** I want to remove an item
+**When** I click the remove button (trash icon)
+**Then** the item is removed from cart immediately
+**And** the total updates
+
+**Technical Details:**
+
+-   Product Search: AJAX endpoint /api/products/search?term={term}
+-   Query: WHERE (name LIKE %term% OR sku LIKE %term%) AND status='active' AND quantity > 0
+-   Cart Storage: Session-based (session('pos_cart'))
+-   Barcode: Listen for Enter key after SKU input
+-   Performance: < 1 second for add to cart (NFR2)
+-   UI: Real-time updates without page reload
+
+---
+
+### Story 8.3: POS Voucher and Points Application
+
+As a **Sales Staff**,
+I want to apply vouchers and customer loyalty points to POS transactions,
+So that customers can use their discounts in-store.
+
+**Acceptance Criteria:**
+
+**Given** I have items in the POS cart
+**When** I look at the cart summary
+**Then** I see an input field "Mã giảm giá"
+**And** if a customer is selected, I see a checkbox "Sử dụng điểm ([X] điểm)"
+
+**Given** I enter a voucher code
+**When** I click "Áp dụng"
+**Then** the voucher is validated (same logic as online checkout)
+**And** if valid, the discount is applied and shown in the summary
+**And** I see "Giảm giá: -[X]đ"
+
+**Given** the voucher is invalid
+**When** I try to apply it
+**Then** I see an error message "Mã giảm giá không hợp lệ"
+**And** no discount is applied
+
+**Given** a customer is selected and has points
+**When** I check the "Sử dụng điểm" checkbox
+**Then** the customer's points are converted to discount (1 point = 1,000đ)
+**And** the discount is applied to the total
+**And** I see "Điểm tích lũy: -[X]đ"
+
+**Given** the customer doesn't have enough points to cover the full order
+**When** I apply points
+**Then** all available points are used
+**And** I see "Đã sử dụng [X] điểm (tối đa)"
+
+**Given** I have both voucher and points applied
+**When** I view the cart summary
+**Then** I see the calculation: Subtotal - Voucher - Points = Total
+**And** all discounts are clearly displayed
+
+**Given** I remove the voucher or uncheck points
+**When** I make changes
+**Then** the discounts are removed immediately
+**And** the total recalculates
+
+**Technical Details:**
+
+-   Voucher Validation: Use VoucherService@validate (same as online)
+-   Points Application: Use PointsService@calculateDiscount
+-   Session: Store applied voucher and points in session('pos_cart')
+-   Real-time: Update total immediately on apply/remove
+-   Unified Logic: Same voucher/points logic as online checkout
+
+---
+
+### Story 8.4: POS IMEI Recording
+
+As a **Sales Staff**,
+I want to record IMEI numbers for each device sold,
+So that we can track authenticity and provide warranty support.
+
+**Acceptance Criteria:**
+
+**Given** I have phone products in the POS cart
+**When** I view each cart item
+**Then** I see an "IMEI" input field for each phone
+**And** the field accepts 15-digit IMEI numbers
+
+**Given** I want to enter IMEI manually
+**When** I type the IMEI number
+**Then** the system validates the format (15 digits)
+**And** I see a green checkmark if valid
+**And** I see a red error if invalid format
+
+**Given** I want to scan IMEI barcode
+**When** I use a barcode scanner on the IMEI
+**Then** the IMEI is automatically filled in the field
+**And** the validation happens immediately
+
+**Given** I have multiple quantities of the same product
+**When** I view the cart item
+**Then** I see multiple IMEI input fields (one per quantity)
+**And** each field is clearly labeled (IMEI 1, IMEI 2, etc.)
+
+**Given** I try to enter duplicate IMEI numbers
+**When** I enter an IMEI that's already used in this transaction
+**Then** I see an error "IMEI đã được sử dụng trong đơn hàng này"
+**And** I cannot proceed until I fix it
+
+**Given** I try to complete a transaction without entering all IMEIs
+**When** I click "Hoàn tất"
+**Then** I see an error "Vui lòng nhập IMEI cho tất cả sản phẩm"
+**And** the missing IMEI fields are highlighted in red
+
+**Given** all IMEIs are entered correctly
+**When** I complete the transaction
+**Then** the IMEIs are stored as JSON array in order_items.imei_list
+**And** the IMEIs will be displayed on the invoice
+
+**Technical Details:**
+
+-   Validation: 15 digits exactly, numeric only
+-   Format: Store as JSON array ["123456789012345", "123456789012346"]
+-   Duplicate Check: Within the same transaction
+-   UI: Dynamic fields based on quantity
+-   Barcode Scanner: Listen for Enter key after 15 digits
+-   Required: Cannot complete transaction without all IMEIs
