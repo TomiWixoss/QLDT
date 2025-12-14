@@ -1750,3 +1750,147 @@ So that I can make an informed purchase decision and trust the product is authen
 -   Design: Apple-inspired minimalism, product-focused
 -   Mobile: Floating "Add to Cart" button (sticky bottom)
 -   Performance: Lazy load images below fold
+
+---
+
+### Story 4.5: Product Image Gallery with Swipe Gestures
+
+As a **Customer**,
+I want to view multiple product images with swipe gestures,
+So that I can see the product from different angles before buying.
+
+**Acceptance Criteria:**
+
+**Given** a product has multiple images
+**When** I view the product detail page on mobile
+**Then** I see a swipeable image gallery
+**And** I can swipe left/right to view different images
+**And** I see dots indicating the current image position (e.g., • ○ ○)
+**And** the swipe gesture is smooth and responsive
+
+**Given** I am on desktop
+**When** I view the product detail page
+**Then** I see thumbnail images below the main image
+**And** clicking a thumbnail changes the main image
+**And** the transition is smooth (fade effect, 0.3s)
+
+**Given** I click on the main product image
+**When** I click the image
+**Then** a lightbox modal opens showing the full-size image
+**And** I can navigate between images using arrow keys or buttons
+**And** I can close the lightbox by clicking outside or pressing Escape
+
+**Given** a product has only one image
+**When** I view the product page
+**Then** I see only the main image without swipe indicators
+**And** clicking the image still opens the lightbox
+
+**Given** I am viewing the image gallery
+**When** I swipe or navigate between images
+**Then** the images are lazy-loaded for performance
+**And** the page remains responsive (60fps)
+
+**Technical Details:**
+
+-   Storage: Multiple images in storage/app/public/products/{product_id}/gallery/
+-   Database: Store image paths as JSON array in products.images column
+-   Mobile: Touch events for swipe (touchstart, touchmove, touchend)
+-   Desktop: Click handlers for thumbnails
+-   Lightbox: CSS-only modal with backdrop
+-   Performance: Lazy load images with loading="lazy" attribute
+
+---
+
+### Story 4.6: Stock Availability Display with Color Coding
+
+As a **Customer**,
+I want to see real-time stock availability with clear visual indicators,
+So that I know if the product is available and how urgently I need to buy it.
+
+**Acceptance Criteria:**
+
+**Given** a product has more than 10 items in stock
+**When** I view the product card or detail page
+**Then** I see a green badge "Còn hàng"
+**And** I see the exact quantity (e.g., "Còn 15 máy")
+
+**Given** a product has 5-10 items in stock
+**When** I view the product
+**Then** I see a yellow badge "Sắp hết"
+**And** I see the exact quantity (e.g., "Còn 7 máy")
+**And** I see a subtle urgency message "Nhanh tay đặt hàng!"
+
+**Given** a product has less than 5 items in stock
+**When** I view the product
+**Then** I see a red badge "Chỉ còn [X] máy"
+**And** I see a stronger urgency message "Số lượng có hạn!"
+
+**Given** a product is out of stock (quantity = 0)
+**When** I view the product
+**Then** I see a gray badge "Hết hàng"
+**And** the "Thêm vào giỏ" button is disabled and grayed out
+**And** I see a "Nhận thông báo khi có hàng" button
+
+**Given** I click "Nhận thông báo khi có hàng"
+**When** I enter my email and submit
+**Then** my email is saved for notification when the product is back in stock
+**And** I see a success message "Chúng tôi sẽ thông báo khi sản phẩm có hàng trở lại"
+
+**Given** stock quantity changes while I'm viewing the page
+**When** another customer purchases the product
+**Then** the stock display updates automatically (via polling every 30 seconds)
+**And** if the product goes out of stock, the "Thêm vào giỏ" button is disabled
+
+**Technical Details:**
+
+-   Stock levels: Green (> 10), Yellow (5-10), Red (< 5), Gray (0)
+-   Colors: Success (#10b981), Warning (#f59e0b), Error (#ef4444), Gray (#6b7280)
+-   Real-time: AJAX polling every 30 seconds to check stock
+-   Notification: Store email in stock_notifications table
+-   Database: products.quantity (updated by triggers)
+
+---
+
+### Story 4.7: Product Warranty Information Display
+
+As a **Customer**,
+I want to see clear warranty information with visual countdown,
+So that I understand the warranty coverage and feel confident about the purchase.
+
+**Acceptance Criteria:**
+
+**Given** I view a product detail page
+**When** the page loads
+**Then** I see a warranty section prominently displayed
+**And** I see the warranty period (e.g., "Bảo hành 12 tháng chính hãng")
+**And** I see a warranty seal icon (shield with checkmark)
+
+**Given** a product has 12 months warranty
+**When** I view the warranty section
+**Then** I see "Bảo hành 12 tháng chính hãng"
+**And** I see a visual progress bar showing the full warranty period
+**And** I see text "Bảo hành tại các trung tâm ủy quyền của hãng"
+
+**Given** I hover over the warranty section
+**When** my mouse is over the warranty info
+**Then** I see a tooltip with detailed warranty terms
+**And** the tooltip explains what is covered and what is not
+
+**Given** I am viewing a product that has been purchased before
+**When** I look at the order history (in my account)
+**Then** I see the warranty expiration date for each purchased product
+**And** I see a countdown (e.g., "Còn 10 tháng bảo hành")
+**And** the countdown is color-coded (green > 6 months, yellow 3-6 months, red < 3 months)
+
+**Given** a product's warranty is about to expire (< 3 months)
+**When** I view my order history
+**Then** I see a warning message "Bảo hành sắp hết hạn"
+**And** I see a link to "Gia hạn bảo hành" (future feature)
+
+**Technical Details:**
+
+-   Database: products.warranty_months (integer)
+-   Display: Visual progress bar using CSS
+-   Calculation: For purchased products, warranty_expiration = order_date + warranty_months
+-   Component: warranty-seal.blade.php (reusable)
+-   Colors: Green (#10b981), Yellow (#f59e0b), Red (#ef4444)
