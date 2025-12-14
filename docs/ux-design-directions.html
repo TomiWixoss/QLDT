@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="vi">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Tact - Design Direction Mockups</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+            rel="stylesheet"
+        />
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        fontFamily: {
+                            sans: ["Inter", "system-ui", "sans-serif"],
+                        },
+                        colors: {
+                            "tact-blue": {
+                                50: "#eff6ff",
+                                100: "#dbeafe",
+                                500: "#3b82f6",
+                                600: "#2563eb",
+                                900: "#1e3a8a",
+                            },
+                            "tact-gray": {
+                                50: "#f9fafb",
+                                100: "#f3f4f6",
+                                200: "#e5e7eb",
+                                500: "#6b7280",
+                                600: "#4b5563",
+                                900: "#111827",
+                            },
+                            "tact-orange": {
+                                500: "#f97316",
+                                600: "#ea580c",
+                            },
+                        },
+                    },
+                },
+            };
+        </script>
+        <style>
+            * {
+                font-family: "Inter", system-ui, sans-serif;
+            }
+            .direction-card {
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            .direction-card:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            }
+            .mockup-frame {
+                border-radius: 12px;
+                overflow: hidden;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            }
+            .tab-active {
+                border-bottom: 2px solid #3b82f6;
+                color: #3b82f6;
+            }
+            .product-card-hover:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            }
+            .btn-hover-lift:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+            }
+            .imei-badge {
+                animation: pulse 2s infinite;
+            }
+            @keyframes pulse {
+                0%,
+                100% {
+                    opacity: 1;
+                }
+                50% {
+                    opacity: 0.8;
+                }
+            }
+            .scroll-smooth {
+                scroll-behavior: smooth;
+            }
+        </style>
+    </head>
+    <body class="bg-tact-gray-50 scroll-smooth">
+        <!-- Header Navigation -->
+        <header
+            class="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-b border-tact-gray-200 z-50"
+        >
+            <div class="max-w-7xl mx-auto px-4 py-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h1 class="text-2xl font-bold text-tact-gray-900">
+                            🎨 Tact Design Directions
+                        </h1>
+                        <p class="text-sm text-tact-gray-500">
+                            Explore 6 visual approaches for your O2O phone
+                            retail system
+                        </p>
+                    </div>
+                    <div class="flex gap-2">
+                        <a
+                            href="#overview"
+                            class="px-4 py-2 text-sm font-medium text-tact-gray-600 hover:text-tact-blue-500 transition-colors"
+                            >Overview</a
+                        >
+                        <a
+                            href="#directions"
+                            class="px-4 py-2 text-sm font-medium text-tact-gray-600 hover:text-tact-blue-500 transition-colors"
+                            >Directions</a
+                        >
+                        <a
+                            href="#comparison"
+                            class="px-4 py-2 text-sm font-medium text-tact-gray-600 hover:text-tact-blue-500 transition-colors"
+                            >Compare</a
+                        >
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="pt-24 pb-16">
+            <!-- Overview Section -->
+            <section id="overview" class="max-w-7xl mx-auto px-4 mb-16">
+                <div
+                    class="bg-white rounded-2xl p-8 shadow-sm border border-tact-gray-100"
+                >
+                    <h2 class="text-xl font-semibold text-tact-gray-900 mb-4">
+                        📋 Design Direction Overview
+                    </h2>
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <div class="p-4 bg-tact-blue-50 rounded-xl">
+                            <h3 class="font-semibold text-tact-blue-900 mb-2">
+                                🎯 Design Goals
+                            </h3>
+                            <ul class="text-sm text-tact-gray-600 space-y-1">
+                                <li>• Awwwards-level aesthetics</li>
+                                <li>• Mobile-first (375px base)</li>
+                                <li>• < 2s page load, 60fps</li>
+                                <li>• Trust through IMEI transparency</li>
+                            </ul>
+                        </div>
+                        <div class="p-4 bg-green-50 rounded-xl">
+                            <h3 class="font-semibold text-green-900 mb-2">
+                                ✅ Foundation
+                            </h3>
+                            <ul class="text-sm text-tact-gray-600 space-y-1">
+                                <li>• Tailwind CSS 4 + DaisyUI 5</li>
+                                <li>• Inter Variable Font</li>
+                                <li>• Blue + Gray + Orange palette</li>
+                                <li>• 4px spacing system</li>
+                            </ul>
+                        </div>
+                        <div class="p-4 bg-orange-50 rounded-xl">
+                            <h3 class="font-semibold text-orange-900 mb-2">
+                                🔥 Inspiration
+                            </h3>
+                            <ul class="text-sm text-tact-gray-600 space-y-1">
+                                <li>• Nike: Whitespace, instant preview</li>
+                                <li>• Apple: Premium typography</li>
+                                <li>• Stripe: Micro-interactions</li>
+                                <li>• Mobbin: Mobile patterns</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Design Directions Grid -->
+            <section id="directions" class="max-w-7xl mx-auto px-4 mb-16">
+                <h2
+                    class="text-2xl font-bold text-tact-gray-900 mb-8 text-center"
+                >
+                    6 Design Directions
+                </h2>
+
+                <div class="grid lg:grid-cols-2 gap-8"></div>
+            </section>
+        </main>
+    </body>
+</html>
+
+<!-- Direction 1: Nike-Inspired Minimal -->
+<div
+    class="direction-card bg-white rounded-2xl overflow-hidden shadow-sm border border-tact-gray-100"
+>
+    <div class="p-4 bg-tact-gray-900 text-white">
+        <div class="flex items-center justify-between">
+            <div>
+                <span class="text-xs font-medium text-tact-gray-400"
+                    >Direction 1</span
+                >
+                <h3 class="text-lg font-semibold">Nike-Inspired Minimal</h3>
+            </div>
+            <span
+                class="px-3 py-1 bg-tact-blue-500 text-white text-xs font-medium rounded-full"
+                >Recommended</span
+            >
+        </div>
+    </div>
+    <div class="mockup-frame m-4 bg-white border border-tact-gray-200">
+        <!-- Mockup 1: Nike-Inspired -->
+        <div class="bg-white">
+            <!-- Nav -->
+            <nav
+                class="flex items-center justify-between px-4 py-3 border-b border-tact-gray-100"
+            >
+                <span class="text-lg font-bold text-tact-gray-900">Tact</span>
+                <div class="flex items-center gap-4">
+                    <svg
+                        class="w-5 h-5 text-tact-gray-600"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                        ></path>
+                    </svg>
+                    <div class="relative">
+                        <svg
+                            class="w-5 h-5 text-tact-gray-600"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+                            ></path>
+                        </svg>
+                        <span
+                            class="absolute -top-1 -right-1 w-4 h-4 bg-tact-blue-500 text-white text-xs rounded-full flex items-center justify-center"
+                            >2</span
+                        >
+                    </div>
+                </div>
+            </nav>
+            <!-- Hero -->
+            <div
+                class="px-6 py-12 bg-gradient-to-br from-tact-gray-50 to-white"
+            >
+                <p class="text-xs font-medium text-tact-blue-500 mb-2">
+                    100% CHÍNH HÃNG
+                </p>
+                <h1
+                    class="text-3xl font-bold text-tact-gray-900 mb-3 tracking-tight"
+                >
+                    iPhone 15 Pro
+                </h1>
+                <p class="text-tact-gray-500 mb-6">Titanium. Mạnh mẽ. Đẹp.</p>
+                <div class="flex items-center gap-3">
+                    <button
+                        class="px-6 py-3 bg-tact-gray-900 text-white font-semibold rounded-full text-sm btn-hover-lift transition-all"
+                    >
+                        Mua ngay
+                    </button>
+                    <button
+                        class="px-6 py-3 border border-tact-gray-300 text-tact-gray-700 font-medium rounded-full text-sm hover:border-tact-gray-400 transition-colors"
+                    >
+                        Tìm hiểu
+                    </button>
+                </div>
+            </div>
+            <!-- Product Grid -->
+            <div class="px-4 py-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-semibold text-tact-gray-900">
+                        Điện thoại nổi bật
+                    </h2>
+                    <a href="#" class="text-sm text-tact-blue-500 font-medium"
+                        >Xem tất cả →</a
+                    >
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div
+                        class="bg-tact-gray-50 rounded-xl p-3 product-card-hover transition-all cursor-pointer"
+                    >
+                        <div
+                            class="aspect-square bg-white rounded-lg mb-2 flex items-center justify-center"
+                        >
+                            <div
+                                class="w-16 h-20 bg-gradient-to-b from-tact-gray-200 to-tact-gray-300 rounded-lg"
+                            ></div>
+                        </div>
+                        <div class="flex items-center gap-1 mb-1">
+                            <span
+                                class="imei-badge px-1.5 py-0.5 bg-green-100 text-green-700 text-xs font-medium rounded"
+                                >✓ IMEI</span
+                            >
+                        </div>
+                        <p class="text-sm font-medium text-tact-gray-900">
+                            iPhone 15
+                        </p>
+                        <p class="text-sm font-bold text-tact-blue-600">
+                            22.990.000₫
+                        </p>
+                    </div>
+                    <div
+                        class="bg-tact-gray-50 rounded-xl p-3 product-card-hover transition-all cursor-pointer"
+                    >
+                        <div
+                            class="aspect-square bg-white rounded-lg mb-2 flex items-center justify-center"
+                        >
+                            <div
+                                class="w-16 h-20 bg-gradient-to-b from-tact-gray-200 to-tact-gray-300 rounded-lg"
+                            ></div>
+                        </div>
+                        <div class="flex items-center gap-1 mb-1">
+                            <span
+                                class="imei-badge px-1.5 py-0.5 bg-green-100 text-green-700 text-xs font-medium rounded"
+                                >✓ IMEI</span
+                            >
+                        </div>
+                        <p class="text-sm font-medium text-tact-gray-900">
+                            Galaxy S24
+                        </p>
+                        <p class="text-sm font-bold text-tact-blue-600">
+                            20.990.000₫
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="p-4 bg-tact-gray-50 border-t border-tact-gray-100">
+        <p class="text-sm text-tact-gray-600">
+            <strong>Key Features:</strong> Generous whitespace, dark CTAs,
+            minimal color, product-focused, earthy tones
+        </p>
+    </div>
+</div>
+
+<!-- Direction 2: Apple-Inspired Premium -->
+<div
+    class="direction-card bg-white rounded-2xl overflow-hidden shadow-sm border border-tact-gray-100"
+>
+    <div class="p-4 bg-tact-gray-900 text-white">
+        <div class="flex items-center justify-between">
+            <div>
+                <span class="text-xs font-medium text-tact-gray-400"
+                    >Direction 2</span
+                >
+                <h3 class="text-lg font-semibold">Apple-Inspired Premium</h3>
+            </div>
+        </div>
+    </div>
+    <div class="mockup-frame m-4 bg-white border border-tact-gray-200">
+        <!-- Mockup 2: Apple-Inspired -->
+        <div class="bg-white">
+            <!-- Nav -->
+            <nav
+                class="flex items-center justify-between px-4 py-3 bg-white/80 backdrop-blur-sm"
+            >
+                <span class="text-lg font-semibold text-tact-gray-900"
+                    >Tact</span
+                >
+                <div class="flex items-center gap-6 text-sm text-tact-gray-600">
+                    <span>iPhone</span>
+                    <span>Samsung</span>
+                    <span>Xiaomi</span>
+                </div>
+            </nav>
+            <!-- Hero - Apple Style -->
+            <div class="text-center px-6 py-16 bg-black text-white">
+                <p class="text-tact-orange-500 text-sm font-medium mb-2">Mới</p>
+                <h1 class="text-4xl font-semibold mb-2 tracking-tight">
+                    iPhone 15 Pro
+                </h1>
+                <p class="text-xl text-tact-gray-400 mb-1">
+                    Titanium. Mạnh mẽ. Đẹp.
+                </p>
+                <p class="text-lg text-tact-gray-500 mb-6">Từ 28.990.000₫</p>
+                <div class="flex items-center justify-center gap-4">
+                    <a
+                        href="#"
+                        class="text-tact-blue-500 text-sm font-medium hover:underline"
+                        >Tìm hiểu thêm →</a
+                    >
+                    <a
+                        href="#"
+                        class="text-tact-blue-500 text-sm font-medium hover:underline"
+                        >Mua →</a
+                    >
+                </div>
+            </div>
+            <!-- Product Section -->
+            <div class="px-4 py-8 text-center">
+                <h2 class="text-2xl font-semibold text-tact-gray-900 mb-2">
+                    Khám phá sản phẩm
+                </h2>
+                <p class="text-tact-gray-500 mb-6">
+                    100% chính hãng, IMEI tracking
+                </p>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="text-center">
+                        <div
+                            class="aspect-square bg-tact-gray-100 rounded-2xl mb-3 flex items-center justify-center"
+                        >
+                            <div
+                                class="w-20 h-24 bg-gradient-to-b from-tact-gray-200 to-tact-gray-300 rounded-xl"
+                            ></div>
+                        </div>
+                        <p class="font-medium text-tact-gray-900">iPhone 15</p>
+                        <p class="text-sm text-tact-gray-500">Từ 22.990.000₫</p>
+                    </div>
+                    <div class="text-center">
+                        <div
+                            class="aspect-square bg-tact-gray-100 rounded-2xl mb-3 flex items-center justify-center"
+                        >
+                            <div
+                                class="w-20 h-24 bg-gradient-to-b from-tact-gray-200 to-tact-gray-300 rounded-xl"
+                            ></div>
+                        </div>
+                        <p class="font-medium text-tact-gray-900">Galaxy S24</p>
+                        <p class="text-sm text-tact-gray-500">Từ 20.990.000₫</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="p-4 bg-tact-gray-50 border-t border-tact-gray-100">
+        <p class="text-sm text-tact-gray-600">
+            <strong>Key Features:</strong> Centered typography, dark hero, text
+            links, ultra-minimal, premium feel
+        </p>
+    </div>
+</div>
+
+<!-- Direction 3: Stripe-Inspired Modern -->
+<div
+    class="direction-card bg-white rounded-2xl overflow-hidden shadow-sm border border-tact-gray-100"
+>
+    <div class="p-4 bg-tact-gray-900 text-white">
+        <div class="flex items-center justify-between">
+            <div>
+                <span class="text-xs font-medium text-tact-gray-400"
+                    >Direction 3</span
+                >
+                <h3 class="text-lg font-semibold">Stripe-Inspired Modern</h3>
+            </div>
+        </div>
+    </div>
+    <div class="mockup-frame m-4 bg-white border border-tact-gray-200">
+        <!-- Mockup 3: Stripe-Inspired -->
+        <div
+            class="bg-gradient-to-br from-indigo-900 via-purple-900 to-indigo-800 min-h-[400px]"
+        >
+            <!-- Nav -->
+            <nav class="flex items-center justify-between px-4 py-3">
+                <span class="text-lg font-bold text-white">Tact</span>
+                <button
+                    class="px-4 py-2 bg-white/10 text-white text-sm font-medium rounded-full hover:bg-white/20 transition-colors"
+                >
+                    Đăng nhập
+                </button>
+            </nav>
+            <!-- Hero -->
+            <div class="px-6 py-12">
+                <div
+                    class="inline-flex items-center gap-2 px-3 py-1 bg-white/10 rounded-full mb-4"
+                >
+                    <span class="w-2 h-2 bg-green-400 rounded-full"></span>
+                    <span class="text-white/80 text-xs">100% chính hãng</span>
+                </div>
+                <h1 class="text-3xl font-bold text-white mb-3">
+                    Mua điện thoại<br />tin tưởng tuyệt đối
+                </h1>
+                <p class="text-white/60 mb-6 text-sm">
+                    IMEI tracking • Bảo hành chính hãng • O2O seamless
+                </p>
+                <button
+                    class="px-6 py-3 bg-white text-indigo-900 font-semibold rounded-lg text-sm btn-hover-lift transition-all"
+                >
+                    Khám phá ngay →
+                </button>
+            </div>
+            <!-- Cards -->
+            <div class="px-4 pb-6">
+                <div class="bg-white/10 backdrop-blur-sm rounded-xl p-4">
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center"
+                        >
+                            <span class="text-white text-lg">📱</span>
+                        </div>
+                        <div>
+                            <p class="text-white font-medium text-sm">
+                                iPhone 15 Pro
+                            </p>
+                            <p class="text-white/60 text-xs">
+                                28.990.000₫ • Còn 8 máy
+                            </p>
+                        </div>
+                        <span
+                            class="ml-auto px-2 py-1 bg-green-500/20 text-green-300 text-xs rounded"
+                            >IMEI ✓</span
+                        >
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="p-4 bg-tact-gray-50 border-t border-tact-gray-100">
+        <p class="text-sm text-tact-gray-600">
+            <strong>Key Features:</strong> Gradient backgrounds, glassmorphism,
+            vibrant colors, modern tech feel
+        </p>
+    </div>
+</div>
+
+<!-- Direction 4: E-commerce Functional -->
+<div
+    class="direction-card bg-white rounded-2xl overflow-hidden shadow-sm border border-tact-gray-100"
+>
+    <div class="p-4 bg-tact-gray-900 text-white">
+        <div class="flex items-center justify-between">
+            <div>
+                <span class="text-xs font-medium text-tact-gray-400"
+                    >Direction 4</span
+                >
+                <h3 class="text-lg font-semibold">E-commerce Functional</h3>
+            </div>
+        </div>
+    </div>
+    <div class="mockup-frame m-4 bg-white border border-tact-gray-200">
+        <!-- Mockup 4: E-commerce -->
+        <div class="bg-white">
+            <!-- Top Bar -->
+            <div class="bg-tact-blue-500 text-white text-xs text-center py-1">
+                🎉 Giảm 500K cho đơn từ 10 triệu | Mã: GIAM500K
+            </div>
+            <!-- Nav -->
+            <nav
+                class="flex items-center justify-between px-4 py-3 border-b border-tact-gray-200"
+            >
+                <span class="text-xl font-bold text-tact-blue-500">Tact</span>
+                <div class="flex-1 mx-4">
+                    <div
+                        class="flex items-center bg-tact-gray-100 rounded-lg px-3 py-2"
+                    >
+                        <svg
+                            class="w-4 h-4 text-tact-gray-400"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                            ></path>
+                        </svg>
+                        <input
+                            type="text"
+                            placeholder="Tìm điện thoại..."
+                            class="bg-transparent text-sm ml-2 outline-none flex-1"
+                        />
+                    </div>
+                </div>
+                <div class="relative">
+                    <svg
+                        class="w-6 h-6 text-tact-gray-600"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+                        ></path>
+                    </svg>
+                    <span
+                        class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center"
+                        >2</span
+                    >
+                </div>
+            </nav>
+            <!-- Categories -->
+            <div class="flex gap-2 px-4 py-3 overflow-x-auto">
+                <span
+                    class="px-3 py-1 bg-tact-blue-500 text-white text-xs font-medium rounded-full whitespace-nowrap"
+                    >Tất cả</span
+                >
+                <span
+                    class="px-3 py-1 bg-tact-gray-100 text-tact-gray-600 text-xs font-medium rounded-full whitespace-nowrap"
+                    >iPhone</span
+                >
+                <span
+                    class="px-3 py-1 bg-tact-gray-100 text-tact-gray-600 text-xs font-medium rounded-full whitespace-nowrap"
+                    >Samsung</span
+                >
+                <span
+                    class="px-3 py-1 bg-tact-gray-100 text-tact-gray-600 text-xs font-medium rounded-full whitespace-nowrap"
+                    >Xiaomi</span
+                >
+            </div>
+            <!-- Products -->
+            <div class="grid grid-cols-2 gap-2 px-4 py-2">
+                <div class="border border-tact-gray-200 rounded-lg p-2">
+                    <div class="relative">
+                        <div
+                            class="aspect-square bg-tact-gray-100 rounded-lg mb-2 flex items-center justify-center"
+                        >
+                            <div
+                                class="w-14 h-18 bg-gradient-to-b from-tact-gray-200 to-tact-gray-300 rounded-lg"
+                            ></div>
+                        </div>
+                        <span
+                            class="absolute top-1 left-1 px-1.5 py-0.5 bg-red-500 text-white text-xs font-medium rounded"
+                            >-10%</span
+                        >
+                        <span
+                            class="absolute top-1 right-1 px-1.5 py-0.5 bg-green-500 text-white text-xs font-medium rounded"
+                            >✓ IMEI</span
+                        >
+                    </div>
+                    <p
+                        class="text-xs font-medium text-tact-gray-900 line-clamp-2"
+                    >
+                        iPhone 15 Pro 128GB Titanium
+                    </p>
+                    <p class="text-sm font-bold text-red-500">28.990.000₫</p>
+                    <p class="text-xs text-tact-gray-400 line-through">
+                        32.990.000₫
+                    </p>
+                    <button
+                        class="w-full mt-2 py-1.5 bg-tact-blue-500 text-white text-xs font-medium rounded-lg"
+                    >
+                        Thêm vào giỏ
+                    </button>
+                </div>
+                <div class="border border-tact-gray-200 rounded-lg p-2">
+                    <div class="relative">
+                        <div
+                            class="aspect-square bg-tact-gray-100 rounded-lg mb-2 flex items-center justify-center"
+                        >
+                            <div
+                                class="w-14 h-18 bg-gradient-to-b from-tact-gray-200 to-tact-gray-300 rounded-lg"
+                            ></div>
+                        </div>
+                        <span
+                            class="absolute top-1 right-1 px-1.5 py-0.5 bg-green-500 text-white text-xs font-medium rounded"
+                            >✓ IMEI</span
+                        >
+                    </div>
+                    <p
+                        class="text-xs font-medium text-tact-gray-900 line-clamp-2"
+                    >
+                        Galaxy S24 Ultra 256GB
+                    </p>
+                    <p class="text-sm font-bold text-tact-blue-600">
+                        29.990.000₫
+                    </p>
+                    <p class="text-xs text-tact-gray-400">Còn 5 máy</p>
+                    <button
+                        class="w-full mt-2 py-1.5 bg-tact-blue-500 text-white text-xs font-medium rounded-lg"
+                    >
+                        Thêm vào giỏ
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="p-4 bg-tact-gray-50 border-t border-tact-gray-100">
+        <p class="text-sm text-tact-gray-600">
+            <strong>Key Features:</strong> Info-dense, promo banners, search
+            prominent, traditional e-commerce layout
+        </p>
+    </div>
+</div>
+
+
+                <!-- Direction 5: Mobile App-Like -->
+                <div class="direction-card bg-white rounded-2xl overflow-hidden shadow-sm border border-tact-gray-100">
+                    <div class="p-4 bg-tact-gray-900 text-white">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <span class="text-xs font-medium text-tact-gray-400">Direction 5</span>
+                                <h3 class="text-lg font-semibold">Mobile App-Like</h3>
+                            </div>
+                            <span class="px-3 py-1 bg-green-500 text-white text-xs font-medium rounded-full">Mobile-First</span>
+                        </div>
+                    </div>
+                    <div class="mockup-frame m-4 bg-white border border-tact-gray-200">
+                        <!-- Mockup 5: App-Like -->
+                        <div class="bg-tact-gray-50 min-h-[400px] relative">
+                            <!-- Status Bar -->
+                            <div class="flex items-center justify-between px-4 py-2 bg-white">
+                                <span class="text-xs font-medium">9:41</span>
+                                <div class="flex items-center gap-1">
+                                    <div class="w-4 h-2 bg-tact-gray-400 rounded-sm"></div>
+                                    <div class="w-6 h-3 border border-tact-gray-400 rounded-sm relative">
+                                        <div class="absolute inset-0.5 bg-green-500 rounded-sm" style="width: 70%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Header -->
+                            <div class="px-4 py-4 bg-white">
+                                <div class="flex items-center justify-between mb-4">
+                                    <div>
+                                        <p class="text-xs text-tact-gray-500">Xin chào 👋</p>
+                                        <p class="text-lg font-semibold text-tact-gray-900">TomiSakae</p>
+                                    </div>
+                                    <div class="w-10 h-10 bg-tact-blue-100 rounded-full flex items-center justify-center">
+                                        <span class="text-tact-blue-600 font-semibold">T</span>
+                                    </div>
+                                </div>
+                                <!-- Search -->
+                                <div class="flex items-center bg-tact-gray-100 rounded-xl px-4 py-3">
+                                    <svg class="w-5 h-5 text-tact-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                                    <input type="text" placeholder="Tìm điện thoại, phụ kiện..." class="bg-transparent text-sm ml-3 outline-none flex-1">
+                                </div>
+                            </div>
+                            <!-- Quick Actions -->
+                            <div class="px-4 py-4">
+                                <div class="grid grid-cols-4 gap-3">
+                                    <div class="text-center">
+                                        <div class="w-12 h-12 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-1">
+                                            <span class="text-xl">📱</span>
+                                        </div>
+                                        <p class="text-xs text-tact-gray-600">iPhone</p>
+                                    </div>
+                                    <div class="text-center">
+                                        <div class="w-12 h-12 bg-purple-100 rounded-2xl flex items-center justify-center mx-auto mb-1">
+                                            <span class="text-xl">🌟</span>
+                                        </div>
+                                        <p class="text-xs text-tact-gray-600">Samsung</p>
+                                    </div>
+                                    <div class="text-center">
+                                        <div class="w-12 h-12 bg-orange-100 rounded-2xl flex items-center justify-center mx-auto mb-1">
+                                            <span class="text-xl">🔥</span>
+                                        </div>
+                                        <p class="text-xs text-tact-gray-600">Hot Deal</p>
+                                    </div>
+                                    <div class="text-center">
+                                        <div class="w-12 h-12 bg-green-100 rounded-2xl flex items-center justify-center mx-auto mb-1">
+                                            <span class="text-xl">🎁</span>
+                                        </div>
+                                        <p class="text-xs text-tact-gray-600">Voucher</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Featured Card -->
+                            <div class="px-4">
+                                <div class="bg-gradient-to-r from-tact-blue-500 to-tact-blue-600 rounded-2xl p-4 text-white">
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <p class="text-xs text-white/80 mb-1">Điểm tích lũy</p>
+                                            <p class="text-2xl font-bold">500 điểm</p>
+                                            <p class="text-xs text-white/60">= 500.000₫</p>
+                                        </div>
+                                        <div class="w-16 h-16 bg-white/20 rounded-xl flex items-center justify-center">
+                                            <span class="text-3xl">💎</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Bottom Nav -->
+                            <div class="absolute bottom-0 left-0 right-0 bg-white border-t border-tact-gray-200 px-6 py-3">
+                                <div class="flex items-center justify-between">
+                                    <div class="text-center">
+                                        <svg class="w-6 h-6 text-tact-blue-500 mx-auto" fill="currentColor" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+                                        <p class="text-xs text-tact-blue-500 mt-1">Trang chủ</p>
+                                    </div>
+                                    <div class="text-center">
+                                        <svg class="w-6 h-6 text-tact-gray-400 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                                        <p class="text-xs text-tact-gray-400 mt-1">Tìm kiếm</p>
+                                    </div>
+                                    <div class="text-center relative">
+                                        <svg class="w-6 h-6 text-tact-gray-400 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                                        <span class="absolute -top-1 right-2 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">2</span>
+                                        <p class="text-xs text-tact-gray-400 mt-1">Giỏ hàng</p>
+                                    </div>
+                                    <div class="text-center">
+                                        <svg class="w-6 h-6 text-tact-gray-400 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                                        <p class="text-xs text-tact-gray-400 mt-1">Tài khoản</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4 bg-tact-gray-50 border-t border-tact-gray-100">
+                        <p class="text-sm text-tact-gray-600"><strong>Key Features:</strong> Bottom navigation, rounded corners, personalized greeting, quick actions, app-like feel</p>
+                    </div>
+                </div>
+
+                <!-- Direction 6: Hybrid Sophisticated -->
+                <div class="direction-card bg-white rounded-2xl overflow-hidden shadow-sm border border-tact-gray-100">
+                    <div class="p-4 bg-tact-gray-900 text-white">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <span class="text-xs font-medium text-tact-gray-400">Direction 6</span>
+                                <h3 class="text-lg font-semibold">Hybrid Sophisticated</h3>
+                            </div>
+                            <span class="px-3 py-1 bg-tact-orange-500 text-white text-xs font-medium rounded-full">Best of All</span>
+                        </div>
+                    </div>
+                    <div class="mockup-frame m-4 bg-white border border-tact-gray-200">
+                        <!-- Mockup 6: Hybrid -->
+                        <div class="bg-white min-h-[400px] relative">
+                            <!-- Nav -->
+                            <nav class="flex items-center justify-between px-4 py-3 border-b border-tact-gray-100">
+                                <span class="text-xl font-bold text-tact-gray-900">Tact</span>
+                                <div class="flex items-center gap-3">
+                                    <div class="flex items-center bg-tact-gray-100 rounded-full px-3 py-1.5">
+                                        <svg class="w-4 h-4 text-tact-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                                        <span class="text-xs text-tact-gray-400 ml-2">Tìm kiếm</span>
+                                    </div>
+                                    <div class="relative">
+                                        <svg class="w-5 h-5 text-tact-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                                        <span class="absolute -top-1 -right-1 w-4 h-4 bg-tact-blue-500 text-white text-xs rounded-full flex items-center justify-center">2</span>
+                                    </div>
+                                </div>
+                            </nav>
+                            <!-- Hero -->
+                            <div class="px-4 py-8 bg-gradient-to-br from-tact-gray-50 to-white">
+                                <div class="flex items-center gap-2 mb-3">
+                                    <span class="px-2 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full flex items-center gap-1">
+                                        <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                                        100% Chính hãng
+                                    </span>
+                                    <span class="px-2 py-1 bg-tact-blue-100 text-tact-blue-700 text-xs font-medium rounded-full">IMEI Tracking</span>
+                                </div>
+                                <h1 class="text-2xl font-bold text-tact-gray-900 mb-2 tracking-tight">iPhone 15 Pro</h1>
+                                <p class="text-tact-gray-500 text-sm mb-4">Titanium. Mạnh mẽ. Đẹp.</p>
+                                <div class="flex items-center gap-3 mb-4">
+                                    <span class="text-2xl font-bold text-tact-gray-900">28.990.000₫</span>
+                                    <span class="text-sm text-tact-gray-400 line-through">32.990.000₫</span>
+                                    <span class="px-2 py-0.5 bg-red-100 text-red-600 text-xs font-medium rounded">-12%</span>
+                                </div>
+                                <div class="flex gap-2">
+                                    <button class="flex-1 py-3 bg-tact-gray-900 text-white font-semibold rounded-xl text-sm btn-hover-lift transition-all">Mua ngay</button>
+                                    <button class="px-4 py-3 border border-tact-gray-300 text-tact-gray-700 rounded-xl hover:border-tact-gray-400 transition-colors">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- Trust Section -->
+                            <div class="px-4 py-4 border-t border-tact-gray-100">
+                                <div class="grid grid-cols-3 gap-3 text-center">
+                                    <div class="p-2">
+                                        <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-1">
+                                            <svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                                        </div>
+                                        <p class="text-xs text-tact-gray-600">IMEI Tracking</p>
+                                    </div>
+                                    <div class="p-2">
+                                        <div class="w-8 h-8 bg-tact-blue-100 rounded-lg flex items-center justify-center mx-auto mb-1">
+                                            <svg class="w-4 h-4 text-tact-blue-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                                        </div>
+                                        <p class="text-xs text-tact-gray-600">Bảo hành 12T</p>
+                                    </div>
+                                    <div class="p-2">
+                                        <div class="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center mx-auto mb-1">
+                                            <svg class="w-4 h-4 text-orange-600" fill="currentColor" viewBox="0 0 20 20"><path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"></path><path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3zM14 7a1 1 0 00-1 1v6.05A2.5 2.5 0 0115.95 16H17a1 1 0 001-1v-5a1 1 0 00-.293-.707l-2-2A1 1 0 0015 7h-1z"></path></svg>
+                                        </div>
+                                        <p class="text-xs text-tact-gray-600">Giao nhanh</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Bottom Nav -->
+                            <div class="absolute bottom-0 left-0 right-0 bg-white border-t border-tact-gray-200 px-4 py-2 safe-area-inset-bottom">
+                                <div class="flex items-center justify-around">
+                                    <div class="text-center py-1">
+                                        <svg class="w-5 h-5 text-tact-blue-500 mx-auto" fill="currentColor" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+                                        <p class="text-xs text-tact-blue-500 mt-0.5">Trang chủ</p>
+                                    </div>
+                                    <div class="text-center py-1">
+                                        <svg class="w-5 h-5 text-tact-gray-400 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                                        <p class="text-xs text-tact-gray-400 mt-0.5">Danh mục</p>
+                                    </div>
+                                    <div class="text-center py-1 relative">
+                                        <svg class="w-5 h-5 text-tact-gray-400 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                                        <span class="absolute top-0 right-4 w-4 h-4 bg-tact-blue-500 text-white text-xs rounded-full flex items-center justify-center">2</span>
+                                        <p class="text-xs text-tact-gray-400 mt-0.5">Giỏ hàng</p>
+                                    </div>
+                                    <div class="text-center py-1">
+                                        <svg class="w-5 h-5 text-tact-gray-400 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                                        <p class="text-xs text-tact-gray-400 mt-0.5">Tài khoản</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4 bg-tact-gray-50 border-t border-tact-gray-100">
+                        <p class="text-sm text-tact-gray-600"><strong>Key Features:</strong> Nike whitespace + Apple typography + Stripe polish + Mobile bottom nav + Trust badges prominent</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- Comparison Section -->
+        <section id="comparison" class="max-w-7xl mx-auto px-4 mb-16">
+            <h2 class="text-2xl font-bold text-tact-gray-900 mb-8 text-center">📊 Direction Comparison</h2>
+            
+            <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-tact-gray-100">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="bg-tact-gray-50 border-b border-tact-gray-200">
+                            <tr>
+                                <th class="px-4 py-3 text-left font-semibold text-tact-gray-900">Criteria</th>
+                                <th class="px-4 py-3 text-center font-semibold text-tact-gray-900">1. Nike</th>
+                                <th class="px-4 py-3 text-center font-semibold text-tact-gray-900">2. Apple</th>
+                                <th class="px-4 py-3 text-center font-semibold text-tact-gray-900">3. Stripe</th>
+                                <th class="px-4 py-3 text-center font-semibold text-tact-gray-900">4. E-com</th>
+                                <th class="px-4 py-3 text-center font-semibold text-tact-gray-900">5. App</th>
+                                <th class="px-4 py-3 text-center font-semibold text-tact-gray-900 bg-tact-orange-50">6. Hybrid ⭐</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-tact-gray-100">
+                            <tr>
+                                <td class="px-4 py-3 font-medium text-tact-gray-900">Awwwards Potential</td>
+                                <td class="px-4 py-3 text-center">⭐⭐⭐⭐⭐</td>
+                                <td class="px-4 py-3 text-center">⭐⭐⭐⭐⭐</td>
+                                <td class="px-4 py-3 text-center">⭐⭐⭐⭐</td>
+                                <td class="px-4 py-3 text-center">⭐⭐</td>
+                                <td class="px-4 py-3 text-center">⭐⭐⭐⭐</td>
+                                <td class="px-4 py-3 text-center bg-tact-orange-50">⭐⭐⭐⭐⭐</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-3 font-medium text-tact-gray-900">Mobile-First</td>
+                                <td class="px-4 py-3 text-center">⭐⭐⭐⭐</td>
+                                <td class="px-4 py-3 text-center">⭐⭐⭐</td>
+                                <td class="px-4 py-3 text-center">⭐⭐⭐</td>
+                                <td class="px-4 py-3 text-center">⭐⭐⭐</td>
+                                <td class="px-4 py-3 text-center">⭐⭐⭐⭐⭐</td>
+                                <td class="px-4 py-3 text-center bg-tact-orange-50">⭐⭐⭐⭐⭐</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-3 font-medium text-tact-gray-900">Trust Signals</td>
+                                <td class="px-4 py-3 text-center">⭐⭐⭐</td>
+                                <td class="px-4 py-3 text-center">⭐⭐⭐</td>
+                                <td class="px-4 py-3 text-center">⭐⭐⭐⭐</td>
+                                <td class="px-4 py-3 text-center">⭐⭐⭐⭐</td>
+                                <td class="px-4 py-3 text-center">⭐⭐⭐</td>
+                                <td class="px-4 py-3 text-center bg-tact-orange-50">⭐⭐⭐⭐⭐</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-3 font-medium text-tact-gray-900">E-commerce UX</td>
+                                <td class="px-4 py-3 text-center">⭐⭐⭐</td>
+                                <td class="px-4 py-3 text-center">⭐⭐</td>
+                                <td class="px-4 py-3 text-center">⭐⭐⭐</td>
+                                <td class="px-4 py-3 text-center">⭐⭐⭐⭐⭐</td>
+                                <td class="px-4 py-3 text-center">⭐⭐⭐⭐</td>
+                                <td class="px-4 py-3 text-center bg-tact-orange-50">⭐⭐⭐⭐</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-3 font-medium text-tact-gray-900">Performance</td>
+                                <td class="px-4 py-3 text-center">⭐⭐⭐⭐⭐</td>
+                                <td class="px-4 py-3 text-center">⭐⭐⭐⭐⭐</td>
+                                <td class="px-4 py-3 text-center">⭐⭐⭐</td>
+                                <td class="px-4 py-3 text-center">⭐⭐⭐⭐</td>
+                                <td class="px-4 py-3 text-center">⭐⭐⭐⭐</td>
+                                <td class="px-4 py-3 text-center bg-tact-orange-50">⭐⭐⭐⭐⭐</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-3 font-medium text-tact-gray-900">Dev Complexity</td>
+                                <td class="px-4 py-3 text-center text-green-600">Low</td>
+                                <td class="px-4 py-3 text-center text-green-600">Low</td>
+                                <td class="px-4 py-3 text-center text-orange-600">Medium</td>
+                                <td class="px-4 py-3 text-center text-green-600">Low</td>
+                                <td class="px-4 py-3 text-center text-yellow-600">Medium</td>
+                                <td class="px-4 py-3 text-center bg-tact-orange-50 text-green-600">Low-Medium</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-3 font-medium text-tact-gray-900">Vietnamese Market</td>
+                                <td class="px-4 py-3 text-center">⭐⭐⭐</td>
+                                <td class="px-4 py-3 text-center">⭐⭐⭐</td>
+                                <td class="px-4 py-3 text-center">⭐⭐⭐</td>
+                                <td class="px-4 py-3 text-center">⭐⭐⭐⭐⭐</td>
+                                <td class="px-4 py-3 text-center">⭐⭐⭐⭐</td>
+                                <td class="px-4 py-3 text-center bg-tact-orange-50">⭐⭐⭐⭐⭐</td>
+                            </tr>
+                        </tbody>
+                        <tfoot class="bg-tact-gray-50 border-t border-tact-gray-200">
+                            <tr>
+                                <td class="px-4 py-3 font-bold text-tact-gray-900">TOTAL SCORE</td>
+                                <td class="px-4 py-3 text-center font-bold">27/35</td>
+                                <td class="px-4 py-3 text-center font-bold">25/35</td>
+                                <td class="px-4 py-3 text-center font-bold">24/35</td>
+                                <td class="px-4 py-3 text-center font-bold">26/35</td>
+                                <td class="px-4 py-3 text-center font-bold">28/35</td>
+                                <td class="px-4 py-3 text-center font-bold bg-tact-orange-50 text-tact-orange-600">33/35 ⭐</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recommendation Section -->
+        <section class="max-w-7xl mx-auto px-4 mb-16">
+            <div class="bg-gradient-to-br from-tact-blue-500 to-tact-blue-600 rounded-2xl p-8 text-white">
+                <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <span class="text-2xl">🎯</span>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold mb-2">Recommendation: Direction 6 - Hybrid Sophisticated</h3>
+                        <p class="text-white/80 mb-4">
+                            Direction 6 combines the best elements from all inspirations while maintaining practical implementation for your 8-week timeline with 3 developers.
+                        </p>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div class="bg-white/10 rounded-xl p-4">
+                                <h4 class="font-semibold mb-2">✅ What It Includes</h4>
+                                <ul class="text-sm text-white/80 space-y-1">
+                                    <li>• Nike-inspired whitespace & product focus</li>
+                                    <li>• Apple-inspired premium typography</li>
+                                    <li>• Stripe-inspired micro-interactions</li>
+                                    <li>• Mobile app-like bottom navigation</li>
+                                    <li>• Prominent IMEI & trust badges</li>
+                                    <li>• Vietnamese market optimizations</li>
+                                </ul>
+                            </div>
+                            <div class="bg-white/10 rounded-xl p-4">
+                                <h4 class="font-semibold mb-2">🚀 Why It Works</h4>
+                                <ul class="text-sm text-white/80 space-y-1">
+                                    <li>• Awwwards-level aesthetics achievable</li>
+                                    <li>• Mobile-first with 375px base</li>
+                                    <li>• CSS-only animations (60fps)</li>
+                                    <li>• DaisyUI components compatible</li>
+                                    <li>• Trust signals prominent (IMEI, warranty)</li>
+                                    <li>• Practical for 3-dev team</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Evaluation Criteria -->
+        <section class="max-w-7xl mx-auto px-4 mb-16">
+            <h2 class="text-2xl font-bold text-tact-gray-900 mb-8 text-center">🔍 Evaluation Criteria</h2>
+            
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="bg-white rounded-xl p-6 shadow-sm border border-tact-gray-100">
+                    <div class="w-10 h-10 bg-tact-blue-100 rounded-lg flex items-center justify-center mb-4">
+                        <span class="text-xl">🎨</span>
+                    </div>
+                    <h3 class="font-semibold text-tact-gray-900 mb-2">Layout Intuitiveness</h3>
+                    <p class="text-sm text-tact-gray-600">Which information hierarchy matches your priorities? Does the layout guide users naturally through the purchase journey?</p>
+                </div>
+                <div class="bg-white rounded-xl p-6 shadow-sm border border-tact-gray-100">
+                    <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+                        <span class="text-xl">✨</span>
+                    </div>
+                    <h3 class="font-semibold text-tact-gray-900 mb-2">Interaction Style</h3>
+                    <p class="text-sm text-tact-gray-600">Which interaction style fits your core experience? Does it support the "Research → Trust → Purchase" flow?</p>
+                </div>
+                <div class="bg-white rounded-xl p-6 shadow-sm border border-tact-gray-100">
+                    <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
+                        <span class="text-xl">⚖️</span>
+                    </div>
+                    <h3 class="font-semibold text-tact-gray-900 mb-2">Visual Weight</h3>
+                    <p class="text-sm text-tact-gray-600">Which visual density feels right for your brand? Balance between premium aesthetics and information needs.</p>
+                </div>
+                <div class="bg-white rounded-xl p-6 shadow-sm border border-tact-gray-100">
+                    <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+                        <span class="text-xl">🧭</span>
+                    </div>
+                    <h3 class="font-semibold text-tact-gray-900 mb-2">Navigation Approach</h3>
+                    <p class="text-sm text-tact-gray-600">Which navigation pattern matches user expectations? Bottom nav for mobile-first, or traditional top nav?</p>
+                </div>
+                <div class="bg-white rounded-xl p-6 shadow-sm border border-tact-gray-100">
+                    <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center mb-4">
+                        <span class="text-xl">🔒</span>
+                    </div>
+                    <h3 class="font-semibold text-tact-gray-900 mb-2">Trust Communication</h3>
+                    <p class="text-sm text-tact-gray-600">How well does the direction communicate IMEI tracking, warranty info, and authenticity? Critical for 85% worried customers.</p>
+                </div>
+                <div class="bg-white rounded-xl p-6 shadow-sm border border-tact-gray-100">
+                    <div class="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center mb-4">
+                        <span class="text-xl">🇻🇳</span>
+                    </div>
+                    <h3 class="font-semibold text-tact-gray-900 mb-2">Vietnamese Market Fit</h3>
+                    <p class="text-sm text-tact-gray-600">Does the direction balance international aesthetics with local preferences? Info-rich but organized beautifully.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Decision Section -->
+        <section class="max-w-3xl mx-auto px-4">
+            <div class="bg-white rounded-2xl p-8 shadow-sm border border-tact-gray-100 text-center">
+                <h2 class="text-xl font-bold text-tact-gray-900 mb-4">🎯 Make Your Decision</h2>
+                <p class="text-tact-gray-600 mb-6">
+                    After exploring all directions, which approach resonates most with you?<br/>
+                    You can pick one direction, combine elements, or request modifications.
+                </p>
+                <div class="flex flex-wrap justify-center gap-3">
+                    <span class="px-4 py-2 bg-tact-gray-100 text-tact-gray-700 rounded-full text-sm font-medium">1. Nike Minimal</span>
+                    <span class="px-4 py-2 bg-tact-gray-100 text-tact-gray-700 rounded-full text-sm font-medium">2. Apple Premium</span>
+                    <span class="px-4 py-2 bg-tact-gray-100 text-tact-gray-700 rounded-full text-sm font-medium">3. Stripe Modern</span>
+                    <span class="px-4 py-2 bg-tact-gray-100 text-tact-gray-700 rounded-full text-sm font-medium">4. E-commerce</span>
+                    <span class="px-4 py-2 bg-tact-gray-100 text-tact-gray-700 rounded-full text-sm font-medium">5. App-Like</span>
+                    <span class="px-4 py-2 bg-tact-orange-500 text-white rounded-full text-sm font-medium">6. Hybrid ⭐</span>
+                </div>
+                <p class="text-sm text-tact-gray-500 mt-6">
+                    💡 <strong>Tip:</strong> Direction 6 (Hybrid Sophisticated) is recommended as it combines the best of all worlds while being practical for your 8-week timeline.
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-tact-gray-900 text-white py-8">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="text-tact-gray-400 text-sm">
+                🎨 Tact Design Direction Mockups | Generated for UX Design Specification<br/>
+                <span class="text-tact-gray-500">Tailwind CSS 4 + DaisyUI 5 | Mobile-First | Awwwards-Level Design</span>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
