@@ -5,15 +5,34 @@
 
 ---
 
-## ⚠️ CRITICAL: COMPANION DOCUMENT REQUIRED
+## ❌❌❌ MANDATORY: LOAD BOTH FILES OR RESPONSE IS INVALID ❌❌❌
 
-> **🚨 AI AGENTS MUST LOAD BOTH FILES:**
->
-> 1. `project-context.md` - Project rules, conventions, tech stack
-> 2. `project_context2.md` (this file) - Document map with headers & line ranges
->
-> **DO NOT proceed without loading `project-context.md`!**
-> The project rules and conventions are essential for correct implementation.
+```
+╔══════════════════════════════════════════════════════════════════════════════╗
+║  🚨🚨🚨 STOP! AI AGENT - YOU MUST LOAD BOTH FILES IMMEDIATELY! 🚨🚨🚨       ║
+╠══════════════════════════════════════════════════════════════════════════════╣
+║                                                                              ║
+║  REQUIRED FILES (LOAD BOTH BEFORE ANY ACTION):                               ║
+║                                                                              ║
+║  1. project-context.md ← YOU MUST LOAD THIS FILE TOO!                        ║
+║     → Project rules, conventions, tech stack                                 ║
+║     → Naming conventions, response formats, anti-patterns                    ║
+║                                                                              ║
+║  2. project_context2.md (this file)                                          ║
+║     → Document map with headers & line ranges                                ║
+║                                                                              ║
+╠══════════════════════════════════════════════════════════════════════════════╣
+║  ❌ FAILURE TO LOAD BOTH FILES = YOUR RESPONSE IS INVALID                    ║
+║  ❌ DO NOT PROCEED WITH ANY TASK UNTIL BOTH FILES ARE LOADED                 ║
+║  ❌ NO EXCEPTIONS - THIS IS A HARD REQUIREMENT                               ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+```
+
+**HOW TO USE THIS DOCUMENT MAP:**
+
+-   Find the document you need in the table below
+-   Note the line range for the specific section
+-   Use `readFile` with `start_line` and `end_line` parameters
 
 ---
 

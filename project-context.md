@@ -6,15 +6,34 @@
 
 ---
 
-## ⚠️ CRITICAL: COMPANION DOCUMENT REQUIRED
+## ❌❌❌ MANDATORY: LOAD BOTH FILES OR RESPONSE IS INVALID ❌❌❌
 
-> **🚨 AI AGENTS MUST LOAD BOTH FILES:**
->
-> 1. `project-context.md` (this file) - Project rules, conventions, tech stack
-> 2. `project_context2.md` - Document map with headers & line ranges
->
-> **DO NOT proceed without loading `project_context2.md`!**
-> The document map is essential for navigating project documentation efficiently.
+```
+╔══════════════════════════════════════════════════════════════════════════════╗
+║  🚨🚨🚨 STOP! AI AGENT - YOU MUST LOAD BOTH FILES IMMEDIATELY! 🚨🚨🚨       ║
+╠══════════════════════════════════════════════════════════════════════════════╣
+║                                                                              ║
+║  REQUIRED FILES (LOAD BOTH BEFORE ANY ACTION):                               ║
+║                                                                              ║
+║  1. project-context.md (this file)                                           ║
+║     → Project rules, conventions, tech stack                                 ║
+║                                                                              ║
+║  2. project_context2.md ← YOU MUST LOAD THIS FILE NOW!                       ║
+║     → Document map with headers & line ranges                                ║
+║     → Essential for navigating docs efficiently                              ║
+║                                                                              ║
+╠══════════════════════════════════════════════════════════════════════════════╣
+║  ❌ FAILURE TO LOAD BOTH FILES = YOUR RESPONSE IS INVALID                    ║
+║  ❌ DO NOT PROCEED WITH ANY TASK UNTIL BOTH FILES ARE LOADED                 ║
+║  ❌ NO EXCEPTIONS - THIS IS A HARD REQUIREMENT                               ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+```
+
+**WHY THIS MATTERS:**
+
+-   `project_context2.md` contains the document map with exact line numbers
+-   Without it, you will read wrong sections or miss critical information
+-   Every AI that skipped this file made mistakes that wasted user's time
 
 ---
 
