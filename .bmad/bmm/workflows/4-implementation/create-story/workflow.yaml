@@ -28,6 +28,7 @@ variables:
 
 # Project context
 project_context: "**/project-context.md"
+project_context_header: "**/project_context_header.md"
 
 default_output_file: "{story_dir}/{{story_key}}.md"
 

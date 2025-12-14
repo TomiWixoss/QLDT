@@ -181,7 +181,7 @@
     <invoke-protocol
       name="discover_inputs" />
     <note>Available content: {epics_content}, {prd_content}, {architecture_content}, {ux_content},
-    {project_context}</note>
+    {project_context and project_context_header}</note>
 
     <!-- Analyze epics file for story foundation -->
     <action>From {epics_content}, extract Epic {{epic_num}} complete context:</action> **EPIC ANALYSIS:** - Epic

@@ -20,6 +20,7 @@ validation: "{installed_path}/checklist.md"
 variables:
   # Project context
   project_context: "**/project-context.md"
+  project_context_header: "**/project_context_header.md"
   # Project identification
   project_name: "{config_source}:project_name"
 

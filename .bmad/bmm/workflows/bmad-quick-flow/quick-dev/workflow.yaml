@@ -14,6 +14,7 @@ date: system-generated
 
 # Project context
 project_context: "**/project-context.md"
+project_context_header: "**/project_context_header.md"
 
 # Workflow components
 installed_path: "{project-root}/.bmad/bmm/workflows/bmad-quick-flow/quick-dev"

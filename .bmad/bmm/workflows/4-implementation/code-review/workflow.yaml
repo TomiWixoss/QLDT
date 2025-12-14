@@ -23,6 +23,7 @@ template: false
 variables:
   # Project context
   project_context: "**/project-context.md"
+  project_context_header: "**/project_context_header.md"
   story_dir: "{sprint_artifacts}"
 
 # Smart input file references - handles both whole docs and sharded docs

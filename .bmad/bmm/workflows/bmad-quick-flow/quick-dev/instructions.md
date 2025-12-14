@@ -5,7 +5,7 @@
 <critical>Communicate in {communication_language}, tailored to {user_skill_level}</critical>
 <critical>Execute continuously until COMPLETE - do not stop for milestones</critical>
 <critical>Flexible - handles tech-specs OR direct instructions</critical>
-<critical>ALWAYS respect {project_context} if it exists - it defines project standards</critical>
+<critical>ALWAYS respect {project_context and project_context_header} if it exists - it defines project standards</critical>
 
 <checkpoint-handlers>
   <on-select key="a">Load and execute {advanced_elicitation}, then return</on-select>
@@ -15,7 +15,7 @@
 
 <step n="1" goal="Load project context and determine execution mode">
 
-<action>Check if {project_context} exists. If yes, load it - this is your foundational reference for ALL implementation decisions (patterns, conventions, architecture).</action>
+<action>Check if {project_context and project_context_header} exists. If yes, load it - this is your foundational reference for ALL implementation decisions (patterns, conventions, architecture).</action>
 
 <action>Parse user input:
 
@@ -39,17 +39,17 @@
 
 **Triggers escalation** (if 2+ signals present):
 
-- Multiple components mentioned (e.g., dashboard + api + database)
-- System-level language (e.g., platform, integration, architecture)
-- Uncertainty about approach (e.g., "how should I", "best way to")
-- Multi-layer scope (e.g., UI + backend + data together)
-- Extended timeframe (e.g., "this week", "over the next few days")
+-   Multiple components mentioned (e.g., dashboard + api + database)
+-   System-level language (e.g., platform, integration, architecture)
+-   Uncertainty about approach (e.g., "how should I", "best way to")
+-   Multi-layer scope (e.g., UI + backend + data together)
+-   Extended timeframe (e.g., "this week", "over the next few days")
 
 **Reduces signal:**
 
-- Simplicity markers (e.g., "just", "quickly", "fix", "bug", "typo", "simple", "basic", "minor")
-- Single file/component focus
-- Confident, specific request
+-   Simplicity markers (e.g., "just", "quickly", "fix", "bug", "typo", "simple", "basic", "minor")
+-   Single file/component focus
+-   Confident, specific request
 
 Use holistic judgment, not mechanical keyword matching.</action>
 
