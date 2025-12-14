@@ -29,7 +29,7 @@ workflow_status:
   product-brief: "docs/analysis/product-brief-Tact-2025-12-14.md"
 
   # Phase 1: Planning (Required)
-  prd: required
+  prd: "docs/prd.md"
   create-ux-design: conditional # if_has_ui
 
   # Phase 2: Solutioning (Required)
