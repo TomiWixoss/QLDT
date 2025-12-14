@@ -1170,3 +1170,143 @@ So that I can manage who has access to the system and their roles.
 -   Authorization: Gate 'manage-users' (Admin only)
 -   Table: users (role_id foreign key to roles table)
 -   UI: DaisyUI data table with action buttons
+
+## Epic 2: Master Data Management
+
+**Goal:** Admin/Manager có thể quản lý dữ liệu cơ bản (categories, brands, suppliers) để chuẩn bị cho product management.
+
+### Story 2.1: Category Management
+
+As an **Admin or Manager**,
+I want to create, view, update, and delete product categories,
+So that products can be organized into logical groups for customers to browse.
+
+**Acceptance Criteria:**
+
+**Given** I am logged in as Admin or Manager
+**When** I navigate to /admin/categories
+**Then** I see a list of all categories with their name and product count
+**And** I see a "Tạo danh mục mới" button
+
+**Given** I click "Tạo danh mục mới"
+**When** I enter a category name (e.g., "iPhone", "Samsung", "Xiaomi") and submit
+**Then** a new category is created in the categories table
+**And** I see a success message "Tạo danh mục thành công"
+**And** the new category appears in the list
+
+**Given** I want to update a category name
+**When** I click "Sửa" on a category row and change the name
+**Then** the category name is updated
+**And** I see a success message "Cập nhật danh mục thành công"
+
+**Given** I want to delete a category that has no products
+**When** I click "Xóa" on a category row
+**Then** I see a confirmation modal "Bạn có chắc muốn xóa danh mục này?"
+**And** when I confirm, the category is deleted
+**And** I see a success message "Đã xóa danh mục"
+
+**Given** I try to delete a category that has products
+**When** I click "Xóa" and confirm
+**Then** I see an error message "Không thể xóa danh mục đang có sản phẩm"
+**And** the category is not deleted
+
+**Technical Details:**
+
+-   Routes: GET /admin/categories, POST /admin/categories, PUT /admin/categories/{id}, DELETE /admin/categories/{id}
+-   Controller: Admin\CategoryController
+-   Authorization: Gate 'manage-products' (Admin, Manager)
+-   Validation: Name required, unique
+-   Table: categories (name unique)
+
+---
+
+### Story 2.2: Brand Management
+
+As an **Admin or Manager**,
+I want to create, view, update, and delete product brands,
+So that products can be associated with their manufacturers.
+
+**Acceptance Criteria:**
+
+**Given** I am logged in as Admin or Manager
+**When** I navigate to /admin/brands
+**Then** I see a list of all brands with their name and product count
+**And** I see a "Tạo thương hiệu mới" button
+
+**Given** I click "Tạo thương hiệu mới"
+**When** I enter a brand name (e.g., "Apple", "Samsung", "Xiaomi") and submit
+**Then** a new brand is created in the brands table
+**And** I see a success message "Tạo thương hiệu thành công"
+**And** the new brand appears in the list
+
+**Given** I want to update a brand name
+**When** I click "Sửa" on a brand row and change the name
+**Then** the brand name is updated
+**And** I see a success message "Cập nhật thương hiệu thành công"
+
+**Given** I want to delete a brand that has no products
+**When** I click "Xóa" on a brand row and confirm
+**Then** the brand is deleted
+**And** I see a success message "Đã xóa thương hiệu"
+
+**Given** I try to delete a brand that has products
+**When** I click "Xóa" and confirm
+**Then** I see an error message "Không thể xóa thương hiệu đang có sản phẩm"
+**And** the brand is not deleted
+
+**Technical Details:**
+
+-   Routes: GET /admin/brands, POST /admin/brands, PUT /admin/brands/{id}, DELETE /admin/brands/{id}
+-   Controller: Admin\BrandController
+-   Authorization: Gate 'manage-products' (Admin, Manager)
+-   Validation: Name required, unique
+-   Table: brands (name unique)
+
+---
+
+### Story 2.3: Supplier Management
+
+As an **Admin or Manager**,
+I want to create, view, update, and delete suppliers,
+So that I can track where products are sourced from for inventory management.
+
+**Acceptance Criteria:**
+
+**Given** I am logged in as Admin or Manager
+**When** I navigate to /admin/suppliers
+**Then** I see a list of all suppliers with their name, contact info, and address
+**And** I see a "Tạo nhà cung cấp mới" button
+
+**Given** I click "Tạo nhà cung cấp mới"
+**When** I enter supplier name, contact person, phone, email, and address
+**Then** a new supplier is created in the suppliers table
+**And** I see a success message "Tạo nhà cung cấp thành công"
+**And** the new supplier appears in the list
+
+**Given** I want to update supplier information
+**When** I click "Sửa" on a supplier row and modify any field
+**Then** the supplier information is updated
+**And** I see a success message "Cập nhật nhà cung cấp thành công"
+
+**Given** I want to delete a supplier that has no stock movements
+**When** I click "Xóa" on a supplier row and confirm
+**Then** the supplier is deleted
+**And** I see a success message "Đã xóa nhà cung cấp"
+
+**Given** I try to delete a supplier that has stock movement history
+**When** I click "Xóa" and confirm
+**Then** I see an error message "Không thể xóa nhà cung cấp đã có lịch sử nhập hàng"
+**And** the supplier is not deleted
+
+**Given** I am logged in as Sales or Warehouse staff
+**When** I try to access /admin/suppliers
+**Then** I can view the supplier list (read-only)
+**And** I cannot create, update, or delete suppliers
+
+**Technical Details:**
+
+-   Routes: GET /admin/suppliers, POST /admin/suppliers, PUT /admin/suppliers/{id}, DELETE /admin/suppliers/{id}
+-   Controller: Admin\SupplierController
+-   Authorization: Gate 'manage-products' for write operations (Admin, Manager)
+-   Validation: Name required, phone format, email format
+-   Table: suppliers (name, contact_person, phone, email, address)
