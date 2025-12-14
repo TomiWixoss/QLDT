@@ -471,3 +471,257 @@ OrderItem::belongsTo(Product::class)
 
 **Last Architecture Update:** 2025-12-14
 **Architecture Status:** ✅ READY FOR IMPLEMENTATION
+
+---
+
+## Implementation Guidance Documents (Week 1 Priority)
+
+**Created:** 2025-12-14
+**Purpose:** Address high-priority recommendations from Implementation Readiness Assessment
+
+### 1. UX Implementation Priorities (`docs/ux-implementation-priorities.md`)
+
+**What:** Prioritization guide for UX features in 8-week timeline
+
+**Key Points:**
+
+-   **Core UX (P0 - Week 1-6):** Trust signals, speed, clarity, mobile-first
+-   **Polish UX (P2-P4 - Week 7-8):** Animations, micro-interactions, visual polish
+-   **Decision Framework:** Trust/Speed/Clarity = P0, Polish = defer if time constrained
+
+**When to Use:**
+
+-   Before implementing any UX feature
+-   When deciding what to cut if timeline pressure
+-   When prioritizing story implementation
+
+**Critical Rules:**
+
+```php
+// P0 - MUST HAVE (Week 1-6)
+- IMEI badge on product cards (static, no animation)
+- Warranty info display (simple text, no countdown)
+- Trust section (3 icons, static)
+- Fast page load (< 2s)
+- Clear CTAs (large buttons, high contrast)
+- Mobile bottom navigation (4 items max)
+- Touch targets 44x44px minimum
+
+// P2-P4 - NICE TO HAVE (Week 7-8 if time)
+- Button hover effects
+- Smooth transitions
+- Success animations
+- Generous whitespace
+- Premium typography polish
+```
+
+### 2. Offline POS Design (`docs/offline-pos-design.md`)
+
+**What:** Offline-first POS architecture for business continuity
+
+**Key Points:**
+
+-   **Technology:** Service Worker + IndexedDB + Background Sync API
+-   **Data Sync:** Product catalog (daily), customers (hourly), vouchers (hourly)
+-   **Transaction Queue:** Store offline transactions, sync when online
+-   **Conflict Resolution:** Server stock validation on sync
+
+**When to Use:**
+
+-   Implementing POS system (Epic 8)
+-   Designing offline capabilities
+-   Handling sync conflicts
+
+**Critical Implementation:**
+
+```javascript
+// Service Worker caching
+const CACHE_NAME = "tact-pos-v1";
+const urlsToCache = ["/admin/pos", "/css/app.css", "/js/app.js"];
+
+// IndexedDB stores
+const STORES = {
+    transactions: "pending_transactions",
+    products: "products",
+    customers: "customers",
+    vouchers: "vouchers",
+};
+
+// Background Sync
+self.addEventListener("sync", (event) => {
+    if (event.tag === "sync-transactions") {
+        event.waitUntil(syncPendingTransactions());
+    }
+});
+```
+
+**UX Requirements:**
+
+```blade
+{{-- Offline indicator --}}
+<div class="alert alert-warning" id="offline-banner">
+  ⚠️ OFFLINE MODE - Transactions queued
+  <button>Retry Connection</button>
+  <button>View Queue: {{ $pendingCount }}</button>
+</div>
+
+{{-- Receipt watermark --}}
+⚠️ TRANSACTION PENDING VERIFICATION
+This receipt is temporary. You will receive
+a confirmed receipt when transaction is synced.
+```
+
+### 3. Image Optimization SLA (`docs/image-optimization-sla.md`)
+
+**What:** Strict image optimization standards for performance
+
+**Key Points:**
+
+-   **File Size Limits:** Thumbnail 50KB, Detail 200KB, Banner 300KB
+-   **Format:** WebP required, JPEG fallback
+-   **Responsive:** srcset with 400w, 800w, 1200w breakpoints
+-   **Lazy Loading:** All images below fold
+
+**When to Use:**
+
+-   Implementing product image upload (Story 3.2)
+-   Optimizing page performance
+-   Validating image sizes
+
+**Critical Implementation:**
+
+```php
+// app/Services/ImageOptimizationService.php
+protected $sizes = [
+    'thumbnail' => ['width' => 400, 'quality' => 80, 'max_size' => 50],
+    'medium' => ['width' => 800, 'quality' => 85, 'max_size' => 150],
+    'large' => ['width' => 1200, 'quality' => 85, 'max_size' => 200],
+];
+
+public function optimizeProductImage(UploadedFile $file, int $productId): array
+{
+    foreach ($this->sizes as $sizeName => $config) {
+        $image = Image::make($file)
+            ->resize($config['width'], $config['width'])
+            ->encode('webp', $config['quality']);
+
+        // Validate file size
+        if ($fileSize > $config['max_size']) {
+            throw new \Exception("Image exceeds {$config['max_size']}KB limit");
+        }
+    }
+}
+```
+
+**Blade Template:**
+
+```blade
+<img
+    src="{{ asset('storage/' . $product->image_medium) }}"
+    srcset="
+        {{ asset('storage/' . $product->image_thumbnail) }} 400w,
+        {{ asset('storage/' . $product->image_medium) }} 800w,
+        {{ asset('storage/' . $product->image_large) }} 1200w
+    "
+    sizes="(max-width: 640px) 400px, (max-width: 1024px) 800px, 1200px"
+    alt="{{ $product->name }}"
+    loading="lazy"
+/>
+```
+
+### 4. Database Trigger Performance Plan (`docs/database-trigger-performance-plan.md`)
+
+**What:** Performance validation plan for database triggers
+
+**Key Points:**
+
+-   **2 Triggers:** update_stock, add_points
+-   **Performance Target:** POS transaction < 100ms
+-   **Testing:** Week 1-2 with realistic data
+-   **Fallback:** Application-level logic or queues if triggers slow
+
+**When to Use:**
+
+-   Implementing Story 1.1 (Project Setup)
+-   Testing POS performance (Epic 8)
+-   Optimizing database queries
+
+**Critical Testing:**
+
+```php
+// tests/Performance/POSTransactionTest.php
+public function test_pos_transaction_performance()
+{
+    $start = microtime(true);
+
+    // Create order + items + stock movement + complete order
+    $order = Order::create([...]);
+    OrderItem::create([...]);
+    StockMovement::create([...]); // Triggers update_stock
+    $order->update(['status' => 'completed']); // Triggers add_points
+
+    $duration = (microtime(true) - $start) * 1000;
+
+    // Assert < 100ms
+    $this->assertLessThan(100, $duration);
+}
+```
+
+**Optimization Strategies:**
+
+```php
+// If triggers slow (> 100ms), use application-level logic
+class StockMovementService
+{
+    public function createStockMovement(array $data): StockMovement
+    {
+        DB::transaction(function () use ($data) {
+            $movement = StockMovement::create($data);
+
+            // Manual stock update instead of trigger
+            if ($data['type'] === 'in') {
+                Product::where('id', $data['product_id'])
+                    ->increment('quantity', $data['quantity']);
+            }
+        });
+    }
+}
+
+// Or queue points calculation
+CalculateLoyaltyPoints::dispatch($order);
+```
+
+---
+
+## Week 1 Implementation Checklist
+
+**Before starting Story 1.1:**
+
+-   [ ] Read all 4 implementation guidance documents
+-   [ ] Understand UX priorities (Core vs Polish)
+-   [ ] Plan offline POS architecture
+-   [ ] Setup image optimization workflow
+-   [ ] Prepare database trigger performance tests
+
+**During Story 1.1 (Project Setup):**
+
+-   [ ] Create database schema with 2 triggers
+-   [ ] Test trigger performance with realistic data
+-   [ ] Setup image optimization service
+-   [ ] Configure Service Worker for offline POS
+-   [ ] Validate all performance targets met
+
+**After Story 1.1:**
+
+-   [ ] Confirm POS transaction < 100ms
+-   [ ] Confirm image optimization working (< 200KB)
+-   [ ] Confirm offline POS caching working
+-   [ ] Document any deviations or issues
+
+---
+
+**For AI Agents:** These 4 documents contain critical implementation guidance for Week 1. Read them BEFORE implementing related features. They address high-priority recommendations from the Implementation Readiness Assessment.
+
+**Priority Level:** HIGH - Must be implemented in Week 1
+**Status:** ✅ READY FOR IMPLEMENTATION
+**Last Updated:** 2025-12-14

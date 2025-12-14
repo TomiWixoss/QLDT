@@ -37,7 +37,13 @@ workflow_status:
   create-epics-and-stories: "docs/epics.md"
   test-design: "docs/test-design-system.md"
   validate-architecture: optional
-  implementation-readiness: required
+  implementation-readiness: "docs/implementation-readiness-report-2025-12-14.md"
+
+  # Phase 2.5: Implementation Guidance (High Priority)
+  ux-implementation-priorities: "docs/ux-implementation-priorities.md"
+  offline-pos-design: "docs/offline-pos-design.md"
+  image-optimization-sla: "docs/image-optimization-sla.md"
+  database-trigger-performance-plan: "docs/database-trigger-performance-plan.md"
 
   # Phase 3: Implementation (Required)
   sprint-planning: required
