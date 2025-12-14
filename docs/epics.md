@@ -828,3 +828,345 @@ NFR72: Cross-browser testing performed on target browsers
 -   Reports: revenue by date range, product performance, inventory turnover, customer analytics
 -   Customer management CRUD
 -   Customer lookup với order history và points balance
+
+## Epic 1: Project Foundation & Authentication
+
+**Goal:** Hệ thống được setup với authentication hoàn chỉnh. Staff và customers có thể đăng nhập an toàn với role-based access control.
+
+### Story 1.1: Project Setup & Database Schema
+
+As a **Developer**,
+I want to initialize the Laravel 12 project with complete database schema,
+So that the foundation is ready for all features to be built upon.
+
+**Acceptance Criteria:**
+
+**Given** a fresh Laravel 12 installation
+**When** I run the database migrations
+**Then** all 12 tables are created successfully with proper relationships
+**And** the 2 database triggers (update_stock, add_points) are created
+**And** foreign key constraints are properly set up
+**And** indexes are created for performance optimization
+**And** the database seeder creates initial data (4 roles: Admin, Manager, Sales, Warehouse)
+
+**Technical Details:**
+
+-   Tables: roles, users, customers, categories, brands, suppliers, products, product_specs, stock_movements, promotions, orders, order_items
+-   Triggers: update_stock (auto-update products.quantity on stock_movements), add_points (auto-calculate loyalty points on order complete)
+-   Relationships: All foreign keys as defined in database/db.sql
+-   Seeders: RoleSeeder creates 4 roles with proper permissions
+
+---
+
+### Story 1.2: Customer Registration with Email/Password
+
+As a **Customer**,
+I want to register an account using my email and password,
+So that I can shop online and track my orders.
+
+**Acceptance Criteria:**
+
+**Given** I am on the registration page
+**When** I enter valid email, password (min 8 characters), password confirmation, full name, and phone number
+**Then** my account is created in the customers table
+**And** my password is hashed using bcrypt (min 10 rounds)
+**And** I receive a success message "Đăng ký thành công"
+**And** I am automatically logged in with the 'customer' guard
+**And** I am redirected to the homepage
+
+**Given** I enter an email that already exists
+**When** I submit the registration form
+**Then** I see an error message "Email đã được sử dụng"
+**And** the form retains my input (except password)
+
+**Given** I enter a password shorter than 8 characters
+**When** I submit the registration form
+**Then** I see an error message "Mật khẩu phải có ít nhất 8 ký tự"
+
+**Given** I enter mismatched passwords
+**When** I submit the registration form
+**Then** I see an error message "Mật khẩu xác nhận không khớp"
+
+**Technical Details:**
+
+-   Route: POST /register
+-   Controller: Auth\RegisterController@store
+-   Validation: StoreCustomerRequest (email unique, password min 8, phone format)
+-   Guard: 'customer' (session-based)
+-   Table: customers (email, password, full_name, phone, points default 0, status default 'active')
+
+---
+
+### Story 1.3: Customer Login with Email/Password
+
+As a **Customer**,
+I want to login using my email and password,
+So that I can access my account and make purchases.
+
+**Acceptance Criteria:**
+
+**Given** I have a registered account
+**When** I enter correct email and password on the login page
+**Then** I am logged in with the 'customer' guard
+**And** I see a success message "Đăng nhập thành công"
+**And** I am redirected to the homepage
+**And** my session is created with HTTP-only and secure cookies
+
+**Given** I enter incorrect email or password
+**When** I submit the login form
+**Then** I see an error message "Email hoặc mật khẩu không đúng"
+**And** I remain on the login page
+**And** the failed attempt is logged for security monitoring
+
+**Given** I attempt to login 5 times with wrong credentials within 1 minute
+**When** I try the 6th attempt
+**Then** I see an error message "Quá nhiều lần đăng nhập sai. Vui lòng thử lại sau 1 phút"
+**And** my IP is temporarily throttled
+
+**Given** I am logged in
+**When** I click the logout button
+**Then** my session is destroyed
+**And** I am redirected to the homepage
+**And** I see a message "Đã đăng xuất thành công"
+
+**Technical Details:**
+
+-   Routes: GET /login, POST /login, POST /logout
+-   Controller: Auth\LoginController
+-   Guard: 'customer' (session-based)
+-   Throttling: 5 attempts per minute per IP (Laravel rate limiting)
+-   Security: CSRF protection, bcrypt password verification
+
+---
+
+### Story 1.4: Customer Google OAuth Registration & Login
+
+As a **Customer**,
+I want to register and login using my Google account,
+So that I can quickly access the system without creating a new password.
+
+**Acceptance Criteria:**
+
+**Given** I am on the registration or login page
+**When** I click the "Đăng nhập với Google" button
+**Then** I am redirected to Google OAuth consent screen
+**And** I can authorize the application to access my Google profile
+
+**Given** I authorize the application and this is my first time
+**When** Google redirects me back to the application
+**Then** a new customer account is created with my Google email and name
+**And** the password field is set to a random secure value
+**And** I am logged in with the 'customer' guard
+**And** I see a modal prompting "Vui lòng đặt mật khẩu để bảo mật tài khoản"
+**And** I am redirected to the set password page
+
+**Given** I have previously registered with Google
+**When** Google redirects me back after authorization
+**Then** I am logged in to my existing account
+**And** I am redirected to the homepage
+
+**Given** I registered with Google but haven't set a password yet
+**When** I try to login with email/password
+**Then** I see an error message "Tài khoản này đăng ký qua Google. Vui lòng đặt mật khẩu trước khi đăng nhập"
+**And** I see a link to the set password page
+
+**Technical Details:**
+
+-   Routes: GET /auth/google, GET /auth/google/callback
+-   Controller: Auth\GoogleAuthController
+-   Package: Laravel Socialite
+-   Guard: 'customer' (session-based)
+-   Table: customers (google_id nullable, password nullable initially)
+-   Config: GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET in .env
+
+---
+
+### Story 1.5: Customer Profile Management
+
+As a **Customer**,
+I want to view and update my profile information,
+So that I can keep my account details current and view my loyalty points.
+
+**Acceptance Criteria:**
+
+**Given** I am logged in as a customer
+**When** I navigate to the profile page (/profile)
+**Then** I see my current information: full name, email, phone, loyalty points balance
+**And** I see a form to update my full name and phone number
+**And** I see a separate section to change my password
+
+**Given** I update my full name and phone number with valid data
+**When** I submit the update form
+**Then** my information is updated in the database
+**And** I see a success message "Cập nhật thông tin thành công"
+**And** the form shows my updated information
+
+**Given** I want to change my password
+**When** I enter my current password, new password (min 8 chars), and confirmation
+**Then** my password is updated and hashed with bcrypt
+**And** I see a success message "Đổi mật khẩu thành công"
+**And** I remain logged in (session is not destroyed)
+
+**Given** I enter an incorrect current password
+**When** I submit the change password form
+**Then** I see an error message "Mật khẩu hiện tại không đúng"
+**And** my password is not changed
+
+**Given** I view my profile
+**When** I look at the loyalty points section
+**Then** I see my current points balance (e.g., "500 điểm = 500.000đ")
+**And** I see a brief explanation "Tích 1 điểm cho mỗi 100.000đ mua hàng"
+
+**Technical Details:**
+
+-   Routes: GET /profile, PUT /profile, PUT /profile/password
+-   Controller: Customer\ProfileController
+-   Validation: UpdateProfileRequest (phone format, password min 8)
+-   Guard: 'customer' middleware
+-   Display: Points balance from customers.points column
+
+---
+
+### Story 1.6: Staff Authentication & Role Setup
+
+As a **Staff Member**,
+I want to login to the admin panel using my email and password,
+So that I can access the management features based on my role.
+
+**Acceptance Criteria:**
+
+**Given** an Admin has created a staff account for me
+**When** I navigate to /admin/login
+**Then** I see a staff login form (separate from customer login)
+**And** I can enter my email and password
+
+**Given** I enter correct staff credentials
+**When** I submit the login form
+**Then** I am logged in with the 'web' guard (staff guard)
+**And** I am redirected to /admin/dashboard
+**And** I see a welcome message with my name and role
+
+**Given** I enter incorrect credentials
+**When** I submit the login form
+**Then** I see an error message "Email hoặc mật khẩu không đúng"
+**And** the failed attempt is logged
+
+**Given** I am logged in as staff
+**When** I click logout
+**Then** my session is destroyed
+**And** I am redirected to /admin/login
+
+**Given** I try to access /admin/\* routes without being logged in
+**When** I navigate to any admin route
+**Then** I am redirected to /admin/login
+**And** I see a message "Vui lòng đăng nhập để tiếp tục"
+
+**Technical Details:**
+
+-   Routes: GET /admin/login, POST /admin/login, POST /admin/logout
+-   Controller: Auth\AdminLoginController
+-   Guard: 'web' (default Laravel guard for staff)
+-   Middleware: 'auth' for all /admin/\* routes
+-   Table: users (email, password, role_id, full_name, status)
+-   Separate login UI from customer login (admin theme)
+
+---
+
+### Story 1.7: Role-Based Access Control (RBAC)
+
+As a **System**,
+I want to enforce role-based access control,
+So that staff members can only access features appropriate for their role.
+
+**Acceptance Criteria:**
+
+**Given** I am logged in as a Sales staff
+**When** I try to access allowed routes (POS, orders, products view, customers)
+**Then** I can access these features successfully
+**And** I see the appropriate navigation menu items
+
+**Given** I am logged in as a Sales staff
+**When** I try to access restricted routes (user management, reports, inventory management)
+**Then** I see a 403 Forbidden error page
+**And** I see a message "Bạn không có quyền truy cập trang này"
+**And** the attempt is logged for security audit
+
+**Given** I am logged in as a Warehouse staff
+**When** I try to access allowed routes (inventory management, stock movements, products view)
+**Then** I can access these features successfully
+
+**Given** I am logged in as a Warehouse staff
+**When** I try to access restricted routes (POS, orders, customers, user management)
+**Then** I see a 403 Forbidden error page
+
+**Given** I am logged in as a Manager
+**When** I try to access any route except user management
+**Then** I can access all features successfully
+
+**Given** I am logged in as an Admin
+**When** I try to access any route in the system
+**Then** I have full access to all features
+
+**Technical Details:**
+
+-   Middleware: CheckRole middleware for route protection
+-   Gates: Define in AuthServiceProvider (manage-users, manage-products, manage-orders, manage-inventory, view-reports, access-pos)
+-   Policies: UserPolicy, ProductPolicy, OrderPolicy for resource-level authorization
+-   Role Permissions:
+    -   Admin: All permissions
+    -   Manager: All except manage-users
+    -   Sales: access-pos, manage-orders, view-products, view-customers
+    -   Warehouse: manage-inventory, view-products
+-   Navigation: Dynamic menu based on user role and permissions
+
+---
+
+### Story 1.8: User Management (Admin Only)
+
+As an **Admin**,
+I want to create, update, and deactivate staff accounts,
+So that I can manage who has access to the system and their roles.
+
+**Acceptance Criteria:**
+
+**Given** I am logged in as an Admin
+**When** I navigate to /admin/users
+**Then** I see a list of all staff users with their name, email, role, and status
+**And** I see a "Tạo người dùng mới" button
+
+**Given** I click "Tạo người dùng mới"
+**When** I fill in email, full name, password, and select a role (Admin/Manager/Sales/Warehouse)
+**Then** a new user account is created in the users table
+**And** the password is hashed with bcrypt
+**And** I see a success message "Tạo người dùng thành công"
+**And** the new user appears in the user list
+
+**Given** I want to update a user's information
+**When** I click "Sửa" on a user row and update their name or role
+**Then** the user's information is updated
+**And** I see a success message "Cập nhật người dùng thành công"
+
+**Given** I want to deactivate a user
+**When** I click "Vô hiệu hóa" on a user row
+**Then** the user's status is set to 'inactive'
+**And** the user can no longer login
+**And** I see a success message "Đã vô hiệu hóa người dùng"
+
+**Given** I try to deactivate my own account
+**When** I click "Vô hiệu hóa" on my own user row
+**Then** I see an error message "Không thể vô hiệu hóa tài khoản của chính mình"
+**And** my account remains active
+
+**Given** I am logged in as a Manager, Sales, or Warehouse staff
+**When** I try to access /admin/users
+**Then** I see a 403 Forbidden error
+**And** I cannot manage users
+
+**Technical Details:**
+
+-   Routes: GET /admin/users, GET /admin/users/create, POST /admin/users, GET /admin/users/{id}/edit, PUT /admin/users/{id}, DELETE /admin/users/{id}
+-   Controller: Admin\UserController
+-   Validation: StoreUserRequest, UpdateUserRequest (email unique, password min 8, role_id exists)
+-   Authorization: Gate 'manage-users' (Admin only)
+-   Table: users (role_id foreign key to roles table)
+-   UI: DaisyUI data table with action buttons
