@@ -1,6 +1,6 @@
 # Story 1.3: Customer Login with Email/Password
 
-Status: ready-for-dev
+Status: Done
 
 ## Story
 
@@ -45,57 +45,57 @@ So that I can access my account and make purchases.
 
 ## Tasks / Subtasks
 
--   [ ] Task 1: Create Login Routes (AC: 1, 2, 3)
+-   [x] Task 1: Create Login Routes (AC: 1, 2, 3)
 
-    -   [ ] 1.1: Add GET /login route for login form
-    -   [ ] 1.2: Add POST /login route for form submission
-    -   [ ] 1.3: Add POST /logout route for logout
-    -   [ ] 1.4: Apply guest:customer middleware to login routes
-    -   [ ] 1.5: Apply auth:customer middleware to logout route
+    -   [x] 1.1: Add GET /login route for login form
+    -   [x] 1.2: Add POST /login route for form submission
+    -   [x] 1.3: Add POST /logout route for logout
+    -   [x] 1.4: Apply guest:customer middleware to login routes
+    -   [x] 1.5: Apply auth:customer middleware to logout route
 
--   [ ] Task 2: Create LoginController (AC: 1, 2, 3, 4)
+-   [x] Task 2: Create LoginController (AC: 1, 2, 3, 4)
 
-    -   [ ] 2.1: Create app/Http/Controllers/Auth/LoginController.php
-    -   [ ] 2.2: Implement showLoginForm() method
-    -   [ ] 2.3: Implement login() method with authentication
-    -   [ ] 2.4: Implement logout() method
-    -   [ ] 2.5: Add rate limiting using RateLimiter facade
+    -   [x] 2.1: Create app/Http/Controllers/Auth/LoginController.php
+    -   [x] 2.2: Implement showLoginForm() method
+    -   [x] 2.3: Implement login() method with authentication
+    -   [x] 2.4: Implement logout() method
+    -   [x] 2.5: Add rate limiting using RateLimiter facade
 
--   [ ] Task 3: Create LoginRequest (AC: 2, 3)
+-   [x] Task 3: Create LoginRequest (AC: 2, 3)
 
-    -   [ ] 3.1: Create app/Http/Requests/LoginRequest.php
-    -   [ ] 3.2: Define validation rules (email required, password required)
-    -   [ ] 3.3: Define Vietnamese error messages
-    -   [ ] 3.4: Implement rate limiting logic in request
+    -   [x] 3.1: Create app/Http/Requests/LoginRequest.php
+    -   [x] 3.2: Define validation rules (email required, password required)
+    -   [x] 3.3: Define Vietnamese error messages
+    -   [x] 3.4: Implement rate limiting logic in request
 
--   [ ] Task 4: Create Login View (AC: 1, 2, 3, 5)
+-   [x] Task 4: Create Login View (AC: 1, 2, 3, 5)
 
-    -   [ ] 4.1: Create resources/views/auth/login.blade.php
-    -   [ ] 4.2: Build form with DaisyUI components
-    -   [ ] 4.3: Add error display for validation messages
-    -   [ ] 4.4: Add "Remember me" checkbox
-    -   [ ] 4.5: Add link to registration page
-    -   [ ] 4.6: Add link to forgot password (placeholder for future)
+    -   [x] 4.1: Create resources/views/auth/login.blade.php
+    -   [x] 4.2: Build form with DaisyUI components
+    -   [x] 4.3: Add error display for validation messages
+    -   [x] 4.4: Add "Remember me" checkbox
+    -   [x] 4.5: Add link to registration page
+    -   [x] 4.6: Add link to forgot password (placeholder for future - Google OAuth button disabled)
 
--   [ ] Task 5: Update Layouts (AC: 4)
+-   [x] Task 5: Update Layouts (AC: 4)
 
-    -   [ ] 5.1: Update customer.blade.php logout form action
-    -   [ ] 5.2: Add login/register links for guests in header
-    -   [ ] 5.3: Show user name when logged in
+    -   [x] 5.1: Update customer.blade.php logout form action
+    -   [x] 5.2: Add login/register links for guests in header
+    -   [x] 5.3: Show user name when logged in
 
--   [ ] Task 6: Configure Session Security (AC: 1)
+-   [x] Task 6: Configure Session Security (AC: 1)
 
-    -   [ ] 6.1: Verify session config in config/session.php
-    -   [ ] 6.2: Ensure HTTP-only cookies
-    -   [ ] 6.3: Ensure secure cookies in production
+    -   [x] 6.1: Verify session config in config/session.php
+    -   [x] 6.2: Ensure HTTP-only cookies (http_only => true by default)
+    -   [x] 6.3: Ensure secure cookies in production (SESSION_SECURE_COOKIE env)
 
--   [ ] Task 7: Write Tests (AC: All)
-    -   [ ] 7.1: Test login screen renders
-    -   [ ] 7.2: Test successful login with valid credentials
-    -   [ ] 7.3: Test failed login with invalid credentials
-    -   [ ] 7.4: Test login throttling after 5 failed attempts
-    -   [ ] 7.5: Test logout destroys session
-    -   [ ] 7.6: Test remember me functionality
+-   [x] Task 7: Write Tests (AC: All)
+    -   [x] 7.1: Test login screen renders
+    -   [x] 7.2: Test successful login with valid credentials
+    -   [x] 7.3: Test failed login with invalid credentials
+    -   [x] 7.4: Test login throttling after 5 failed attempts
+    -   [x] 7.5: Test logout destroys session
+    -   [x] 7.6: Test remember me functionality
 
 ## Dev Notes
 
@@ -682,12 +682,52 @@ class LoginTest extends TestCase
 
 ### Context Reference
 
-<!-- Path(s) to story context XML will be added here by context workflow -->
+-   project-context.md
+-   project_context2.md
+-   docs/3-implementation/sprint-status.yaml
 
 ### Agent Model Used
 
+Claude (Anthropic)
+
 ### Debug Log References
+
+-   Discovered missing `remember_token` column in customers table
+-   Created migration to add remember_token column
 
 ### Completion Notes List
 
+-   ✅ Implemented customer login with email/password using 'customer' guard
+-   ✅ Rate limiting: 5 attempts per minute per IP+email combination
+-   ✅ Vietnamese error messages for all validation and authentication errors
+-   ✅ Failed login attempts logged for security monitoring
+-   ✅ Session regeneration on login, invalidation on logout
+-   ✅ Remember me functionality with remember_token cookie
+-   ✅ HTTP-only session cookies configured by default
+-   ✅ All 11 login tests passing
+-   ✅ Full test suite (47 tests) passing with no regressions
+-   ✅ Updated customer layout with proper logout form and login link for guests
+-   ✅ Updated register page with link to login page
+
 ### File List
+
+**New Files:**
+
+-   app/Http/Controllers/Auth/LoginController.php
+-   app/Http/Requests/LoginRequest.php
+-   resources/views/auth/login.blade.php
+-   tests/Feature/Auth/LoginTest.php
+-   database/migrations/2025_12_14_200000_add_remember_token_to_customers_table.php
+
+**Modified Files:**
+
+-   routes/web.php (added login/logout routes)
+-   resources/views/layouts/customer.blade.php (logout form action, login link)
+-   resources/views/auth/register.blade.php (login link)
+-   docs/3-implementation/sprint-status.yaml (status update)
+-   .env.example (added SESSION_SECURE_COOKIE documentation)
+
+### Change Log
+
+-   2025-12-14: Story 1.3 implemented - Customer Login with Email/Password
+-   2025-12-14: Code Review completed - Fixed PHPUnit deprecation warnings, added CSRF test, documented session security settings

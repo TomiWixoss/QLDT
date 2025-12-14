@@ -46,7 +46,7 @@
                             <li><a href="#">Tài khoản</a></li>
                             <li><a href="#">Đơn hàng</a></li>
                             <li>
-                                <form method="POST" action="#">
+                                <form method="POST" action="{{ route('logout') }}">
                                     @csrf
                                     <button type="submit" class="w-full text-left">Đăng xuất</button>
                                 </form>
@@ -54,6 +54,7 @@
                         </ul>
                     </div>
                 @else
+                    <a href="{{ route('login') }}" class="btn btn-ghost btn-sm">Đăng nhập</a>
                     <a href="{{ route('register') }}" class="btn btn-primary btn-sm">Đăng ký</a>
                 @endauth
             </div>

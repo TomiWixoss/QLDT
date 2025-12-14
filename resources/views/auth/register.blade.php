@@ -92,7 +92,7 @@
 
         <p class="text-center text-sm">
             Đã có tài khoản?
-            <a href="#" class="link link-primary">Đăng nhập</a>
+            <a href="{{ route('login') }}" class="link link-primary">Đăng nhập</a>
         </p>
     </div>
 </div>
