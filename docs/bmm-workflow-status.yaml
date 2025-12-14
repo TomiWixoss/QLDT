@@ -30,10 +30,10 @@ workflow_status:
 
   # Phase 1: Planning (Required)
   prd: "docs/prd.md"
-  create-ux-design: conditional # if_has_ui
+  create-ux-design: "docs/ux-design-specification.md"
 
   # Phase 2: Solutioning (Required)
-  create-architecture: required
+  create-architecture: "docs/architecture.md"
   create-epics-and-stories: required
   test-design: recommended
   validate-architecture: optional
