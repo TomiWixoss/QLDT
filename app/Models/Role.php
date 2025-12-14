@@ -7,15 +7,33 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Role extends Model
 {
-    public $timestamps = false;
-
     protected $fillable = [
         'name',
         'description',
+        'permissions',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'permissions' => 'array',
+        ];
+    }
 
     public function users(): HasMany
     {
         return $this->hasMany(User::class);
+    }
+
+    /**
+     * Check if role has a specific permission
+     */
+    public function hasPermission(string $permission): bool
+    {
+        if ($this->name === 'Admin') {
+            return true; // Admin has all permissions
+        }
+
+        return in_array($permission, $this->permissions ?? []);
     }
 }

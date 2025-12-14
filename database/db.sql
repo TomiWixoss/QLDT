@@ -23,7 +23,10 @@ SET FOREIGN_KEY_CHECKS = 1;
 CREATE TABLE `roles` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `name` VARCHAR(50) UNIQUE NOT NULL,
-  `description` TEXT
+  `description` TEXT,
+  `permissions` JSON COMMENT 'Danh sách quyền của role',
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- Bảng Users (Nhân viên)
@@ -219,8 +222,11 @@ END$$
 DELIMITER ;
 
 -- Dữ liệu mẫu Roles
-INSERT INTO `roles` (`id`, `name`, `description`) VALUES 
-(1, 'Admin', 'Chủ cửa hàng'), (2, 'Manager', 'Quản lý'), (3, 'Sales', 'Nhân viên bán hàng'), (4, 'Warehouse', 'Thủ kho');
+INSERT INTO `roles` (`id`, `name`, `description`, `permissions`) VALUES 
+(1, 'Admin', 'Chủ cửa hàng - Toàn quyền quản lý hệ thống', '["*"]'),
+(2, 'Manager', 'Quản lý - Quản lý sản phẩm, đơn hàng, kho, báo cáo', '["view-all","manage-products","manage-orders","manage-inventory","view-reports","manage-customers","manage-promotions"]'),
+(3, 'Sales', 'Nhân viên bán hàng - POS, đơn hàng, xem sản phẩm, khách hàng', '["access-pos","manage-orders","view-products","view-customers"]'),
+(4, 'Warehouse', 'Thủ kho - Quản lý kho, xem sản phẩm', '["manage-inventory","view-products"]');
 
 -- User Admin
 INSERT INTO `users` (`role_id`, `username`, `password`, `full_name`, `email`) VALUES 

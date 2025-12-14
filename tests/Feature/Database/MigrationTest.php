@@ -38,7 +38,7 @@ class MigrationTest extends TestCase
     public function test_roles_table_has_correct_columns(): void
     {
         $this->assertTrue(Schema::hasColumns('roles', [
-            'id', 'name', 'description',
+            'id', 'name', 'description', 'permissions', 'created_at', 'updated_at',
         ]));
     }
 

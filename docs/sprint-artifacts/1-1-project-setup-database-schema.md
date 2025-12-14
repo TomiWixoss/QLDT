@@ -1,6 +1,6 @@
 # Story 1.1: Project Setup & Database Schema
 
-Status: Ready for Review
+Status: Done
 
 ## Story
 
@@ -478,15 +478,31 @@ Claude (Kiro IDE)
 -   Fixed test files to use dynamic IDs instead of hardcoded values
 -   Fixed UserSeeder to lookup Admin role dynamically
 
+### Code Review Fixes (2025-12-14)
+
+-   🔧 Added `permissions` JSON column to roles table migration
+-   🔧 Added `timestamps` to roles table (created_at, updated_at)
+-   🔧 Updated RoleSeeder with proper permissions array for each role
+-   🔧 Updated Role model with `permissions` cast and `hasPermission()` method
+-   🔧 Created SupplierSeeder with 2 suppliers (Apple Vietnam, Samsung Vietnam)
+-   🔧 Created SupplierFactory for testing
+-   🔧 Updated DatabaseSeeder to include SupplierSeeder
+-   🔧 Added comprehensive POS transaction test (5 items, full flow < 100ms)
+-   🔧 Added permission validation tests in SeederTest
+-   🔧 Updated db.sql with permissions column and role data
+-   🔧 Updated MigrationTest to verify permissions column
+
 ### Completion Notes List
 
 -   ✅ Created 12 migrations matching db.sql schema exactly
 -   ✅ Created 2 database triggers (update_stock, add_points) working correctly
 -   ✅ Created 12 Eloquent models with proper relationships
--   ✅ Created 6 seeders (Role, User, Customer, Category, Brand, DatabaseSeeder)
+-   ✅ Created 7 seeders (Role, User, Customer, Category, Brand, Supplier, DatabaseSeeder)
 -   ✅ Added indexes on all required columns for performance
--   ✅ All 25 tests passing (MigrationTest, TriggerTest, SeederTest, ProductTest, OrderTest)
+-   ✅ All 28 tests passing (MigrationTest, TriggerTest, SeederTest, ProductTest, OrderTest)
 -   ✅ Stock trigger performance < 100ms verified
+-   ✅ Full POS transaction (5 items) < 100ms verified
+-   ✅ Role permissions system implemented with hasPermission() method
 
 ### File List
 
@@ -522,22 +538,24 @@ Claude (Kiro IDE)
 -   app/Models/Order.php
 -   app/Models/OrderItem.php
 
-**Seeders (6 files):**
+**Seeders (7 files):**
 
 -   database/seeders/RoleSeeder.php
 -   database/seeders/UserSeeder.php
 -   database/seeders/CustomerSeeder.php
 -   database/seeders/CategorySeeder.php
 -   database/seeders/BrandSeeder.php
+-   database/seeders/SupplierSeeder.php
 -   database/seeders/DatabaseSeeder.php
 
-**Factories (5 files):**
+**Factories (6 files):**
 
 -   database/factories/CategoryFactory.php
 -   database/factories/BrandFactory.php
 -   database/factories/ProductFactory.php
 -   database/factories/CustomerFactory.php
 -   database/factories/OrderFactory.php
+-   database/factories/SupplierFactory.php
 
 **Tests (5 files):**
 

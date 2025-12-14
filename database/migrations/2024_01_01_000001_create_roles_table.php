@@ -12,6 +12,8 @@ return new class extends Migration
             $table->id();
             $table->string('name', 50)->unique();
             $table->text('description')->nullable();
+            $table->json('permissions')->nullable()->comment('Danh sách quyền của role');
+            $table->timestamps();
         });
     }
 
