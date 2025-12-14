@@ -2899,3 +2899,152 @@ So that we can track authenticity and provide warranty support.
 -   UI: Dynamic fields based on quantity
 -   Barcode Scanner: Listen for Enter key after 15 digits
 -   Required: Cannot complete transaction without all IMEIs
+
+---
+
+### Story 8.5: POS Payment and Transaction Completion
+
+As a **Sales Staff**,
+I want to complete POS transactions quickly with multiple payment methods,
+So that I can serve customers efficiently and accurately.
+
+**Acceptance Criteria:**
+
+**Given** I have items in the POS cart with all IMEIs entered
+**When** I scroll to the payment section
+**Then** I see payment method options: "Tiền mặt", "Thẻ", "Chuyển khoản"
+**And** "Tiền mặt" is selected by default
+**And** I see the final total amount prominently displayed
+
+**Given** I select "Tiền mặt" payment method
+**When** I click "Hoàn tất giao dịch"
+**Then** I see a confirmation modal "Xác nhận thanh toán [X]đ bằng tiền mặt?"
+**And** I can confirm or cancel
+
+**Given** I confirm the cash payment
+**When** I click "Xác nhận"
+**Then** the system creates a new order with status='completed' and source='store'
+**And** all order items are created with IMEI numbers stored in imei_list
+**And** the database trigger 'update_stock' fires automatically to decrease product quantities
+**And** if a customer is selected, the trigger 'add_points' fires to award loyalty points
+**And** if points were used, they are deducted from customer balance
+**And** if a voucher was used, its usage_count is incremented
+**And** I see a success message "Giao dịch thành công!"
+**And** the POS cart is cleared
+
+**Given** I select "Thẻ" or "Chuyển khoản" payment method
+**When** I complete the transaction
+**Then** the payment method is recorded in the order
+**And** the same order creation process happens
+**And** I see payment-specific instructions if needed
+
+**Given** the transaction fails (e.g., insufficient stock)
+**When** an error occurs during order creation
+**Then** I see a clear error message "Giao dịch thất bại: [lý do]"
+**And** the cart is NOT cleared
+**And** I can fix the issue and try again
+**And** no partial data is saved (database transaction rollback)
+
+**Given** a transaction is completed successfully
+**When** I view the success screen
+**Then** I see the order code (e.g., "ORD-20241214-001")
+**And** I see a "In hóa đơn" button
+**And** I see a "Giao dịch mới" button to start another transaction
+
+**Given** I want to start a new transaction
+**When** I click "Giao dịch mới"
+**Then** the POS interface resets to initial state
+**And** the customer selection is cleared
+**And** the cart is empty
+**And** I can begin a new transaction immediately
+
+**Technical Details:**
+
+-   Route: POST /admin/pos/complete
+-   Controller: Admin\POSController@complete
+-   Service: OrderService@createPOSOrder
+-   Database Transaction: Wrap order creation, stock update, points calculation
+-   Order Fields: source='store', status='completed', payment_method, customer_id (nullable)
+-   Trigger: update_stock (auto decrease quantity), add_points (auto award points)
+-   Points Deduction: UPDATE customers SET points = points - used_points
+-   Voucher Update: UPDATE promotions SET usage_count = usage_count + 1
+-   Performance: Complete transaction < 1 second (NFR2)
+-   Error Handling: Rollback on any failure, show user-friendly message
+
+---
+
+### Story 8.6: Invoice Generation and Printing
+
+As a **Sales Staff**,
+I want to print invoices with IMEI numbers for customers,
+So that customers have proof of purchase and warranty information.
+
+**Acceptance Criteria:**
+
+**Given** a POS transaction is completed
+**When** I click "In hóa đơn" button
+**Then** the invoice is generated and sent to the printer
+**And** the invoice opens in a new window/tab for preview
+
+**Given** I view the generated invoice
+**When** the invoice loads
+**Then** I see the store information at the top (name, address, phone)
+**And** I see the invoice number (order code)
+**And** I see the transaction date and time
+**And** I see the customer information (if customer was selected)
+**And** I see the sales staff name who processed the transaction
+
+**Given** I view the product list on the invoice
+**When** I scroll to the items section
+**Then** I see each product with: name, quantity, unit price, subtotal
+**And** for each phone product, I see the IMEI numbers listed prominently
+**And** IMEI numbers are displayed in large, easy-to-read font
+**And** each IMEI is on a separate line for clarity
+
+**Given** I view the pricing breakdown
+**When** I scroll to the bottom of the invoice
+**Then** I see: Subtotal, Voucher discount (if applied), Points discount (if applied), Final Total
+**And** the payment method is clearly stated
+**And** all amounts are formatted in Vietnamese currency (25.000.000đ)
+
+**Given** I view the warranty information
+**When** I look at each product line
+**Then** I see the warranty period (e.g., "Bảo hành 12 tháng")
+**And** I see the warranty expiration date calculated from purchase date
+**And** I see warranty terms and conditions at the bottom
+
+**Given** I view the footer section
+**When** I scroll to the end
+**Then** I see a thank you message "Cảm ơn quý khách đã mua hàng!"
+**And** I see return policy information (if applicable)
+**And** I see contact information for support
+**And** I see a signature line for customer (if needed)
+
+**Given** the invoice is ready to print
+**When** I click the browser print button or Ctrl+P
+**Then** the invoice is formatted for A4 or thermal printer (80mm)
+**And** the print layout is clean with no unnecessary elements
+**And** page breaks are handled correctly for multi-page invoices
+
+**Given** I want to reprint an invoice later
+**When** I navigate to the order detail page (/admin/orders/{id})
+**Then** I see a "In lại hóa đơn" button
+**And** clicking it generates and prints the same invoice
+
+**Given** I want to email the invoice to the customer
+**When** I click "Gửi email" button (future enhancement)
+**Then** the invoice PDF is sent to the customer's email
+**And** I see a confirmation "Đã gửi hóa đơn qua email"
+
+**Technical Details:**
+
+-   Route: GET /admin/pos/invoice/{orderId}
+-   Controller: Admin\POSController@invoice
+-   View: resources/views/admin/pos/invoice.blade.php
+-   Print CSS: @media print styles for clean printing
+-   IMEI Display: Loop through order_items.imei_list JSON array
+-   Warranty Calculation: purchase_date + product.warranty_months
+-   Format: A4 paper (210mm x 297mm) or Thermal (80mm width)
+-   Printer Support: Standard browser print dialog
+-   PDF Generation: Optional - use Laravel DomPDF package (future)
+-   Email: Optional - use Laravel Mail (future enhancement)
