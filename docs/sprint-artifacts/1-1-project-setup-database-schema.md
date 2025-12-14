@@ -1,6 +1,6 @@
 # Story 1.1: Project Setup & Database Schema
 
-Status: ready-for-dev
+Status: Ready for Review
 
 ## Story
 
@@ -27,50 +27,50 @@ So that the foundation is ready for all features to be built upon.
 
 ## Tasks / Subtasks
 
--   [ ] Task 1: Convert database/db.sql to Laravel migrations (AC: All 12 tables)
+-   [x] Task 1: Convert database/db.sql to Laravel migrations (AC: All 12 tables)
 
-    -   [ ] 1.1: Create migration for roles table
-    -   [ ] 1.2: Create migration for users table with role_id foreign key
-    -   [ ] 1.3: Create migration for customers table (email, password, google_id, points)
-    -   [ ] 1.4: Create migration for categories table
-    -   [ ] 1.5: Create migration for brands table
-    -   [ ] 1.6: Create migration for suppliers table
-    -   [ ] 1.7: Create migration for products table (category_id, brand_id, sku unique)
-    -   [ ] 1.8: Create migration for product_specs table (one-to-one with products)
-    -   [ ] 1.9: Create migration for stock_movements table
-    -   [ ] 1.10: Create migration for promotions table (vouchers)
-    -   [ ] 1.11: Create migration for orders table (customer_id, user_id, source enum)
-    -   [ ] 1.12: Create migration for order_items table (imei_list TEXT field)
+    -   [x] 1.1: Create migration for roles table
+    -   [x] 1.2: Create migration for users table with role_id foreign key
+    -   [x] 1.3: Create migration for customers table (email, password, google_id, points)
+    -   [x] 1.4: Create migration for categories table
+    -   [x] 1.5: Create migration for brands table
+    -   [x] 1.6: Create migration for suppliers table
+    -   [x] 1.7: Create migration for products table (category_id, brand_id, sku unique)
+    -   [x] 1.8: Create migration for product_specs table (one-to-one with products)
+    -   [x] 1.9: Create migration for stock_movements table
+    -   [x] 1.10: Create migration for promotions table (vouchers)
+    -   [x] 1.11: Create migration for orders table (customer_id, user_id, source enum)
+    -   [x] 1.12: Create migration for order_items table (imei_list TEXT field)
 
--   [ ] Task 2: Create database triggers (AC: 2 triggers working)
+-   [x] Task 2: Create database triggers (AC: 2 triggers working)
 
-    -   [ ] 2.1: Create migration for update_stock trigger (auto-update products.quantity)
-    -   [ ] 2.2: Create migration for add_points trigger (auto-calculate loyalty points)
-    -   [ ] 2.3: Test triggers with sample data
+    -   [x] 2.1: Create migration for update_stock trigger (auto-update products.quantity)
+    -   [x] 2.2: Create migration for add_points trigger (auto-calculate loyalty points)
+    -   [x] 2.3: Test triggers with sample data
 
--   [ ] Task 3: Create Eloquent models with relationships (AC: All 12 models)
+-   [x] Task 3: Create Eloquent models with relationships (AC: All 12 models)
 
-    -   [ ] 3.1: Create Role model
-    -   [ ] 3.2: Create User model (belongsTo Role)
-    -   [ ] 3.3: Create Customer model (casts for google_id, points)
-    -   [ ] 3.4: Create Category model (hasMany Products)
-    -   [ ] 3.5: Create Brand model (hasMany Products)
-    -   [ ] 3.6: Create Supplier model (hasMany StockMovements)
-    -   [ ] 3.7: Create Product model (belongsTo Category, Brand; hasOne ProductSpec)
-    -   [ ] 3.8: Create ProductSpec model (belongsTo Product)
-    -   [ ] 3.9: Create StockMovement model (belongsTo Product, User, Supplier)
-    -   [ ] 3.10: Create Promotion model (voucher logic)
-    -   [ ] 3.11: Create Order model (belongsTo Customer, User; hasMany OrderItems)
-    -   [ ] 3.12: Create OrderItem model (belongsTo Order, Product; cast imei_list to array)
+    -   [x] 3.1: Create Role model
+    -   [x] 3.2: Create User model (belongsTo Role)
+    -   [x] 3.3: Create Customer model (casts for google_id, points)
+    -   [x] 3.4: Create Category model (hasMany Products)
+    -   [x] 3.5: Create Brand model (hasMany Products)
+    -   [x] 3.6: Create Supplier model (hasMany StockMovements)
+    -   [x] 3.7: Create Product model (belongsTo Category, Brand; hasOne ProductSpec)
+    -   [x] 3.8: Create ProductSpec model (belongsTo Product)
+    -   [x] 3.9: Create StockMovement model (belongsTo Product, User, Supplier)
+    -   [x] 3.10: Create Promotion model (voucher logic)
+    -   [x] 3.11: Create Order model (belongsTo Customer, User; hasMany OrderItems)
+    -   [x] 3.12: Create OrderItem model (belongsTo Order, Product; cast imei_list to array)
 
--   [ ] Task 4: Create database seeders (AC: Initial data populated)
+-   [x] Task 4: Create database seeders (AC: Initial data populated)
 
-    -   [ ] 4.1: Create RoleSeeder (4 roles: Admin, Manager, Sales, Warehouse)
-    -   [ ] 4.2: Create UserSeeder (1 admin user for testing)
-    -   [ ] 4.3: Create CustomerSeeder (1 guest customer for walk-in sales)
-    -   [ ] 4.4: Create CategorySeeder (2 categories: Điện thoại, Phụ kiện)
-    -   [ ] 4.5: Create BrandSeeder (2 brands: Apple, Samsung)
-    -   [ ] 4.6: Update DatabaseSeeder to call all seeders in correct order
+    -   [x] 4.1: Create RoleSeeder (4 roles: Admin, Manager, Sales, Warehouse)
+    -   [x] 4.2: Create UserSeeder (1 admin user for testing)
+    -   [x] 4.3: Create CustomerSeeder (1 guest customer for walk-in sales)
+    -   [x] 4.4: Create CategorySeeder (2 categories: Điện thoại, Phụ kiện)
+    -   [x] 4.5: Create BrandSeeder (2 brands: Apple, Samsung)
+    -   [x] 4.6: Update DatabaseSeeder to call all seeders in correct order
 
 **Seeder Data Specifications:**
 
@@ -103,23 +103,23 @@ BrandSeeder (2 brands):
 - Samsung
 ```
 
--   [ ] Task 5: Add indexes for performance (AC: Query time < 100ms)
+-   [x] Task 5: Add indexes for performance (AC: Query time < 100ms)
 
-    -   [ ] 5.1: Add index on products.sku (unique, for barcode scanning)
-    -   [ ] 5.2: Add index on customers.email (unique, for login)
-    -   [ ] 5.3: Add index on customers.google_id (unique, for OAuth)
-    -   [ ] 5.4: Add index on orders.order_code (unique, for tracking)
-    -   [ ] 5.5: Add index on orders.customer_id (for customer order history)
-    -   [ ] 5.6: Add index on order_items.order_id (for order details)
-    -   [ ] 5.7: Add index on stock_movements.product_id (for stock history)
+    -   [x] 5.1: Add index on products.sku (unique, for barcode scanning)
+    -   [x] 5.2: Add index on customers.email (unique, for login)
+    -   [x] 5.3: Add index on customers.google_id (unique, for OAuth)
+    -   [x] 5.4: Add index on orders.order_code (unique, for tracking)
+    -   [x] 5.5: Add index on orders.customer_id (for customer order history)
+    -   [x] 5.6: Add index on order_items.order_id (for order details)
+    -   [x] 5.7: Add index on stock_movements.product_id (for stock history)
 
--   [ ] Task 6: Test database setup (AC: All tests pass)
-    -   [ ] 6.1: Run migrations fresh with seed
-    -   [ ] 6.2: Verify all 12 tables exist with correct columns
-    -   [ ] 6.3: Verify foreign key constraints work (try deleting parent record)
-    -   [ ] 6.4: Test update_stock trigger (insert stock_movement, check products.quantity)
-    -   [ ] 6.5: Test add_points trigger (update order status to completed, check customers.points)
-    -   [ ] 6.6: Verify seeders created correct initial data
+-   [x] Task 6: Test database setup (AC: All tests pass)
+    -   [x] 6.1: Run migrations fresh with seed
+    -   [x] 6.2: Verify all 12 tables exist with correct columns
+    -   [x] 6.3: Verify foreign key constraints work (try deleting parent record)
+    -   [x] 6.4: Test update_stock trigger (insert stock_movement, check products.quantity)
+    -   [x] 6.5: Test add_points trigger (update order status to completed, check customers.points)
+    -   [x] 6.6: Verify seeders created correct initial data
 
 ## Dev Notes
 
@@ -465,20 +465,88 @@ Issue 5: Eloquent relationships not working
 
 ### Context Reference
 
-<!-- Path(s) to story context XML will be added here by context workflow -->
+-   database/db.sql (reference schema)
+-   project-context.md (coding standards)
 
 ### Agent Model Used
 
-<!-- Will be filled by dev agent -->
+Claude (Kiro IDE)
 
 ### Debug Log References
 
-<!-- Will be added during implementation -->
+-   Configured phpunit.xml to use MySQL instead of SQLite for trigger testing
+-   Fixed test files to use dynamic IDs instead of hardcoded values
+-   Fixed UserSeeder to lookup Admin role dynamically
 
 ### Completion Notes List
 
-<!-- Will be added during implementation -->
+-   ✅ Created 12 migrations matching db.sql schema exactly
+-   ✅ Created 2 database triggers (update_stock, add_points) working correctly
+-   ✅ Created 12 Eloquent models with proper relationships
+-   ✅ Created 6 seeders (Role, User, Customer, Category, Brand, DatabaseSeeder)
+-   ✅ Added indexes on all required columns for performance
+-   ✅ All 25 tests passing (MigrationTest, TriggerTest, SeederTest, ProductTest, OrderTest)
+-   ✅ Stock trigger performance < 100ms verified
 
 ### File List
 
-<!-- Will be added during implementation -->
+**Migrations (14 files):**
+
+-   database/migrations/2024_01_01_000001_create_roles_table.php
+-   database/migrations/2024_01_01_000002_create_users_table.php
+-   database/migrations/2024_01_01_000003_create_customers_table.php
+-   database/migrations/2024_01_01_000004_create_categories_table.php
+-   database/migrations/2024_01_01_000005_create_brands_table.php
+-   database/migrations/2024_01_01_000006_create_suppliers_table.php
+-   database/migrations/2024_01_01_000007_create_products_table.php
+-   database/migrations/2024_01_01_000008_create_product_specs_table.php
+-   database/migrations/2024_01_01_000009_create_stock_movements_table.php
+-   database/migrations/2024_01_01_000010_create_promotions_table.php
+-   database/migrations/2024_01_01_000011_create_orders_table.php
+-   database/migrations/2024_01_01_000012_create_order_items_table.php
+-   database/migrations/2024_01_01_000013_create_update_stock_trigger.php
+-   database/migrations/2024_01_01_000014_create_add_points_trigger.php
+
+**Models (12 files):**
+
+-   app/Models/Role.php
+-   app/Models/User.php
+-   app/Models/Customer.php
+-   app/Models/Category.php
+-   app/Models/Brand.php
+-   app/Models/Supplier.php
+-   app/Models/Product.php
+-   app/Models/ProductSpec.php
+-   app/Models/StockMovement.php
+-   app/Models/Promotion.php
+-   app/Models/Order.php
+-   app/Models/OrderItem.php
+
+**Seeders (6 files):**
+
+-   database/seeders/RoleSeeder.php
+-   database/seeders/UserSeeder.php
+-   database/seeders/CustomerSeeder.php
+-   database/seeders/CategorySeeder.php
+-   database/seeders/BrandSeeder.php
+-   database/seeders/DatabaseSeeder.php
+
+**Factories (5 files):**
+
+-   database/factories/CategoryFactory.php
+-   database/factories/BrandFactory.php
+-   database/factories/ProductFactory.php
+-   database/factories/CustomerFactory.php
+-   database/factories/OrderFactory.php
+
+**Tests (5 files):**
+
+-   tests/Feature/Database/MigrationTest.php
+-   tests/Feature/Database/TriggerTest.php
+-   tests/Feature/Database/SeederTest.php
+-   tests/Unit/Models/ProductTest.php
+-   tests/Unit/Models/OrderTest.php
+
+**Config (1 file modified):**
+
+-   phpunit.xml (changed to MySQL for testing)
