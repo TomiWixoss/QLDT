@@ -1547,3 +1547,206 @@ So that the product catalog stays accurate and up-to-date.
 -   Authorization: Gate 'manage-products' (Admin, Manager only)
 -   Cascade Delete: product_specs deleted automatically (foreign key cascade)
 -   Soft Delete Consideration: Use status='inactive' instead of hard delete for products with history
+
+## Epic 4: Product Discovery & Browsing (Customer)
+
+**Goal:** Khách hàng có thể tìm kiếm, lọc, sort sản phẩm và xem chi tiết với IMEI badge, warranty info, trust signals.
+
+### Story 4.1: Homepage with Featured Products
+
+As a **Customer**,
+I want to see a beautiful homepage with featured products,
+So that I can quickly discover popular phones and start shopping.
+
+**Acceptance Criteria:**
+
+**Given** I visit the homepage (/)
+**When** the page loads
+**Then** I see a hero section with a banner image and call-to-action
+**And** I see a "Sản phẩm nổi bật" section with 8-12 featured products
+**And** each product card shows: image, name, price, IMEI badge (green, top-right)
+**And** I see a "Danh mục" section with category cards (iPhone, Samsung, Xiaomi, etc.)
+**And** the page loads in < 2 seconds (NFR1)
+
+**Given** I hover over a product card
+**When** my mouse is over the card
+**Then** the card lifts slightly (translateY -2px) with shadow increase
+**And** the transition is smooth (0.3s cubic-bezier)
+
+**Given** I click on a product card
+**When** I click anywhere on the card
+**Then** I am taken to the product detail page
+
+**Given** I click on a category card
+**When** I click a category
+**Then** I am taken to the product listing page filtered by that category
+
+**Given** I am on mobile (< 640px)
+**When** I view the homepage
+**Then** I see a bottom navigation bar with 4 items: Home, Search, Cart, Account
+**And** the navigation bar is fixed at the bottom (56px height)
+**And** touch targets are 44x44px minimum
+
+**Technical Details:**
+
+-   Route: GET /
+-   Controller: Customer\HomeController@index
+-   Query: Get featured products (status='active', order by created_at DESC, limit 12)
+-   Layout: resources/views/layouts/customer.blade.php (Nike-inspired)
+-   Components: product-card.blade.php, bottom-nav.blade.php
+-   Design: Generous whitespace, Inter Variable Font, Tact Blue (#3b82f6)
+
+---
+
+### Story 4.2: Product Listing with Filters and Sort
+
+As a **Customer**,
+I want to browse products with filters and sorting options,
+So that I can find the exact phone I'm looking for.
+
+**Acceptance Criteria:**
+
+**Given** I navigate to /products or click a category
+**When** the page loads
+**Then** I see a grid of product cards (3-4 columns on desktop, 2 on tablet, 1 on mobile)
+**And** I see filter options: Category, Brand, Price Range
+**And** I see sort options: Price (Low to High), Price (High to Low), Newest, Best Sellers
+**And** I see pagination (20 products per page)
+
+**Given** I select a category filter
+**When** I click on a category (e.g., "iPhone")
+**Then** the product list updates to show only products in that category
+**And** the filter is applied without page reload (AJAX)
+**And** the URL updates to reflect the filter (e.g., /products?category=1)
+
+**Given** I select a brand filter
+**When** I click on a brand (e.g., "Apple")
+**Then** the product list updates to show only products from that brand
+**And** the filter is applied without page reload
+
+**Given** I select a price range
+**When** I choose "Dưới 10 triệu", "10-20 triệu", "20-30 triệu", "Trên 30 triệu"
+**Then** the product list updates to show products in that price range
+
+**Given** I select "Price (Low to High)" sort
+**When** I click the sort option
+**Then** products are sorted by price ascending
+**And** the sort is applied without page reload
+
+**Given** I select "Newest" sort
+**When** I click the sort option
+**Then** products are sorted by created_at descending
+
+**Given** there are more than 20 products
+**When** I scroll to the bottom
+**Then** I see pagination links (1, 2, 3, ... Next)
+**And** clicking a page number loads that page
+
+**Technical Details:**
+
+-   Route: GET /products
+-   Controller: Customer\ProductController@index
+-   Query: WHERE status='active', apply filters, apply sort, paginate(20)
+-   AJAX: Use Axios for filter/sort without page reload
+-   URL: Update query parameters for shareable links
+-   Performance: Eager load category, brand to prevent N+1
+
+---
+
+### Story 4.3: Product Search
+
+As a **Customer**,
+I want to search for products by name or SKU,
+So that I can quickly find a specific phone I'm interested in.
+
+**Acceptance Criteria:**
+
+**Given** I am on any page
+**When** I look at the header
+**Then** I see a prominent search bar
+
+**Given** I type in the search bar
+**When** I enter at least 2 characters
+**Then** I see autocomplete suggestions showing matching products
+**And** each suggestion shows: product image thumbnail, name, price
+**And** the suggestions appear within 500ms (NFR3)
+
+**Given** I click on an autocomplete suggestion
+**When** I select a product
+**Then** I am taken directly to that product's detail page
+
+**Given** I press Enter in the search bar
+**When** I submit the search
+**Then** I am taken to the product listing page with search results
+**And** the search term is highlighted in product names
+**And** I see a message "Kết quả tìm kiếm cho: [search term]"
+
+**Given** I search for a term with no results
+**When** the search completes
+**Then** I see a message "Không tìm thấy sản phẩm nào"
+**And** I see suggestions for popular products
+
+**Given** I am on mobile
+**When** I tap the search icon in bottom navigation
+**Then** a full-screen search overlay appears
+**And** the keyboard opens automatically
+**And** I can close the overlay with an X button
+
+**Technical Details:**
+
+-   Route: GET /search
+-   Controller: Customer\ProductController@search
+-   Query: WHERE (name LIKE %term% OR sku LIKE %term%) AND status='active'
+-   Autocomplete: AJAX endpoint /api/products/autocomplete (returns JSON)
+-   Performance: Debounce search input (300ms) to reduce queries
+-   Mobile: Full-screen overlay with backdrop
+
+---
+
+### Story 4.4: Product Detail Page with Trust Signals
+
+As a **Customer**,
+I want to view detailed product information with trust signals,
+So that I can make an informed purchase decision and trust the product is authentic.
+
+**Acceptance Criteria:**
+
+**Given** I click on a product
+**When** the product detail page loads
+**Then** I see a large product image (with swipe gallery if multiple images)
+**And** I see the product name, price (large, bold), and brand
+**And** I see an IMEI tracking badge (green, prominent) with text "IMEI được tracking 100%"
+**And** I see a warranty section showing "Bảo hành [X] tháng chính hãng"
+**And** I see a trust section with 3 icons: IMEI Tracking, Warranty, Fast Delivery
+**And** I see stock availability (color-coded: green > 10, yellow 5-10, red < 5)
+
+**Given** I scroll down on the product page
+**When** I view the specifications section
+**Then** I see an accordion with technical specs (screen, processor, RAM, storage, camera, battery, OS)
+**And** each spec is displayed in a clean, readable format
+**And** the accordion expands/collapses smoothly
+
+**Given** I hover over the IMEI badge
+**When** my mouse is over the badge
+**Then** I see a tooltip explaining "Mỗi máy có IMEI riêng, được ghi trên hóa đơn để xác thực"
+
+**Given** the product is out of stock (quantity = 0)
+**When** I view the product page
+**Then** I see a red "Hết hàng" badge
+**And** the "Thêm vào giỏ" button is disabled
+**And** I see a "Nhận thông báo khi có hàng" button
+
+**Given** the product is in stock
+**When** I view the product page
+**Then** I see a large "Thêm vào giỏ" button (floating on mobile, sticky)
+**And** the button has a smooth hover effect
+
+**Technical Details:**
+
+-   Route: GET /products/{id}
+-   Controller: Customer\ProductController@show
+-   Query: Eager load category, brand, specs
+-   Components: imei-badge.blade.php, warranty-seal.blade.php, trust-section.blade.php
+-   Design: Apple-inspired minimalism, product-focused
+-   Mobile: Floating "Add to Cart" button (sticky bottom)
+-   Performance: Lazy load images below fold
