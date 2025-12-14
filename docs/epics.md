@@ -1,11 +1,19 @@
 ---
-stepsCompleted: ["step-01-validate-prerequisites", "step-02-design-epics"]
+stepsCompleted:
+    [
+        "step-01-validate-prerequisites",
+        "step-02-design-epics",
+        "step-03-create-stories",
+    ]
 inputDocuments:
     - "docs/prd.md"
     - "docs/architecture.md"
     - "docs/ux-design-specification.md"
 epicCount: 10
 totalFRs: 139
+totalStories: 47
+completed: true
+completedDate: "2025-12-14"
 ---
 
 # Tact - Epic Breakdown
@@ -3048,3 +3056,801 @@ So that customers have proof of purchase and warranty information.
 -   Printer Support: Standard browser print dialog
 -   PDF Generation: Optional - use Laravel DomPDF package (future)
 -   Email: Optional - use Laravel Mail (future enhancement)
+
+## Epic 9: Inventory Management
+
+**Goal:** Warehouse staff có thể nhập kho, xem lịch sử stock movements, và nhận alerts về tồn kho thấp/chậm bán. Manager có thể monitor inventory value và turnover.
+
+### Story 9.1: Stock-In Transaction Creation
+
+As a **Warehouse Staff**,
+I want to create stock-in transactions for new inventory,
+So that product quantities are updated accurately in the system.
+
+**Acceptance Criteria:**
+
+**Given** I am logged in as Warehouse staff
+**When** I navigate to /admin/inventory/stock-in
+**Then** I see a "Tạo phiếu nhập kho" button
+**And** I see a list of recent stock-in transactions
+
+**Given** I click "Tạo phiếu nhập kho"
+**When** the form loads
+**Then** I see fields: Supplier (dropdown), Reference Number (text), Date (date picker), Notes (textarea)
+**And** I see a section to add products with: Product (searchable dropdown), Quantity (number), Cost Price (number)
+**And** I see an "Thêm sản phẩm" button to add more product lines
+
+**Given** I select a supplier
+**When** I click the supplier dropdown
+**Then** I see a list of all active suppliers
+**And** I can search suppliers by name
+**And** selecting a supplier fills the supplier_id field
+
+**Given** I want to add a product to the stock-in
+**When** I click the product dropdown
+**Then** I see a searchable list of all products
+**And** I can search by product name or SKU
+**And** selecting a product shows its current stock quantity
+
+**Given** I enter product details
+**When** I fill in quantity and cost price
+**Then** the system calculates the line total (quantity × cost)
+**And** I see the line total displayed
+**And** the grand total updates automatically
+
+**Given** I want to add multiple products
+**When** I click "Thêm sản phẩm"
+**Then** a new product line is added to the form
+**And** I can add up to 50 products in one stock-in transaction
+
+**Given** I want to remove a product line
+**When** I click the "Xóa" button on a product line
+**Then** that product line is removed from the form
+**And** the grand total recalculates
+
+**Given** I complete the form with valid data
+**When** I click "Lưu phiếu nhập"
+**Then** I see the total value displayed (e.g., "Tổng giá trị: 12.000.000.000đ")
+**And** if the total > 50,000,000đ, I see a confirmation modal "Xác nhận giao dịch giá trị cao?"
+**And** I must confirm to proceed
+
+**Given** I confirm a high-value transaction
+**When** I click "Xác nhận"
+**Then** the stock-in transaction is created in stock_movements table (type='in')
+**And** for each product, a stock_movement record is created
+**And** the database trigger 'update_stock' fires to increase product quantities
+**And** I see a success message "Nhập kho thành công!"
+**And** I am redirected to the stock movement history page
+
+**Technical Details:**
+
+-   Route: GET /admin/inventory/stock-in, POST /admin/inventory/stock-in
+-   Controller: Admin\InventoryController@stockIn, @storeStockIn
+-   Authorization: Gate 'manage-inventory' (Warehouse, Admin, Manager)
+-   Validation: supplier_id required, at least 1 product, quantity > 0, cost > 0
+-   High-Value Threshold: 50,000,000 VND (FR77)
+-   Database: Create stock_movements records (type='in', quantity, cost_price, reference_number, notes)
+-   Trigger: update_stock (UPDATE products SET quantity = quantity + NEW.quantity)
+-   UI: Dynamic form with add/remove product lines (JavaScript)
+
+---
+
+### Story 9.2: Stock Movement History and Filtering
+
+As a **Warehouse Staff or Manager**,
+I want to view stock movement history with filtering options,
+So that I can track inventory changes and audit transactions.
+
+**Acceptance Criteria:**
+
+**Given** I am logged in as Warehouse, Manager, or Admin
+**When** I navigate to /admin/inventory/movements
+**Then** I see a list of all stock movements sorted by date (newest first)
+**And** each row shows: Date, Type (In/Out), Product, Quantity, Reference, Staff, Notes
+
+**Given** I view the stock movement list
+**When** I look at the Type column
+**Then** "In" movements show a green badge with up arrow ↑
+**And** "Out" movements show a red badge with down arrow ↓
+**And** the color coding makes it easy to distinguish at a glance
+
+**Given** I want to filter by movement type
+**When** I select "Nhập kho" or "Xuất kho" from the type filter
+**Then** the list updates to show only that type of movement
+**And** the filter is applied without page reload (AJAX)
+
+**Given** I want to filter by date range
+**When** I select a start date and end date
+**Then** the list shows only movements within that date range
+**And** I can use preset ranges: "Hôm nay", "7 ngày qua", "Tháng này", "Tháng trước"
+
+**Given** I want to filter by product
+**When** I type in the product search field
+**Then** I see autocomplete suggestions
+**And** selecting a product filters the list to show only that product's movements
+
+**Given** I want to filter by supplier (for stock-in)
+**When** I select a supplier from the dropdown
+**Then** the list shows only stock-in movements from that supplier
+
+**Given** I want to export the filtered data
+**When** I click "Xuất Excel" button (future enhancement)
+**Then** the filtered stock movements are exported to Excel file
+**And** the file downloads automatically
+
+**Given** I click on a stock movement row
+**When** I select a movement
+**Then** I see a detail modal showing: Full product info, Quantity change, Cost/Price, Reference number, Notes, Staff who created it, Timestamp
+
+**Given** I want to see the impact on inventory
+**When** I view a stock movement detail
+**Then** I see "Tồn kho trước: [X]" and "Tồn kho sau: [Y]"
+**And** the quantity change is clearly highlighted
+
+**Technical Details:**
+
+-   Route: GET /admin/inventory/movements
+-   Controller: Admin\InventoryController@movements
+-   Authorization: Gate 'view-inventory' (Warehouse, Manager, Admin)
+-   Query: Eager load product, supplier, user relationships
+-   Filters: type, date_range, product_id, supplier_id
+-   Pagination: 50 movements per page
+-   AJAX: Use Axios for filtering without page reload
+-   Export: Optional - use Laravel Excel package (future)
+
+---
+
+### Story 9.3: Low Stock Alerts and Monitoring
+
+As a **Warehouse Staff or Manager**,
+I want to see low stock alerts automatically,
+So that I can reorder products before they run out.
+
+**Acceptance Criteria:**
+
+**Given** I am logged in as Warehouse, Manager, or Admin
+**When** I navigate to /admin/dashboard or /admin/inventory
+**Then** I see a "Cảnh báo tồn kho" widget
+**And** the widget shows the count of low stock products
+
+**Given** there are products with quantity < 5
+**When** I view the low stock alerts widget
+**Then** I see a red badge with the count (e.g., "🔴 5 sản phẩm sắp hết")
+**And** clicking the badge takes me to the low stock products list
+
+**Given** I navigate to /admin/inventory/low-stock
+**When** the page loads
+**Then** I see a list of all products with quantity < 5
+**And** each row shows: Product name, SKU, Current quantity (red text), Category, Brand, Last stock-in date
+**And** the list is sorted by quantity (lowest first)
+
+**Given** I view a low stock product
+**When** I look at the product row
+**Then** I see a visual indicator: Red badge "Chỉ còn [X]"
+**And** if quantity = 0, I see "Hết hàng" badge
+**And** I see a "Nhập kho" quick action button
+
+**Given** I click "Nhập kho" on a low stock product
+**When** the button is clicked
+**Then** I am taken to the stock-in form with that product pre-selected
+**And** I can quickly create a stock-in transaction
+
+**Given** I want to see stock trends
+**When** I view a low stock product detail
+**Then** I see a mini chart showing quantity over the last 30 days
+**And** I can see if the stock is decreasing rapidly or slowly
+
+**Given** I want to set custom alert thresholds
+**When** I edit a product (future enhancement)
+**Then** I can set a custom "Min Stock Level" (e.g., 10 instead of default 5)
+**And** alerts trigger when quantity < min_stock_level
+
+**Given** there are no low stock products
+**When** I view the low stock page
+**Then** I see a success message "✅ Tất cả sản phẩm đều đủ hàng"
+**And** I see a green checkmark icon
+
+**Technical Details:**
+
+-   Route: GET /admin/inventory/low-stock
+-   Controller: Admin\InventoryController@lowStock
+-   Query: WHERE quantity < 5 AND status = 'active' ORDER BY quantity ASC
+-   Alert Threshold: 5 items (FR84)
+-   Color Coding: Red (< 5), Yellow (5-10), Green (> 10) - FR87
+-   Dashboard Widget: Show count and link to full list
+-   Quick Action: Pre-fill stock-in form with selected product
+-   Future: Custom thresholds per product, email notifications
+
+---
+
+### Story 9.4: Dead Stock Alerts and Analysis
+
+As a **Manager**,
+I want to identify products that haven't sold in 30+ days,
+So that I can take action to clear slow-moving inventory.
+
+**Acceptance Criteria:**
+
+**Given** I am logged in as Manager or Admin
+**When** I navigate to /admin/inventory/dead-stock
+**Then** I see a list of products with no sales in the last 30 days
+**And** each row shows: Product name, SKU, Current quantity, Days without sale, Inventory value (quantity × cost), Last sale date
+
+**Given** I view the dead stock list
+**When** the page loads
+**Then** products are sorted by "Days without sale" (highest first)
+**And** I see a yellow warning badge "⚠️ [X] ngày không bán"
+**And** if days > 60, the badge turns red "🔴 [X] ngày không bán"
+
+**Given** I view the total dead stock value
+**When** I look at the summary section
+**Then** I see "Tổng giá trị hàng tồn chậm: [X]đ"
+**And** I see the percentage of total inventory value
+**And** I see the count of dead stock products
+
+**Given** I want to analyze why a product isn't selling
+**When** I click on a dead stock product
+**Then** I see a detail modal with: Product info, Price comparison with competitors (manual input), Customer views (if tracked), Last promotion date, Suggested actions
+
+**Given** I want to create a promotion for dead stock
+**When** I click "Tạo khuyến mãi" on a dead stock product
+**Then** I am taken to the promotion creation form with that product pre-selected
+**And** I can quickly create a discount voucher
+
+**Given** I want to adjust the price
+**When** I click "Điều chỉnh giá" on a dead stock product
+**Then** I am taken to the product edit page
+**And** I can update the selling price
+
+**Given** I want to filter dead stock by category or brand
+**When** I use the category/brand filters
+**Then** the list updates to show only dead stock in that category/brand
+**And** I can identify which categories have the most dead stock
+
+**Given** I want to export dead stock report
+**When** I click "Xuất báo cáo"
+**Then** an Excel file is generated with all dead stock data
+**And** the file includes: Product details, Days without sale, Inventory value, Suggested actions
+
+**Given** there is no dead stock
+**When** I view the dead stock page
+**Then** I see a success message "✅ Không có sản phẩm chậm bán"
+**And** I see a green checkmark icon
+
+**Technical Details:**
+
+-   Route: GET /admin/inventory/dead-stock
+-   Controller: Admin\InventoryController@deadStock
+-   Query: Products with no order_items in last 30 days AND quantity > 0
+-   Calculation: Days without sale = DATEDIFF(NOW(), MAX(order_items.created_at))
+-   Threshold: 30 days (FR85)
+-   Inventory Value: quantity × cost_price
+-   Color Coding: Yellow (30-60 days), Red (> 60 days)
+-   Actions: Create promotion, Adjust price, Mark for clearance
+-   Report: Optional - Excel export with recommendations
+
+---
+
+### Story 9.5: Inventory Value Tracking and Dashboard
+
+As a **Manager**,
+I want to see total inventory value and key metrics on the dashboard,
+So that I can monitor inventory health and make informed decisions.
+
+**Acceptance Criteria:**
+
+**Given** I am logged in as Manager or Admin
+**When** I navigate to /admin/dashboard
+**Then** I see an "Inventory Overview" widget
+**And** the widget shows: Total Inventory Value, Low Stock Count, Dead Stock Count, Inventory Turnover Rate
+
+**Given** I view the Total Inventory Value
+**When** I look at the inventory widget
+**Then** I see the total value calculated as: SUM(quantity × cost_price) for all products
+**And** the value is formatted in Vietnamese currency (e.g., "450.000.000đ")
+**And** I see a trend indicator (up/down arrow) compared to last month
+
+**Given** I view the Low Stock Count
+**When** I look at the inventory widget
+**Then** I see the count of products with quantity < 5
+**And** the count is displayed with a red badge if > 0
+**And** clicking the count takes me to the low stock page
+
+**Given** I view the Dead Stock Count
+**When** I look at the inventory widget
+**Then** I see the count of products with no sales in 30+ days
+**And** the count is displayed with a yellow badge if > 0
+**And** clicking the count takes me to the dead stock page
+
+**Given** I view the Inventory Turnover Rate
+**When** I look at the inventory widget
+**Then** I see the turnover rate calculated as: (Cost of Goods Sold / Average Inventory Value) × 365 days
+**And** the rate is displayed as "X lần/năm"
+**And** I see a color indicator: Green (8-10x), Yellow (6-8x), Red (< 6x)
+**And** I see a tooltip explaining what the rate means
+
+**Given** I want to see inventory trends
+**When** I scroll down on the dashboard
+**Then** I see a chart showing "Inventory Value Over Time" (last 6 months)
+**And** the chart uses Chart.js with smooth line graph
+**And** I can hover over data points to see exact values
+
+**Given** I want to see stock movement summary
+**When** I view the dashboard
+**Then** I see a "Recent Stock Movements" widget
+**And** the widget shows the last 5 stock movements (in/out)
+**And** I can click "Xem tất cả" to go to the full stock movement history
+
+**Given** I want to see top products by inventory value
+**When** I scroll to the inventory section
+**Then** I see a "Top 10 Products by Inventory Value" list
+**And** each product shows: Name, Quantity, Cost Price, Total Value
+**And** the list helps me identify which products tie up the most capital
+
+**Given** I want to drill down into inventory details
+**When** I click on any inventory metric
+**Then** I am taken to the detailed page for that metric
+**And** I can see the full data and take actions
+
+**Technical Details:**
+
+-   Route: GET /admin/dashboard
+-   Controller: Admin\DashboardController@index
+-   Calculations:
+    -   Total Inventory Value: SUM(products.quantity × products.cost)
+    -   Low Stock Count: COUNT(products WHERE quantity < 5)
+    -   Dead Stock Count: COUNT(products with no sales in 30 days)
+    -   Inventory Turnover: (Total COGS last 12 months) / (Average Inventory Value)
+-   Chart: Chart.js line chart for inventory value over time
+-   Caching: Cache dashboard metrics for 5 minutes (performance)
+-   Color Coding: Green (good), Yellow (warning), Red (critical)
+-   Responsive: Dashboard widgets stack on mobile, side-by-side on desktop
+
+## Epic 10: Dashboard, Reports & Customer Management
+
+**Goal:** Manager/Admin có thể xem dashboard với real-time metrics, generate reports, và quản lý customer data.
+
+### Story 10.1: Dashboard with Key Metrics and Charts
+
+As a **Manager or Admin**,
+I want to see a comprehensive dashboard with key business metrics,
+So that I can monitor business performance at a glance.
+
+**Acceptance Criteria:**
+
+**Given** I am logged in as Manager or Admin
+**When** I navigate to /admin/dashboard
+**Then** I see the dashboard with 4 main sections: Overview Cards, Revenue Chart, Stock Alerts, Recent Activities
+
+**Given** I view the Overview Cards section
+**When** the dashboard loads
+**Then** I see 4 metric cards displayed in a row (desktop) or stacked (mobile):
+
+1. **Total Revenue** (this month): Amount in VND, trend vs last month (up/down arrow %)
+2. **Total Orders** (this month): Count, trend vs last month
+3. **Total Products**: Active product count, low stock count in red badge
+4. **Total Customers**: Customer count, new customers this month in green badge
+
+**Given** I view the Revenue Chart
+**When** I scroll to the chart section
+**Then** I see a line chart showing "Revenue by Day" for the current month
+**And** the chart is built with Chart.js with smooth curves
+**And** I can hover over data points to see exact revenue for that day
+**And** I see a dropdown to change the time period: "7 ngày", "Tháng này", "Tháng trước", "3 tháng"
+**And** selecting a period updates the chart without page reload (AJAX)
+
+**Given** I view the Stock Alerts section
+**When** I look at the alerts widget
+**Then** I see two alert cards side by side:
+
+1. **Low Stock Alert**: Red badge with count, "🔴 [X] sản phẩm sắp hết", click to view list
+2. **Dead Stock Alert**: Yellow badge with count, "⚠️ [X] sản phẩm chậm bán", click to view list
+   **And** if no alerts, I see green checkmarks "✅ Tồn kho tốt"
+
+**Given** I view the Recent Activities section
+**When** I scroll to the bottom
+**Then** I see a timeline of recent activities (last 10):
+
+-   New orders created
+-   Orders status changed (confirmed, shipped, completed)
+-   Stock movements (in/out)
+-   New customers registered
+    **And** each activity shows: Icon, Description, Timestamp, User who performed it
+    **And** I can click "Xem tất cả" to see full activity log
+
+**Given** I want to refresh the dashboard data
+**When** I wait 30 seconds
+**Then** the dashboard automatically refreshes via AJAX polling
+**And** I see a subtle loading indicator during refresh
+**And** the new data is displayed without page reload
+
+**Given** I am on mobile
+**When** I view the dashboard
+**Then** all widgets stack vertically
+**And** charts are responsive and readable on small screens
+**And** touch interactions work smoothly
+
+**Technical Details:**
+
+-   Route: GET /admin/dashboard
+-   Controller: Admin\DashboardController@index
+-   Metrics Calculation:
+    -   Revenue: SUM(orders.total_money WHERE status='completed' AND MONTH(created_at) = current month)
+    -   Orders: COUNT(orders WHERE MONTH(created_at) = current month)
+    -   Products: COUNT(products WHERE status='active')
+    -   Customers: COUNT(customers)
+-   Chart: Chart.js with responsive config
+-   AJAX Polling: Every 30 seconds for real-time updates
+-   Caching: Cache metrics for 5 minutes to reduce database load
+-   Authorization: Gate 'view-dashboard' (Manager, Admin only)
+
+---
+
+### Story 10.2: Revenue and Product Performance Reports
+
+As a **Manager or Admin**,
+I want to generate revenue and product performance reports,
+So that I can analyze sales trends and identify top/bottom performers.
+
+**Acceptance Criteria:**
+
+**Given** I am logged in as Manager or Admin
+**When** I navigate to /admin/reports
+**Then** I see a reports page with tabs: "Doanh thu", "Sản phẩm", "Tồn kho", "Khách hàng"
+**And** the "Doanh thu" tab is active by default
+
+**Given** I am on the Revenue Report tab
+**When** I view the report options
+**Then** I see date range filters: Start Date, End Date, and preset options ("Hôm nay", "7 ngày", "Tháng này", "Tháng trước", "Tùy chỉnh")
+**And** I see a "Tạo báo cáo" button
+
+**Given** I select a date range and click "Tạo báo cáo"
+**When** the report is generated
+**Then** I see a summary section showing:
+
+-   Total Revenue for the period
+-   Total Orders count
+-   Average Order Value (AOV)
+-   Revenue by Source (Web vs Store) - pie chart
+    **And** I see a detailed table with daily breakdown: Date, Orders Count, Revenue, AOV
+
+**Given** I view the Product Performance Report
+**When** I switch to the "Sản phẩm" tab
+**Then** I see two sections: "Top Sellers" and "Slow Movers"
+**And** I can select a date range for the analysis
+
+**Given** I generate a Product Performance Report
+**When** I click "Tạo báo cáo"
+**Then** I see the Top 10 Best Selling Products table showing:
+
+-   Product Name, SKU, Units Sold, Revenue, Profit Margin
+    **And** I see the Top 10 Slow Moving Products table showing:
+-   Product Name, SKU, Days Without Sale, Current Stock, Inventory Value
+    **And** I see a bar chart comparing top sellers by revenue
+
+**Given** I want to export a report
+**When** I click "Xuất Excel" button
+**Then** the report data is exported to an Excel file
+**And** the file downloads automatically with filename "report-revenue-YYYY-MM-DD.xlsx"
+**And** the Excel file includes all tables and summary data
+
+**Given** I want to print a report
+**When** I click "In báo cáo" button
+**Then** a print-friendly version of the report opens in a new window
+**And** the print layout is clean with proper page breaks
+**And** I can print using the browser print dialog
+
+**Given** I want to schedule recurring reports (future enhancement)
+**When** I click "Lên lịch báo cáo"
+**Then** I can set up automatic report generation (daily, weekly, monthly)
+**And** reports are emailed to specified recipients
+
+**Technical Details:**
+
+-   Route: GET /admin/reports, POST /admin/reports/generate
+-   Controller: Admin\ReportController@index, @generate
+-   Authorization: Gate 'view-reports' (Manager, Admin)
+-   Queries:
+    -   Revenue: SUM(orders.total_money WHERE status='completed' AND created_at BETWEEN start_date AND end_date)
+    -   Top Sellers: SELECT product_id, SUM(quantity), SUM(subtotal) FROM order_items GROUP BY product_id ORDER BY SUM(quantity) DESC LIMIT 10
+    -   Slow Movers: Products with no sales in date range
+-   Charts: Chart.js for pie chart (revenue by source) and bar chart (top sellers)
+-   Export: Laravel Excel package (maatwebsite/excel)
+-   Print: @media print CSS for clean printing
+
+---
+
+### Story 10.3: Inventory Reports and Analysis
+
+As a **Manager or Admin**,
+I want to generate inventory reports with turnover analysis,
+So that I can optimize stock levels and reduce carrying costs.
+
+**Acceptance Criteria:**
+
+**Given** I am logged in as Manager or Admin
+**When** I navigate to /admin/reports and click the "Tồn kho" tab
+**Then** I see inventory report options with date range filters
+**And** I see report type options: "Tổng quan", "Xuất nhập tồn", "Vòng quay kho"
+
+**Given** I select "Tổng quan" report type
+**When** I click "Tạo báo cáo"
+**Then** I see an Inventory Overview Report showing:
+
+-   Total Inventory Value (quantity × cost for all products)
+-   Total Products Count (active products)
+-   Low Stock Products Count (< 5 items)
+-   Dead Stock Products Count (> 30 days no sale)
+-   Stock Level Distribution: Pie chart (Low < 5, Medium 5-20, High > 20)
+
+**Given** I select "Xuất nhập tồn" report type
+**When** I generate the report for a date range
+**Then** I see a Stock Movement Report with columns:
+
+-   Product Name, SKU
+-   Opening Stock (quantity at start of period)
+-   Stock In (total quantity added)
+-   Stock Out (total quantity sold)
+-   Closing Stock (quantity at end of period)
+-   Inventory Value (closing stock × cost)
+    **And** the report shows all products with movements in the period
+    **And** I see a summary row with totals
+
+**Given** I select "Vòng quay kho" report type
+**When** I generate the report
+**Then** I see an Inventory Turnover Report showing:
+
+-   Product Name, SKU, Category
+-   Average Inventory (average quantity during period)
+-   Units Sold (total quantity sold)
+-   Inventory Turnover Ratio (units sold / average inventory)
+-   Days Sales of Inventory (365 / turnover ratio)
+-   Color coding: Green (turnover > 8x), Yellow (4-8x), Red (< 4x)
+    **And** products are sorted by turnover ratio (highest first)
+
+**Given** I view the Inventory Turnover Report
+**When** I look at the summary section
+**Then** I see overall metrics:
+
+-   Overall Inventory Turnover Rate (8-10x target)
+-   Average Days Sales of Inventory (40-50 days target)
+-   Fast Moving Products Count (turnover > 10x)
+-   Slow Moving Products Count (turnover < 4x)
+
+**Given** I want to identify optimization opportunities
+**When** I view the report
+**Then** I see recommendations:
+
+-   "Reduce stock for products with turnover < 4x"
+-   "Increase stock for products with turnover > 12x and frequent stockouts"
+-   "Consider discontinuing products with 0 turnover"
+
+**Given** I want to export the inventory report
+**When** I click "Xuất Excel"
+**Then** the report is exported with all tables and charts
+**And** the Excel file includes formulas for calculations
+
+**Technical Details:**
+
+-   Route: GET /admin/reports/inventory
+-   Controller: Admin\ReportController@inventory
+-   Calculations:
+    -   Opening Stock: products.quantity at start_date
+    -   Stock In: SUM(stock_movements.quantity WHERE type='in' AND date BETWEEN start_date AND end_date)
+    -   Stock Out: SUM(order_items.quantity WHERE order.status='completed' AND date BETWEEN start_date AND end_date)
+    -   Closing Stock: Opening + Stock In - Stock Out
+    -   Turnover Ratio: Units Sold / Average Inventory
+    -   Days Sales of Inventory: 365 / Turnover Ratio
+-   Charts: Pie chart for stock level distribution
+-   Export: Excel with multiple sheets (Overview, Movements, Turnover)
+
+---
+
+### Story 10.4: Customer Management and Insights
+
+As a **Manager, Admin, or Sales Staff**,
+I want to view and manage customer information with purchase history,
+So that I can provide better service and identify valuable customers.
+
+**Acceptance Criteria:**
+
+**Given** I am logged in as Manager, Admin, or Sales
+**When** I navigate to /admin/customers
+**Then** I see a list of all customers with columns: Name, Email, Phone, Points Balance, Total Orders, Total Spent, Registration Date
+**And** the list is paginated (20 customers per page)
+**And** I see a search box to find customers by name, email, or phone
+
+**Given** I want to search for a customer
+**When** I type in the search box
+**Then** I see autocomplete suggestions as I type (debounced 300ms)
+**And** the search matches name, email, or phone number
+**And** selecting a suggestion takes me to that customer's detail page
+
+**Given** I want to filter customers
+**When** I use the filter options
+**Then** I can filter by:
+
+-   Registration Date Range
+-   Points Balance Range (e.g., > 500 points)
+-   Total Spent Range (e.g., > 10M VND)
+-   Order Count Range (e.g., > 5 orders)
+    **And** filters can be combined (e.g., high spenders with many orders)
+
+**Given** I click on a customer row
+**When** I select a customer
+**Then** I am taken to the customer detail page (/admin/customers/{id})
+**And** I see the customer's full information
+
+**Given** I view a customer detail page
+**When** the page loads
+**Then** I see the customer profile section showing:
+
+-   Full Name, Email, Phone, Address
+-   Registration Date, Last Login Date
+-   Current Points Balance with equivalent value (points × 1,000đ)
+-   Total Orders Count, Total Spent Amount
+-   Customer Tier badge (Bronze/Silver/Gold based on spending)
+
+**Given** I view the customer's order history
+**When** I scroll to the orders section
+**Then** I see a list of all orders from this customer sorted by date (newest first)
+**And** each order shows: Order Code, Date, Total, Status, Source (Web/Store)
+**And** I can click on an order to view its details
+
+**Given** I view the customer's points history
+**When** I scroll to the points section
+**Then** I see a table showing points transactions:
+
+-   Date, Description (e.g., "Earned from Order #123", "Used for Order #456"), Points Change (+/-), Balance After
+    **And** the table shows the last 20 transactions with pagination
+
+**Given** I want to manually adjust customer points (Admin only)
+**When** I click "Điều chỉnh điểm" button
+**Then** I see a modal to add or subtract points
+**And** I must enter a reason for the adjustment
+**And** the adjustment is logged in points history
+
+**Given** I want to view customer insights
+**When** I look at the insights section
+**Then** I see:
+
+-   Favorite Categories (based on purchase history)
+-   Average Order Value
+-   Purchase Frequency (orders per month)
+-   Last Purchase Date
+-   Recommended Actions (e.g., "Send promotion to re-engage")
+
+**Given** I want to export customer data
+**When** I click "Xuất Excel" on the customer list
+**Then** all customers (or filtered customers) are exported to Excel
+**And** the file includes: Name, Email, Phone, Points, Orders, Total Spent
+
+**Technical Details:**
+
+-   Route: GET /admin/customers, GET /admin/customers/{id}
+-   Controller: Admin\CustomerController@index, @show
+-   Authorization: Gate 'view-customers' (Manager, Admin, Sales)
+-   Search: AJAX endpoint /api/customers/search?q={query}
+-   Filters: registration_date, points_range, spent_range, order_count_range
+-   Customer Tier: Bronze (< 10M), Silver (10-50M), Gold (> 50M) based on total_spent
+-   Points Adjustment: Admin only, requires reason, logged in points_history table
+-   Insights: Calculate from order history (favorite categories, AOV, frequency)
+-   Export: Laravel Excel package
+
+---
+
+### Story 10.5: Customer Reports and Loyalty Analysis
+
+As a **Manager or Admin**,
+I want to generate customer reports with loyalty program analysis,
+So that I can measure customer retention and loyalty program effectiveness.
+
+**Acceptance Criteria:**
+
+**Given** I am logged in as Manager or Admin
+**When** I navigate to /admin/reports and click the "Khách hàng" tab
+**Then** I see customer report options with date range filters
+**And** I see report type options: "Tổng quan", "Khách hàng mới", "Top khách hàng", "Phân tích điểm"
+
+**Given** I select "Tổng quan" report type
+**When** I generate the report
+**Then** I see a Customer Overview Report showing:
+
+-   Total Customers Count
+-   New Customers This Month (count and % growth)
+-   Active Customers (made purchase in last 90 days)
+-   Repeat Customer Rate (customers with 2+ orders / total customers)
+-   Customer Lifetime Value (CLV) - average total spent per customer
+-   Customer Acquisition Cost (CAC) - if tracked
+
+**Given** I select "Khách hàng mới" report type
+**When** I generate the report for a date range
+**Then** I see a New Customers Report showing:
+
+-   List of customers who registered in the period
+-   Columns: Name, Email, Phone, Registration Date, First Order Date, First Order Value
+-   Conversion Rate (customers who made first purchase / total new customers)
+-   Average Time to First Purchase
+-   Chart showing new customer registrations by day
+
+**Given** I select "Top khách hàng" report type
+**When** I generate the report
+**Then** I see a Top Customers Report showing:
+
+-   Top 20 Customers by Total Spent with columns: Name, Email, Total Orders, Total Spent, Points Balance, Last Purchase Date
+-   Top 20 Customers by Order Count
+-   Top 20 Customers by Points Balance
+-   Customer Tier Distribution: Pie chart (Bronze, Silver, Gold)
+
+**Given** I select "Phân tích điểm" report type
+**When** I generate the report
+**Then** I see a Loyalty Points Analysis Report showing:
+
+-   Total Points Issued (all time)
+-   Total Points Redeemed (all time)
+-   Points Redemption Rate (redeemed / issued)
+-   Average Points Balance per Customer
+-   Points Issued This Month (from completed orders)
+-   Points Redeemed This Month (from orders using points)
+-   Chart showing points issued vs redeemed over time (last 6 months)
+
+**Given** I view the Loyalty Points Analysis
+**When** I look at the insights section
+**Then** I see:
+
+-   "Points Liability" - total unredeemed points value (points × 1,000đ)
+-   "Most Active Points Users" - top 10 customers by points redeemed
+-   "Points Expiry" - if points have expiry (future feature)
+-   Recommendations: "X% of customers have never used points - consider promotion"
+
+**Given** I want to analyze customer retention
+**When** I view the Customer Overview Report
+**Then** I see a Cohort Analysis table (optional, future enhancement):
+
+-   Rows: Customer registration month cohorts
+-   Columns: Months since registration (Month 0, 1, 2, 3...)
+-   Values: % of cohort that made a purchase in that month
+-   Color coding: Green (high retention), Yellow (medium), Red (low)
+
+**Given** I want to export the customer report
+**When** I click "Xuất Excel"
+**Then** the report is exported with all tables and charts
+**And** the Excel file includes customer lists and summary metrics
+
+**Technical Details:**
+
+-   Route: GET /admin/reports/customers
+-   Controller: Admin\ReportController@customers
+-   Calculations:
+    -   New Customers: COUNT(customers WHERE created_at BETWEEN start_date AND end_date)
+    -   Active Customers: COUNT(DISTINCT customers WHERE orders.created_at > NOW() - 90 days)
+    -   Repeat Rate: COUNT(customers with orders.count >= 2) / COUNT(customers)
+    -   CLV: AVG(SUM(orders.total_money) per customer)
+    -   Points Issued: SUM(points earned from completed orders)
+    -   Points Redeemed: SUM(orders.points_used)
+    -   Redemption Rate: Points Redeemed / Points Issued
+-   Charts: Line chart for new customers over time, Pie chart for customer tiers, Line chart for points issued vs redeemed
+-   Export: Excel with multiple sheets (Overview, New Customers, Top Customers, Points Analysis)
+-   Future: Cohort analysis, RFM segmentation, churn prediction
+
+---
+
+## Summary
+
+**Total Epics: 10**
+**Total Stories: 47**
+
+**Epic Breakdown:**
+
+-   Epic 1: Project Foundation & Authentication (8 stories)
+-   Epic 2: Master Data Management (3 stories)
+-   Epic 3: Product Management (5 stories)
+-   Epic 4: Product Discovery & Browsing (7 stories)
+-   Epic 5: Shopping Cart & Checkout (5 stories)
+-   Epic 6: Promotion & Loyalty System (4 stories)
+-   Epic 7: Order Management (5 stories)
+-   Epic 8: Point of Sale System (6 stories)
+-   Epic 9: Inventory Management (5 stories)
+-   Epic 10: Dashboard, Reports & Customer Management (5 stories)
+
+**All 139 Functional Requirements covered across 47 user stories.**
