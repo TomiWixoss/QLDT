@@ -9,7 +9,11 @@ user_name: "{config_source}:user_name"
 communication_language: "{config_source}:communication_language"
 date: system-generated
 sprint_artifacts: "{config_source}:sprint_artifacts"
-story_dir: "{sprint_artifacts}"
+
+# CRITICAL: story_dir MUST match story_location in sprint-status.yaml
+# This is where story files are saved - NOT sprint_artifacts!
+# Default structure: {output_folder}/3-implementation (e.g., docs/3-implementation)
+story_dir: "{output_folder}/3-implementation"
 
 # Workflow components
 installed_path: "{project-root}/.bmad/bmm/workflows/4-implementation/create-story"
