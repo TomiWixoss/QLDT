@@ -5,6 +5,18 @@
 
 ---
 
+## ⚠️ CRITICAL: COMPANION DOCUMENT REQUIRED
+
+> **🚨 AI AGENTS MUST LOAD BOTH FILES:**
+>
+> 1. `project-context.md` - Project rules, conventions, tech stack
+> 2. `project_context2.md` (this file) - Document map with headers & line ranges
+>
+> **DO NOT proceed without loading `project-context.md`!**
+> The project rules and conventions are essential for correct implementation.
+
+---
+
 ## 🗺️ Document Map (Headers + Line Ranges)
 
 ### Phase 0: Discovery
@@ -473,4 +485,3 @@
 | ### File List               | 436-448 |
 
 ---
-

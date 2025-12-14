@@ -6,6 +6,18 @@
 
 ---
 
+## ⚠️ CRITICAL: COMPANION DOCUMENT REQUIRED
+
+> **🚨 AI AGENTS MUST LOAD BOTH FILES:**
+>
+> 1. `project-context.md` (this file) - Project rules, conventions, tech stack
+> 2. `project_context2.md` - Document map with headers & line ranges
+>
+> **DO NOT proceed without loading `project_context2.md`!**
+> The document map is essential for navigating project documentation efficiently.
+
+---
+
 ## 🎯 Project Overview
 
 **Tact** là website quản lý cửa hàng điện thoại với mô hình O2O (Online-to-Offline), được xây dựng trên Laravel 12, Tailwind CSS 4, và DaisyUI 5.
