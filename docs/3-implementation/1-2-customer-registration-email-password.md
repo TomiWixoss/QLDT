@@ -1,6 +1,6 @@
 # Story 1.2: Customer Registration with Email/Password
 
-Status: ready-for-dev
+Status: Done
 
 ## Story
 
@@ -42,64 +42,64 @@ So that I can shop online and track my orders.
 
 ## Tasks / Subtasks
 
--   [ ] Task 1: Setup Customer Authentication Guard (AC: All)
+-   [x] Task 1: Setup Customer Authentication Guard (AC: All)
 
-    -   [ ] 1.1: Configure 'customer' guard in config/auth.php
-    -   [ ] 1.2: Configure 'customers' provider pointing to Customer model
-    -   [ ] 1.3: Update Customer model to implement Authenticatable
+    -   [x] 1.1: Configure 'customer' guard in config/auth.php
+    -   [x] 1.2: Configure 'customers' provider pointing to Customer model
+    -   [x] 1.3: Update Customer model to implement Authenticatable
 
--   [ ] Task 2: Create Registration Routes (AC: 1)
+-   [x] Task 2: Create Registration Routes (AC: 1)
 
-    -   [ ] 2.1: Add GET /register route for registration form
-    -   [ ] 2.2: Add POST /register route for form submission
-    -   [ ] 2.3: Group routes under guest middleware
+    -   [x] 2.1: Add GET /register route for registration form
+    -   [x] 2.2: Add POST /register route for form submission
+    -   [x] 2.3: Group routes under guest middleware
 
--   [ ] Task 3: Create RegisterController (AC: 1, 2, 3, 4, 5)
+-   [x] Task 3: Create RegisterController (AC: 1, 2, 3, 4, 5)
 
-    -   [ ] 3.1: Create app/Http/Controllers/Auth/RegisterController.php
-    -   [ ] 3.2: Implement showRegistrationForm() method
-    -   [ ] 3.3: Implement store() method with validation and creation
+    -   [x] 3.1: Create app/Http/Controllers/Auth/RegisterController.php
+    -   [x] 3.2: Implement showRegistrationForm() method
+    -   [x] 3.3: Implement store() method with validation and creation
 
--   [ ] Task 4: Create StoreCustomerRequest (AC: 2, 3, 4, 5)
+-   [x] Task 4: Create StoreCustomerRequest (AC: 2, 3, 4, 5)
 
-    -   [ ] 4.1: Create app/Http/Requests/StoreCustomerRequest.php
-    -   [ ] 4.2: Define validation rules (email unique, password min 8, phone regex)
-    -   [ ] 4.3: Define Vietnamese error messages
+    -   [x] 4.1: Create app/Http/Requests/StoreCustomerRequest.php
+    -   [x] 4.2: Define validation rules (email unique, password min 8, phone regex)
+    -   [x] 4.3: Define Vietnamese error messages
 
--   [ ] Task 5: Create Guest Layout (AC: 1)
+-   [x] Task 5: Create Guest Layout (AC: 1)
 
-    -   [ ] 5.1: Create resources/views/layouts/guest.blade.php
-    -   [ ] 5.2: Include Tailwind CSS + DaisyUI styling
-    -   [ ] 5.3: Add Inter Variable Font
+    -   [x] 5.1: Create resources/views/layouts/guest.blade.php
+    -   [x] 5.2: Include Tailwind CSS + DaisyUI styling
+    -   [x] 5.3: Add Inter Variable Font
 
--   [ ] Task 6: Create Registration View (AC: 1, 2, 3, 4, 5)
+-   [x] Task 6: Create Registration View (AC: 1, 2, 3, 4, 5)
 
-    -   [ ] 6.1: Create resources/views/auth/register.blade.php
-    -   [ ] 6.2: Build form with DaisyUI components
-    -   [ ] 6.3: Add client-side validation feedback
-    -   [ ] 6.4: Add error display for validation messages
-    -   [ ] 6.5: Add link to login page
+    -   [x] 6.1: Create resources/views/auth/register.blade.php
+    -   [x] 6.2: Build form with DaisyUI components
+    -   [x] 6.3: Add client-side validation feedback
+    -   [x] 6.4: Add error display for validation messages
+    -   [x] 6.5: Add link to login page
 
--   [ ] Task 7: Create Customer Layout (AC: 1)
+-   [x] Task 7: Create Customer Layout (AC: 1)
 
-    -   [ ] 7.1: Create resources/views/layouts/customer.blade.php
-    -   [ ] 7.2: Add header with navigation
-    -   [ ] 7.3: Add footer
-    -   [ ] 7.4: Add mobile bottom navigation
+    -   [x] 7.1: Create resources/views/layouts/customer.blade.php
+    -   [x] 7.2: Add header with navigation
+    -   [x] 7.3: Add footer
+    -   [x] 7.4: Add mobile bottom navigation
 
--   [ ] Task 8: Create Homepage (AC: 1)
+-   [x] Task 8: Create Homepage (AC: 1)
 
-    -   [ ] 8.1: Create resources/views/customer/home.blade.php
-    -   [ ] 8.2: Add welcome message for logged-in user
-    -   [ ] 8.3: Add placeholder for featured products
+    -   [x] 8.1: Create resources/views/customer/home.blade.php
+    -   [x] 8.2: Add welcome message for logged-in user
+    -   [x] 8.3: Add placeholder for featured products
 
--   [ ] Task 9: Write Tests (AC: All)
-    -   [ ] 9.1: Test successful registration creates customer
-    -   [ ] 9.2: Test duplicate email shows error
-    -   [ ] 9.3: Test short password shows error
-    -   [ ] 9.4: Test mismatched passwords shows error
-    -   [ ] 9.5: Test invalid phone shows error
-    -   [ ] 9.6: Test user is logged in after registration
+-   [x] Task 9: Write Tests (AC: All)
+    -   [x] 9.1: Test successful registration creates customer
+    -   [x] 9.2: Test duplicate email shows error
+    -   [x] 9.3: Test short password shows error
+    -   [x] 9.4: Test mismatched passwords shows error
+    -   [x] 9.5: Test invalid phone shows error
+    -   [x] 9.6: Test user is logged in after registration
 
 ## Dev Notes
 
@@ -627,6 +627,11 @@ class RegistrationTest extends TestCase
 -   [Project Context: project-context.md] - Naming conventions, response format
 -   [Previous Story: docs/3-implementation/1-1-project-setup-database-schema.md] - Patterns established
 
+## Review Follow-ups (AI)
+
+-   [ ] [AI-Review][MEDIUM] Login link in register.blade.php uses `#` - Update to `route('login')` when Story 1.3 is implemented [resources/views/auth/register.blade.php:95]
+-   [ ] [AI-Review][MEDIUM] Logout form action in customer.blade.php uses `#` - Add logout route and controller when Story 1.3 is implemented [resources/views/layouts/customer.blade.php:42]
+
 ## Dev Agent Record
 
 ### Context Reference
@@ -635,10 +640,48 @@ class RegistrationTest extends TestCase
 
 ### Agent Model Used
 
-{{agent_model_name_version}}
+Claude Sonnet 4
 
 ### Debug Log References
 
 ### Completion Notes List
 
+-   ✅ Configured dual authentication system: 'web' guard for staff, 'customer' guard for customers
+-   ✅ Customer model already extended Authenticatable (from Story 1.1)
+-   ✅ Created RegisterController with showRegistrationForm() and store() methods
+-   ✅ Created StoreCustomerRequest with Vietnamese validation messages
+-   ✅ Created guest.blade.php layout with Inter font and DaisyUI
+-   ✅ Created customer.blade.php layout with header, footer, mobile bottom nav
+-   ✅ Created register.blade.php form with all required fields and error display
+-   ✅ Created home.blade.php with welcome message and trust signals
+-   ✅ All 8 registration tests pass (36 total tests pass)
+-   ✅ Password hashing via model cast (bcrypt)
+-   ✅ Auto-login after registration with customer guard
+-   ✅ Form retains input on error (except password)
+
+### Code Review Fixes (2025-12-14)
+
+-   ✅ Fixed phone regex in StoreCustomerRequest: `/^0[35789][0-9]{8}$/` (simpler, correct)
+-   ✅ Added `remember_token` to Customer model hidden fields
+-   ✅ Fixed CustomerFactory phone format to match Vietnamese phone regex
+-   ⏳ Login/logout routes deferred to Story 1.3 (added as action items)
+
 ### File List
+
+**New Files:**
+
+-   app/Http/Controllers/Auth/RegisterController.php
+-   app/Http/Requests/StoreCustomerRequest.php
+-   resources/views/layouts/guest.blade.php
+-   resources/views/layouts/customer.blade.php
+-   resources/views/auth/register.blade.php
+-   resources/views/customer/home.blade.php
+-   tests/Feature/Auth/RegistrationTest.php
+
+**Modified Files:**
+
+-   config/auth.php (added customer guard and customers provider)
+-   routes/web.php (added registration routes)
+-   app/Models/Customer.php (added remember_token to hidden)
+-   app/Http/Requests/StoreCustomerRequest.php (fixed phone regex)
+-   database/factories/CustomerFactory.php (fixed phone format)
