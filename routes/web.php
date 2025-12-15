@@ -103,7 +103,14 @@ Route::prefix('admin')->middleware('auth')->group(function () {
 
     // User Management - Admin only
     Route::middleware('role:Admin')->group(function () {
-        Route::get('/users', [UserController::class, 'index'])->name('admin.users.index');
+        Route::resource('users', UserController::class)->names([
+            'index' => 'admin.users.index',
+            'create' => 'admin.users.create',
+            'store' => 'admin.users.store',
+            'edit' => 'admin.users.edit',
+            'update' => 'admin.users.update',
+            'destroy' => 'admin.users.destroy',
+        ]);
     });
 });
 

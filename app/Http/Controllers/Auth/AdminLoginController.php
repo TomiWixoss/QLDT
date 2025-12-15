@@ -36,6 +36,15 @@ class AdminLoginController extends Controller
             ])->withInput($request->only('email'));
         }
 
+        // Check if user exists and is active BEFORE attempting login
+        $user = \App\Models\User::where('email', $request->email)->first();
+
+        if ($user && $user->status === 'inactive') {
+            return back()
+                ->withInput($request->only('email'))
+                ->withErrors(['email' => 'Tài khoản đã bị vô hiệu hóa. Vui lòng liên hệ quản trị viên.']);
+        }
+
         // Attempt login with 'web' guard (default)
         if (Auth::attempt($request->only('email', 'password'), $request->boolean('remember'))) {
             RateLimiter::clear($throttleKey);

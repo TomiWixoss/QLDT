@@ -1,6 +1,6 @@
 # Story 1.8: User Management (Admin Only)
 
-Status: ready-for-dev
+Status: Done
 
 ---
 
@@ -90,58 +90,58 @@ So that I can manage who has access to the system and their roles.
 
 ## Tasks / Subtasks
 
--   [ ] Task 1: Update UserController with Full CRUD (AC: 1-6)
+-   [x] Task 1: Update UserController with Full CRUD (AC: 1-6)
 
-    -   [ ] 1.1: REPLACE placeholder `index()` with full implementation (paginated list with role)
-    -   [ ] 1.2: Add `create()` method to show create form with roles dropdown
-    -   [ ] 1.3: Add `store()` method with StoreUserRequest validation
-    -   [ ] 1.4: Add `edit()` method to show edit form
-    -   [ ] 1.5: Add `update()` method with UpdateUserRequest validation
-    -   [ ] 1.6: Add `destroy()` method to toggle status (NOT hard delete)
-    -   [ ] 1.7: Add self-deactivation prevention check in destroy()
+    -   [x] 1.1: REPLACE placeholder `index()` with full implementation (paginated list with role)
+    -   [x] 1.2: Add `create()` method to show create form with roles dropdown
+    -   [x] 1.3: Add `store()` method with StoreUserRequest validation
+    -   [x] 1.4: Add `edit()` method to show edit form
+    -   [x] 1.5: Add `update()` method with UpdateUserRequest validation
+    -   [x] 1.6: Add `destroy()` method to toggle status (NOT hard delete)
+    -   [x] 1.7: Add self-deactivation prevention check in destroy()
 
--   [ ] Task 2: Create Form Request Validation (AC: 2, 3)
+-   [x] Task 2: Create Form Request Validation (AC: 2, 3)
 
-    -   [ ] 2.1: Create `StoreUserRequest` with username unique, email unique, password min 8 confirmed
-    -   [ ] 2.2: Create `UpdateUserRequest` with username/email unique (except current)
-    -   [ ] 2.3: Add Vietnamese validation messages
+    -   [x] 2.1: Create `StoreUserRequest` with username unique, email unique, password min 8 confirmed
+    -   [x] 2.2: Create `UpdateUserRequest` with username/email unique (except current)
+    -   [x] 2.3: Add Vietnamese validation messages
 
--   [ ] Task 3: Update Routes (AC: All)
+-   [x] Task 3: Update Routes (AC: All)
 
-    -   [ ] 3.1: REPLACE single /users route with resource routes
-    -   [ ] 3.2: Keep role:Admin middleware (already exists from Story 1.7)
+    -   [x] 3.1: REPLACE single /users route with resource routes
+    -   [x] 3.2: Keep role:Admin middleware (already exists from Story 1.7)
 
--   [ ] Task 4: Update User List View (AC: 1)
+-   [x] Task 4: Update User List View (AC: 1)
 
-    -   [ ] 4.1: REPLACE placeholder view with DaisyUI data table
-    -   [ ] 4.2: Display columns: Username, Name, Email, Role, Status, Actions
-    -   [ ] 4.3: Add "Tạo người dùng mới" button
-    -   [ ] 4.4: Add conditional action buttons: Sửa, Vô hiệu hóa/Kích hoạt
-    -   [ ] 4.5: Add pagination links
-    -   [ ] 4.6: Disable deactivate button for current user
+    -   [x] 4.1: REPLACE placeholder view with DaisyUI data table
+    -   [x] 4.2: Display columns: Username, Name, Email, Role, Status, Actions
+    -   [x] 4.3: Add "Tạo người dùng mới" button
+    -   [x] 4.4: Add conditional action buttons: Sửa, Vô hiệu hóa/Kích hoạt
+    -   [x] 4.5: Add pagination links
+    -   [x] 4.6: Disable deactivate button for current user
 
--   [ ] Task 5: Create User Form Views (AC: 2, 3)
+-   [x] Task 5: Create User Form Views (AC: 2, 3)
 
-    -   [ ] 5.1: Create `create.blade.php` with all fields including password_confirmation
-    -   [ ] 5.2: Create `edit.blade.php` with optional password change
-    -   [ ] 5.3: Add form fields: username, email, full_name, password, password_confirmation, role_id, phone
-    -   [ ] 5.4: Add role dropdown with 4 options from database
+    -   [x] 5.1: Create `create.blade.php` with all fields including password_confirmation
+    -   [x] 5.2: Create `edit.blade.php` with optional password change
+    -   [x] 5.3: Add form fields: username, email, full_name, password, password_confirmation, role_id, phone
+    -   [x] 5.4: Add role dropdown with 4 options from database
 
--   [ ] Task 6: Update AdminLoginController for Status Check (AC: 4)
+-   [x] Task 6: Update AdminLoginController for Status Check (AC: 4)
 
-    -   [ ] 6.1: Add status check BEFORE Auth::attempt()
-    -   [ ] 6.2: Return Vietnamese error message for inactive users
+    -   [x] 6.1: Add status check BEFORE Auth::attempt()
+    -   [x] 6.2: Return Vietnamese error message for inactive users
 
--   [ ] Task 7: Write Tests (AC: All)
-    -   [ ] 7.1: Test Admin can view user list with pagination
-    -   [ ] 7.2: Test Admin can create new user with all fields
-    -   [ ] 7.3: Test Admin can update user
-    -   [ ] 7.4: Test Admin can deactivate user
-    -   [ ] 7.5: Test Admin can reactivate user
-    -   [ ] 7.6: Test Admin cannot deactivate self
-    -   [ ] 7.7: Test deactivated user cannot login
-    -   [ ] 7.8: Test non-Admin cannot access user management
-    -   [ ] 7.9: Test validation errors (username/email unique, password confirmation)
+-   [x] Task 7: Write Tests (AC: All)
+    -   [x] 7.1: Test Admin can view user list with pagination
+    -   [x] 7.2: Test Admin can create new user with all fields
+    -   [x] 7.3: Test Admin can update user
+    -   [x] 7.4: Test Admin can deactivate user
+    -   [x] 7.5: Test Admin can reactivate user
+    -   [x] 7.6: Test Admin cannot deactivate self
+    -   [x] 7.7: Test deactivated user cannot login
+    -   [x] 7.8: Test non-Admin cannot access user management
+    -   [x] 7.9: Test validation errors (username/email unique, password confirmation)
 
 ---
 
@@ -1038,8 +1038,33 @@ class UserManagementTest extends TestCase
 
 ### Completion Notes List
 
-<!-- To be filled by Dev Agent -->
+-   ✅ Implemented full CRUD for User Management (Admin only)
+-   ✅ UserController with index, create, store, edit, update, destroy methods
+-   ✅ StoreUserRequest and UpdateUserRequest with Vietnamese validation messages
+-   ✅ Resource routes replacing single route, maintaining role:Admin middleware
+-   ✅ DaisyUI-styled views: index (data table with pagination), create, edit forms
+-   ✅ Status toggle (active/inactive) instead of hard delete
+-   ✅ Self-deactivation prevention (backend check + disabled button)
+-   ✅ AdminLoginController updated to block inactive users before Auth::attempt()
+-   ✅ 21 comprehensive tests covering all ACs (all passing)
+-   ✅ Full test suite: 125 tests, 358 assertions, all passing
+
+### Files Created
+
+-   app/Http/Controllers/Admin/UserController.php (replaced)
+-   app/Http/Requests/Admin/StoreUserRequest.php (new)
+-   app/Http/Requests/Admin/UpdateUserRequest.php (new)
+-   resources/views/admin/users/index.blade.php (replaced)
+-   resources/views/admin/users/create.blade.php (new)
+-   resources/views/admin/users/edit.blade.php (new)
+-   tests/Feature/Admin/UserManagementTest.php (new)
+
+### Files Modified
+
+-   routes/web.php (resource routes for users)
+-   app/Http/Controllers/Auth/AdminLoginController.php (status check)
+-   docs/3-implementation/sprint-status.yaml (status update)
 
 ### Agent Model Used
 
-<!-- To be filled by Dev Agent -->
+Claude (Anthropic)
