@@ -18,7 +18,7 @@ class SetPasswordController extends Controller
         $customer = Auth::guard('customer')->user();
 
         // Only show if password is null (Google-only account)
-        if ($customer->getAttributes()['password'] !== null) {
+        if ($customer->hasPassword()) {
             return redirect()->route('home');
         }
 

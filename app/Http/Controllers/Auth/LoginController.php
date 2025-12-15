@@ -33,7 +33,7 @@ class LoginController extends Controller
         // Check if this is a Google-only account (no password set)
         $customer = Customer::where('email', $request->email)->first();
 
-        if ($customer && $customer->getAttributes()['password'] === null) {
+        if ($customer && !$customer->hasPassword()) {
             RateLimiter::hit($request->throttleKey());
 
             return back()

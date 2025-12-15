@@ -16,7 +16,16 @@ class GoogleAuthController extends Controller
      */
     public function redirectToGoogle(): RedirectResponse
     {
-        return Socialite::driver('google')->redirect();
+        try {
+            return Socialite::driver('google')->redirect();
+        } catch (\Exception $e) {
+            Log::error('Google OAuth redirect error', [
+                'message' => $e->getMessage(),
+            ]);
+
+            return redirect()->route('login')
+                ->with('error', 'Không thể kết nối với Google. Vui lòng kiểm tra cấu hình.');
+        }
     }
 
     /**

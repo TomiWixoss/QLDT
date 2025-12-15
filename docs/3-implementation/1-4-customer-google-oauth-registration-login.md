@@ -1,6 +1,6 @@
 # Story 1.4: Customer Google OAuth Registration & Login
 
-Status: Ready for Review
+Status: Done
 
 ## Story
 
@@ -852,10 +852,22 @@ Claude (Kiro)
 
 **Modified Files:**
 
+-   composer.json (added Laravel Socialite v5.24 dependency)
+-   composer.lock (dependency lock file updated)
 -   config/services.php (added Google OAuth config)
 -   routes/web.php (added OAuth and set-password routes)
 -   app/Http/Controllers/Auth/LoginController.php (check null password for Google users)
+-   app/Models/Customer.php (added hasPassword() helper method)
 -   resources/views/auth/login.blade.php (enabled Google button, added set-password link)
 -   resources/views/auth/register.blade.php (added Google button)
 -   .env (added Google OAuth credentials)
 -   .env.example (added Google OAuth placeholders)
+
+### Code Review Fixes Applied (2025-12-15)
+
+**Fixed Issues:**
+
+1. **H1 - Incomplete File List**: Added composer.json, composer.lock, Customer.php to File List
+2. **M1 - Test Deprecation Warnings**: Replaced `/** @test */` with `#[Test]` attribute in GoogleAuthTest.php
+3. **M3 - Inconsistent Password Null Check**: Added `hasPassword()` method to Customer model, updated all controllers and tests to use it
+4. **L1 - Missing Error Handling**: Added try-catch to `redirectToGoogle()` method in GoogleAuthController

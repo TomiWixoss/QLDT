@@ -41,4 +41,13 @@ class Customer extends Authenticatable
     {
         return $this->hasMany(Order::class);
     }
+
+    /**
+     * Check if customer has a password set.
+     * Google-only accounts have null password until they set one.
+     */
+    public function hasPassword(): bool
+    {
+        return $this->getAttributes()['password'] !== null;
+    }
 }

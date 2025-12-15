@@ -7,6 +7,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\User as SocialiteUser;
 use Mockery;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class GoogleAuthTest extends TestCase
@@ -34,7 +35,7 @@ class GoogleAuthTest extends TestCase
         parent::tearDown();
     }
 
-    /** @test */
+    #[Test]
     public function google_redirect_redirects_to_google(): void
     {
         // Mock the redirect
@@ -52,7 +53,7 @@ class GoogleAuthTest extends TestCase
         $response->assertRedirect();
     }
 
-    /** @test */
+    #[Test]
     public function first_time_google_registration_creates_customer(): void
     {
         $this->mockSocialiteUser([
@@ -70,14 +71,13 @@ class GoogleAuthTest extends TestCase
         ]);
 
         $customer = Customer::where('email', 'newuser@gmail.com')->first();
-        $this->assertNull($customer->getAttributes()['password']);
+        $this->assertFalse($customer->hasPassword());
         $this->assertAuthenticated('customer');
         $response->assertRedirect(route('password.set'));
         $response->assertSessionHas('success');
     }
 
-
-    /** @test */
+    #[Test]
     public function returning_google_user_is_logged_in(): void
     {
         $customer = Customer::factory()->create([
@@ -99,7 +99,7 @@ class GoogleAuthTest extends TestCase
         $response->assertSessionHas('success', 'Đăng nhập thành công');
     }
 
-    /** @test */
+    #[Test]
     public function email_conflict_links_google_account(): void
     {
         $customer = Customer::factory()->create([
@@ -123,7 +123,7 @@ class GoogleAuthTest extends TestCase
         $response->assertSessionHas('success', 'Tài khoản đã được liên kết với Google');
     }
 
-    /** @test */
+    #[Test]
     public function google_user_without_password_cannot_email_login(): void
     {
         Customer::factory()->create([
@@ -141,7 +141,7 @@ class GoogleAuthTest extends TestCase
         $response->assertSessionHasErrors(['email']);
     }
 
-    /** @test */
+    #[Test]
     public function set_password_page_shows_for_google_user_without_password(): void
     {
         $customer = Customer::factory()->create([
@@ -157,7 +157,7 @@ class GoogleAuthTest extends TestCase
         $response->assertViewIs('auth.set-password');
     }
 
-    /** @test */
+    #[Test]
     public function set_password_works_for_google_user(): void
     {
         $customer = Customer::factory()->create([
@@ -173,12 +173,12 @@ class GoogleAuthTest extends TestCase
         ]);
 
         $customer->refresh();
-        $this->assertNotNull($customer->getAttributes()['password']);
+        $this->assertTrue($customer->hasPassword());
         $response->assertRedirect(route('home'));
         $response->assertSessionHas('success', 'Đặt mật khẩu thành công');
     }
 
-    /** @test */
+    #[Test]
     public function set_password_page_redirects_if_password_exists(): void
     {
         $customer = Customer::factory()->create([
@@ -192,7 +192,7 @@ class GoogleAuthTest extends TestCase
         $response->assertRedirect(route('home'));
     }
 
-    /** @test */
+    #[Test]
     public function set_password_validates_minimum_length(): void
     {
         $customer = Customer::factory()->create([
@@ -210,7 +210,7 @@ class GoogleAuthTest extends TestCase
         $response->assertSessionHasErrors(['password']);
     }
 
-    /** @test */
+    #[Test]
     public function set_password_validates_confirmation(): void
     {
         $customer = Customer::factory()->create([
@@ -228,7 +228,7 @@ class GoogleAuthTest extends TestCase
         $response->assertSessionHasErrors(['password']);
     }
 
-    /** @test */
+    #[Test]
     public function google_oauth_routes_require_guest(): void
     {
         $customer = Customer::factory()->create();
