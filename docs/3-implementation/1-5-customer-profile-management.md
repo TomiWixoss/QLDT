@@ -1,6 +1,6 @@
 # Story 1.5: Customer Profile Management
 
-Status: ready-for-dev
+Status: Done
 
 ## Story
 
@@ -45,53 +45,53 @@ So that I can keep my account details current and view my loyalty points.
 
 ## Tasks / Subtasks
 
--   [ ] Task 1: Create ProfileController (AC: 1, 2)
+-   [x] Task 1: Create ProfileController (AC: 1, 2)
 
-    -   [ ] 1.1: Create app/Http/Controllers/Customer/ProfileController.php
-    -   [ ] 1.2: Implement show() method to display profile page
-    -   [ ] 1.3: Implement update() method to update profile info
-    -   [ ] 1.4: Add proper authorization (customer guard)
+    -   [x] 1.1: Create app/Http/Controllers/Customer/ProfileController.php
+    -   [x] 1.2: Implement show() method to display profile page
+    -   [x] 1.3: Implement update() method to update profile info
+    -   [x] 1.4: Add proper authorization (customer guard)
 
--   [ ] Task 2: Create Profile Update Request (AC: 2)
+-   [x] Task 2: Create Profile Update Request (AC: 2)
 
-    -   [ ] 2.1: Create app/Http/Requests/UpdateProfileRequest.php
-    -   [ ] 2.2: Add validation rules (full_name required, phone format)
-    -   [ ] 2.3: Add Vietnamese validation messages
+    -   [x] 2.1: Create app/Http/Requests/UpdateProfileRequest.php
+    -   [x] 2.2: Add validation rules (full_name required, phone format)
+    -   [x] 2.3: Add Vietnamese validation messages
 
--   [ ] Task 3: Create Change Password Feature (AC: 3, 4)
+-   [x] Task 3: Create Change Password Feature (AC: 3, 4)
 
-    -   [ ] 3.1: Implement updatePassword() method in ProfileController
-    -   [ ] 3.2: Create app/Http/Requests/ChangePasswordRequest.php
-    -   [ ] 3.3: Validate current password matches
-    -   [ ] 3.4: Validate new password (min 8 chars, confirmed)
+    -   [x] 3.1: Implement updatePassword() method in ProfileController
+    -   [x] 3.2: Create app/Http/Requests/ChangePasswordRequest.php
+    -   [x] 3.3: Validate current password matches
+    -   [x] 3.4: Validate new password (min 8 chars, confirmed)
 
--   [ ] Task 4: Create Profile Routes (AC: All)
+-   [x] Task 4: Create Profile Routes (AC: All)
 
-    -   [ ] 4.1: Add GET /profile route for show
-    -   [ ] 4.2: Add PUT /profile route for update
-    -   [ ] 4.3: Add PUT /profile/password route for password change
-    -   [ ] 4.4: Apply auth:customer middleware
+    -   [x] 4.1: Add GET /profile route for show
+    -   [x] 4.2: Add PUT /profile route for update
+    -   [x] 4.3: Add PUT /profile/password route for password change
+    -   [x] 4.4: Apply auth:customer middleware
 
--   [ ] Task 5: Create Profile View (AC: 1, 5)
+-   [x] Task 5: Create Profile View (AC: 1, 5)
 
-    -   [ ] 5.1: Create resources/views/customer/profile.blade.php
-    -   [ ] 5.2: Display current profile information
-    -   [ ] 5.3: Create profile update form
-    -   [ ] 5.4: Create password change form (separate section)
-    -   [ ] 5.5: Display loyalty points with explanation
+    -   [x] 5.1: Create resources/views/customer/profile.blade.php
+    -   [x] 5.2: Display current profile information
+    -   [x] 5.3: Create profile update form
+    -   [x] 5.4: Create password change form (separate section)
+    -   [x] 5.5: Display loyalty points with explanation
 
--   [ ] Task 6: Update Navigation (AC: 1)
+-   [x] Task 6: Update Navigation (AC: 1)
 
-    -   [ ] 6.1: Add profile link to customer layout navigation
-    -   [ ] 6.2: Add profile link to mobile bottom navigation
+    -   [x] 6.1: Add profile link to customer layout navigation
+    -   [x] 6.2: Add profile link to mobile bottom navigation
 
--   [ ] Task 7: Write Tests (AC: All)
-    -   [ ] 7.1: Test profile page displays correctly
-    -   [ ] 7.2: Test profile update with valid data
-    -   [ ] 7.3: Test profile update with invalid data
-    -   [ ] 7.4: Test password change with correct current password
-    -   [ ] 7.5: Test password change with incorrect current password
-    -   [ ] 7.6: Test unauthenticated access redirects to login
+-   [x] Task 7: Write Tests (AC: All)
+    -   [x] 7.1: Test profile page displays correctly
+    -   [x] 7.2: Test profile update with valid data
+    -   [x] 7.3: Test profile update with invalid data
+    -   [x] 7.4: Test password change with correct current password
+    -   [x] 7.5: Test password change with incorrect current password
+    -   [x] 7.6: Test unauthenticated access redirects to login
 
 ## Dev Notes
 
@@ -879,11 +879,21 @@ class ProfileTest extends TestCase
 
 ### Agent Model Used
 
-Claude (Kiro) - Scrum Master Agent
+Claude (Kiro) - Dev Agent
 
 ### Debug Log References
 
-N/A - Story drafted
+N/A
+
+### Implementation Plan
+
+1. Created ProfileController with show(), update(), updatePassword() methods
+2. Created UpdateProfileRequest with full_name required, phone regex validation
+3. Created ChangePasswordRequest with current_password, password min:8 confirmed
+4. Added routes: GET/PUT /profile, PUT /profile/password with auth:customer middleware
+5. Created profile.blade.php with loyalty points card, profile form, password form
+6. Updated customer layout navigation (desktop dropdown + mobile bottom nav)
+7. Wrote 13 comprehensive tests covering all acceptance criteria
 
 ### Completion Notes List
 
@@ -894,18 +904,42 @@ N/A - Story drafted
 -   ✅ Anti-patterns documented
 -   ✅ Previous story learnings incorporated
 -   ✅ UX requirements extracted
+-   ✅ **IMPLEMENTATION COMPLETE (2025-12-15)**
+-   ✅ All 7 tasks completed with red-green-refactor cycle
+-   ✅ 13 tests written and passing (34 assertions)
+-   ✅ Full test suite: 72 tests passing, no regressions
+-   ✅ Navigation updated for both desktop and mobile
+-   ✅ Loyalty points display with VND equivalent
+-   ✅ Vietnamese validation messages implemented
+-   ✅ **CODE REVIEW COMPLETE (2025-12-15)**
+-   ✅ 6 issues found and fixed (4 MEDIUM, 2 LOW)
+-   ✅ 15 tests now passing (38 assertions) - added 2 auth tests
+-   ✅ Full test suite: 74 tests passing, no regressions
+
+### Code Review Fixes (2025-12-15)
+
+| #   | Severity | Issue                                | Fix Applied                                     |
+| --- | -------- | ------------------------------------ | ----------------------------------------------- |
+| 1   | MEDIUM   | Missing container padding for mobile | Added `px-4` to profile container               |
+| 2   | MEDIUM   | Manual password check in controller  | Moved to ChangePasswordRequest::withValidator() |
+| 3   | MEDIUM   | Missing ARIA labels on SVG icons     | Added `aria-hidden="true"` to all SVGs          |
+| 4   | MEDIUM   | Missing auth tests for PUT routes    | Added 2 tests for unauthenticated access        |
+| 5   | LOW      | Hardcoded points value (1000)        | Created config/tact.php with points_value       |
+| 6   | LOW      | Missing authorization test           | Covered by middleware (no action needed)        |
 
 ### File List
 
-**Files to Create:**
+**Files Created:**
 
 -   app/Http/Controllers/Customer/ProfileController.php
 -   app/Http/Requests/UpdateProfileRequest.php
 -   app/Http/Requests/ChangePasswordRequest.php
 -   resources/views/customer/profile.blade.php
 -   tests/Feature/Customer/ProfileTest.php
+-   config/tact.php (code review fix)
 
-**Files to Modify:**
+**Files Modified:**
 
--   routes/web.php (add profile routes)
--   resources/views/layouts/customer.blade.php (add navigation)
+-   routes/web.php (added profile routes)
+-   resources/views/layouts/customer.blade.php (added navigation links)
+-   docs/3-implementation/sprint-status.yaml (status: in-progress → review → done)

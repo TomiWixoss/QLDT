@@ -43,7 +43,7 @@
                         </div>
                         <ul tabindex="0" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
                             <li class="menu-title">{{ Auth::guard('customer')->user()->full_name }}</li>
-                            <li><a href="#">Tài khoản</a></li>
+                            <li><a href="{{ route('profile') }}">Tài khoản</a></li>
                             <li><a href="#">Đơn hàng</a></li>
                             <li>
                                 <form method="POST" action="{{ route('logout') }}">
@@ -85,7 +85,7 @@
 
     {{-- Mobile Bottom Navigation --}}
     <nav class="btm-nav md:hidden">
-        <a href="{{ route('home') }}" class="active">
+        <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'active' : '' }}">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
             </svg>
@@ -103,12 +103,21 @@
             </svg>
             <span class="btm-nav-label">Giỏ hàng</span>
         </a>
-        <a href="#">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-            </svg>
-            <span class="btm-nav-label">Tài khoản</span>
-        </a>
+        @auth('customer')
+            <a href="{{ route('profile') }}" class="{{ request()->routeIs('profile*') ? 'active' : '' }}">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+                <span class="btm-nav-label">Tài khoản</span>
+            </a>
+        @else
+            <a href="{{ route('login') }}" class="">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+                <span class="btm-nav-label">Đăng nhập</span>
+            </a>
+        @endauth
     </nav>
 </body>
 </html>

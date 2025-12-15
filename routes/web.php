@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\SetPasswordController;
+use App\Http\Controllers\Customer\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 // Public homepage
@@ -39,4 +40,9 @@ Route::middleware('auth:customer')->group(function () {
     Route::get('/password/set', [SetPasswordController::class, 'showSetPasswordForm'])
         ->name('password.set');
     Route::post('/password/set', [SetPasswordController::class, 'setPassword']);
+
+    // Profile routes
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
 });
