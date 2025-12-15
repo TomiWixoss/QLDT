@@ -26,38 +26,40 @@
 </head>
 <body class="min-h-screen bg-base-100 pb-16 md:pb-0">
     {{-- Header --}}
-    <header class="navbar bg-base-100 shadow-sm sticky top-0 z-50">
-        <div class="container mx-auto">
-            <div class="flex-1">
-                <a href="{{ route('home') }}" class="btn btn-ghost text-xl font-bold text-primary">
-                    Tact
-                </a>
-            </div>
-            <div class="flex-none gap-2">
-                @auth('customer')
-                    <div class="dropdown dropdown-end">
-                        <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar placeholder">
-                            <div class="bg-primary text-primary-content rounded-full w-10">
-                                <span>{{ substr(Auth::guard('customer')->user()->full_name, 0, 1) }}</span>
-                            </div>
+    <header class="navbar bg-base-100 shadow-sm sticky top-0 z-50 px-4">
+        <div class="flex-1">
+            <a href="{{ route('home') }}" class="btn btn-ghost text-xl font-bold text-primary">
+                Tact
+            </a>
+        </div>
+        <div class="flex-none gap-2">
+            @auth('customer')
+                <span class="text-sm hidden md:inline mr-2">{{ Auth::guard('customer')->user()->full_name }}</span>
+                <div class="dropdown dropdown-end">
+                    <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar placeholder">
+                        <div class="bg-primary text-primary-content rounded-full w-10">
+                            <span>{{ substr(Auth::guard('customer')->user()->full_name, 0, 1) }}</span>
                         </div>
-                        <ul tabindex="0" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
-                            <li class="menu-title">{{ Auth::guard('customer')->user()->full_name }}</li>
+                    </div>
+                    <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[100] mt-3 w-52 p-2 shadow-lg border" style="right: 0; left: auto;">
+                            <li class="menu-title"><span>{{ Auth::guard('customer')->user()->full_name }}</span></li>
                             <li><a href="{{ route('profile') }}">Tài khoản</a></li>
                             <li><a href="#">Đơn hàng</a></li>
+                            <div class="divider my-1"></div>
                             <li>
-                                <form method="POST" action="{{ route('logout') }}">
+                                <form method="POST" action="{{ route('logout') }}" class="m-0 p-0">
                                     @csrf
-                                    <button type="submit" class="w-full text-left">Đăng xuất</button>
+                                    <button type="submit" class="text-error hover:bg-error/10 w-full text-left rounded-lg px-4 py-2">
+                                        Đăng xuất
+                                    </button>
                                 </form>
                             </li>
                         </ul>
                     </div>
-                @else
-                    <a href="{{ route('login') }}" class="btn btn-ghost btn-sm">Đăng nhập</a>
-                    <a href="{{ route('register') }}" class="btn btn-primary btn-sm">Đăng ký</a>
-                @endauth
-            </div>
+            @else
+                <a href="{{ route('login') }}" class="btn btn-ghost btn-sm">Đăng nhập</a>
+                <a href="{{ route('register') }}" class="btn btn-primary btn-sm">Đăng ký</a>
+            @endauth
         </div>
     </header>
 
