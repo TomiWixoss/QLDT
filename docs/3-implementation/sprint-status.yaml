@@ -50,7 +50,7 @@ development_status:
   1-5-customer-profile-management: done
   1-6-staff-authentication-role-setup: done
   1-7-role-based-access-control-rbac: done
-  1-8-user-management-admin-only: backlog
+  1-8-user-management-admin-only: ready-for-dev
   epic-1-retrospective: optional
 
   # Epic 2: Master Data Management (3 stories)
