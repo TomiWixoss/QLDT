@@ -1,6 +1,6 @@
 # Story 1.4: Customer Google OAuth Registration & Login
 
-Status: ready-for-dev
+Status: Ready for Review
 
 ## Story
 
@@ -57,55 +57,55 @@ So that I can quickly access the system without creating a new password.
 
 ## Tasks / Subtasks
 
--   [ ] Task 1: Install and Configure Laravel Socialite (AC: 1)
+-   [x] Task 1: Install and Configure Laravel Socialite (AC: 1)
 
-    -   [ ] 1.1: Install Laravel Socialite via Composer
-    -   [ ] 1.2: Add Google OAuth credentials to .env
-    -   [ ] 1.3: Configure services.php for Google provider
-    -   [ ] 1.4: Add GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET to .env.example
+    -   [x] 1.1: Install Laravel Socialite via Composer
+    -   [x] 1.2: Add Google OAuth credentials to .env
+    -   [x] 1.3: Configure services.php for Google provider
+    -   [x] 1.4: Add GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET to .env.example
 
--   [ ] Task 2: Create Google OAuth Routes (AC: 1, 2, 3)
+-   [x] Task 2: Create Google OAuth Routes (AC: 1, 2, 3)
 
-    -   [ ] 2.1: Add GET /auth/google route for redirect to Google
-    -   [ ] 2.2: Add GET /auth/google/callback route for callback handling
-    -   [ ] 2.3: Apply guest:customer middleware to OAuth routes
+    -   [x] 2.1: Add GET /auth/google route for redirect to Google
+    -   [x] 2.2: Add GET /auth/google/callback route for callback handling
+    -   [x] 2.3: Apply guest:customer middleware to OAuth routes
 
--   [ ] Task 3: Create GoogleAuthController (AC: 1, 2, 3, 6)
+-   [x] Task 3: Create GoogleAuthController (AC: 1, 2, 3, 6)
 
-    -   [ ] 3.1: Create app/Http/Controllers/Auth/GoogleAuthController.php
-    -   [ ] 3.2: Implement redirectToGoogle() method
-    -   [ ] 3.3: Implement handleGoogleCallback() method
-    -   [ ] 3.4: Handle first-time registration (create customer with google_id)
-    -   [ ] 3.5: Handle returning user login (find by google_id)
-    -   [ ] 3.6: Handle email conflict (link existing account to google_id)
+    -   [x] 3.1: Create app/Http/Controllers/Auth/GoogleAuthController.php
+    -   [x] 3.2: Implement redirectToGoogle() method
+    -   [x] 3.3: Implement handleGoogleCallback() method
+    -   [x] 3.4: Handle first-time registration (create customer with google_id)
+    -   [x] 3.5: Handle returning user login (find by google_id)
+    -   [x] 3.6: Handle email conflict (link existing account to google_id)
 
--   [ ] Task 4: Create Set Password Feature (AC: 5)
+-   [x] Task 4: Create Set Password Feature (AC: 5)
 
-    -   [ ] 4.1: Add GET /password/set route for set password form
-    -   [ ] 4.2: Add POST /password/set route for form submission
-    -   [ ] 4.3: Create SetPasswordController or add to existing controller
-    -   [ ] 4.4: Create SetPasswordRequest with validation
-    -   [ ] 4.5: Create resources/views/auth/set-password.blade.php
+    -   [x] 4.1: Add GET /password/set route for set password form
+    -   [x] 4.2: Add POST /password/set route for form submission
+    -   [x] 4.3: Create SetPasswordController or add to existing controller
+    -   [x] 4.4: Create SetPasswordRequest with validation
+    -   [x] 4.5: Create resources/views/auth/set-password.blade.php
 
--   [ ] Task 5: Update Login Logic (AC: 4)
+-   [x] Task 5: Update Login Logic (AC: 4)
 
-    -   [ ] 5.1: Modify LoginController to check if password is null
-    -   [ ] 5.2: Return specific error message for Google-only accounts
-    -   [ ] 5.3: Include link to set password page in error
+    -   [x] 5.1: Modify LoginController to check if password is null
+    -   [x] 5.2: Return specific error message for Google-only accounts
+    -   [x] 5.3: Include link to set password page in error
 
--   [ ] Task 6: Update Views (AC: 1)
+-   [x] Task 6: Update Views (AC: 1)
 
-    -   [ ] 6.1: Enable Google OAuth button in login.blade.php
-    -   [ ] 6.2: Add Google OAuth button to register.blade.php
-    -   [ ] 6.3: Style Google button with proper Google branding
+    -   [x] 6.1: Enable Google OAuth button in login.blade.php
+    -   [x] 6.2: Add Google OAuth button to register.blade.php
+    -   [x] 6.3: Style Google button with proper Google branding
 
--   [ ] Task 7: Write Tests (AC: All)
-    -   [ ] 7.1: Test redirect to Google OAuth
-    -   [ ] 7.2: Test first-time registration creates customer
-    -   [ ] 7.3: Test returning user is logged in
-    -   [ ] 7.4: Test email conflict links account
-    -   [ ] 7.5: Test Google user without password cannot email login
-    -   [ ] 7.6: Test set password functionality
+-   [x] Task 7: Write Tests (AC: All)
+    -   [x] 7.1: Test redirect to Google OAuth
+    -   [x] 7.2: Test first-time registration creates customer
+    -   [x] 7.3: Test returning user is logged in
+    -   [x] 7.4: Test email conflict links account
+    -   [x] 7.5: Test Google user without password cannot email login
+    -   [x] 7.6: Test set password functionality
 
 ## Dev Notes
 
@@ -820,8 +820,42 @@ GOOGLE_REDIRECT_URI="${APP_URL}/auth/google/callback"
 
 ### Agent Model Used
 
+Claude (Kiro)
+
 ### Debug Log References
+
+-   All tests verified working with MySQL database
 
 ### Completion Notes List
 
+-   ✅ Installed Laravel Socialite v5.24
+-   ✅ Configured Google OAuth in services.php and .env/.env.example
+-   ✅ Created GoogleAuthController with redirect and callback handling
+-   ✅ Implemented 3 OAuth flows: first-time registration, returning user, email conflict linking
+-   ✅ Created SetPasswordController and SetPasswordRequest for Google users to set password
+-   ✅ Created set-password.blade.php view with DaisyUI styling
+-   ✅ Updated LoginController to block Google-only accounts from email login
+-   ✅ Enabled Google OAuth buttons in login.blade.php and register.blade.php with official Google branding
+-   ✅ All 11 GoogleAuthTest tests passing
+-   ✅ Full test suite: 55 passed, 4 skipped (trigger tests - MySQL only)
+-   ✅ All Vietnamese messages implemented
+
 ### File List
+
+**New Files:**
+
+-   app/Http/Controllers/Auth/GoogleAuthController.php
+-   app/Http/Controllers/Auth/SetPasswordController.php
+-   app/Http/Requests/SetPasswordRequest.php
+-   resources/views/auth/set-password.blade.php
+-   tests/Feature/Auth/GoogleAuthTest.php
+
+**Modified Files:**
+
+-   config/services.php (added Google OAuth config)
+-   routes/web.php (added OAuth and set-password routes)
+-   app/Http/Controllers/Auth/LoginController.php (check null password for Google users)
+-   resources/views/auth/login.blade.php (enabled Google button, added set-password link)
+-   resources/views/auth/register.blade.php (added Google button)
+-   .env (added Google OAuth credentials)
+-   .env.example (added Google OAuth placeholders)

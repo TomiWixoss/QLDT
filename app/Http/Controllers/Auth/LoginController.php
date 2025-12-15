@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
+use App\Models\Customer;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -28,6 +29,20 @@ class LoginController extends Controller
     {
         // Check rate limiting
         $request->ensureIsNotRateLimited();
+
+        // Check if this is a Google-only account (no password set)
+        $customer = Customer::where('email', $request->email)->first();
+
+        if ($customer && $customer->getAttributes()['password'] === null) {
+            RateLimiter::hit($request->throttleKey());
+
+            return back()
+                ->withInput($request->only('email', 'remember'))
+                ->withErrors([
+                    'email' => 'Tài khoản này đăng ký qua Google. Vui lòng đặt mật khẩu trước.',
+                ])
+                ->with('show_set_password_link', true);
+        }
 
         $credentials = $request->only('email', 'password');
         $remember = $request->boolean('remember');
