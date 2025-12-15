@@ -1,6 +1,6 @@
 # Story 1.6: Staff Authentication & Role Setup
 
-Status: ready-for-dev
+Status: done
 
 ## Story
 
@@ -52,83 +52,83 @@ So that I can access the management features based on my role.
 
 ## Tasks / Subtasks
 
--   [ ] Task 1: Create Admin Layout (AC: 2, 6)
+-   [x] Task 1: Create Admin Layout (AC: 2, 6)
 
-    -   [ ] 1.1: Create resources/views/layouts/admin.blade.php
-    -   [ ] 1.2: Implement DaisyUI sidebar navigation
-    -   [ ] 1.3: Add header with user info and logout button
-    -   [ ] 1.4: Add responsive mobile menu
+    -   [x] 1.1: Create resources/views/layouts/admin.blade.php
+    -   [x] 1.2: Implement DaisyUI sidebar navigation
+    -   [x] 1.3: Add header with user info and logout button
+    -   [x] 1.4: Add responsive mobile menu
 
--   [ ] Task 2: Create AdminLoginController (AC: 1, 2, 3, 4)
+-   [x] Task 2: Create AdminLoginController (AC: 1, 2, 3, 4)
 
-    -   [ ] 2.1: Create app/Http/Controllers/Auth/AdminLoginController.php
-    -   [ ] 2.2: Implement showLoginForm() method
-    -   [ ] 2.3: Implement login() method with rate limiting
-    -   [ ] 2.4: Implement logout() method
+    -   [x] 2.1: Create app/Http/Controllers/Auth/AdminLoginController.php
+    -   [x] 2.2: Implement showLoginForm() method
+    -   [x] 2.3: Implement login() method with rate limiting
+    -   [x] 2.4: Implement logout() method
 
--   [ ] Task 3: Create Admin Login Request (AC: 3)
+-   [x] Task 3: Create Admin Login Request (AC: 3)
 
-    -   [ ] 3.1: Create app/Http/Requests/AdminLoginRequest.php
-    -   [ ] 3.2: Add validation rules (email required, password required)
-    -   [ ] 3.3: Add Vietnamese validation messages
-    -   [ ] 3.4: Implement rate limiting logic
+    -   [x] 3.1: Create app/Http/Requests/AdminLoginRequest.php
+    -   [x] 3.2: Add validation rules (email required, password required)
+    -   [x] 3.3: Add Vietnamese validation messages
+    -   [x] 3.4: Implement rate limiting logic
 
--   [ ] Task 4: Create Admin Login View (AC: 1)
+-   [x] Task 4: Create Admin Login View (AC: 1)
 
-    -   [ ] 4.1: Create resources/views/admin/auth/login.blade.php
-    -   [ ] 4.2: Style with DaisyUI (admin theme)
-    -   [ ] 4.3: Add error message display
-    -   [ ] 4.4: Add rate limit warning display
+    -   [x] 4.1: Create resources/views/admin/auth/login.blade.php
+    -   [x] 4.2: Style with DaisyUI (admin theme)
+    -   [x] 4.3: Add error message display
+    -   [x] 4.4: Add rate limit warning display
 
--   [ ] Task 5: Create Basic Dashboard (AC: 6)
+-   [x] Task 5: Create Basic Dashboard (AC: 6)
 
-    -   [ ] 5.1: Create app/Http/Controllers/Admin/DashboardController.php
-    -   [ ] 5.2: Create resources/views/admin/dashboard.blade.php
-    -   [ ] 5.3: Display welcome message with user name and role
-    -   [ ] 5.4: Add placeholder stat cards
+    -   [x] 5.1: Create app/Http/Controllers/Admin/DashboardController.php
+    -   [x] 5.2: Create resources/views/admin/dashboard.blade.php
+    -   [x] 5.3: Display welcome message with user name and role
+    -   [x] 5.4: Add placeholder stat cards
 
--   [ ] Task 6: Configure Admin Routes (AC: 5)
+-   [x] Task 6: Configure Admin Routes (AC: 5)
 
-    -   [ ] 6.1: Add admin routes group in routes/web.php
-    -   [ ] 6.2: Add GET /admin/login route
-    -   [ ] 6.3: Add POST /admin/login route
-    -   [ ] 6.4: Add POST /admin/logout route
-    -   [ ] 6.5: Add GET /admin/dashboard route
-    -   [ ] 6.6: Apply 'auth' middleware to protected routes
-    -   [ ] 6.7: Add guest middleware to login route
+    -   [x] 6.1: Add admin routes group in routes/web.php
+    -   [x] 6.2: Add GET /admin/login route
+    -   [x] 6.3: Add POST /admin/login route
+    -   [x] 6.4: Add POST /admin/logout route
+    -   [x] 6.5: Add GET /admin/dashboard route
+    -   [x] 6.6: Apply 'auth' middleware to protected routes
+    -   [x] 6.7: Add guest middleware to login route
 
--   [ ] Task 7: Create Authentication Middleware (AC: 5) ⚠️ MUST CREATE - FILE DOESN'T EXIST
+-   [x] Task 7: Create Authentication Middleware (AC: 5) ⚠️ MUST CREATE - FILE DOESN'T EXIST
 
-    -   [ ] 7.1: CREATE app/Http/Middleware/Authenticate.php (file doesn't exist!)
-    -   [ ] 7.2: Implement redirectTo() method for admin/customer routing
-    -   [ ] 7.3: Add session flash message for admin redirect
+    -   [x] 7.1: CREATE app/Http/Middleware/Authenticate.php (file doesn't exist!)
+    -   [x] 7.2: Implement redirectTo() method for admin/customer routing
+    -   [x] 7.3: Add session flash message for admin redirect
 
--   [ ] Task 8: Create RedirectIfAuthenticated Middleware (AC: 1) ⚠️ MUST CREATE - FILE DOESN'T EXIST
+-   [x] Task 8: Create RedirectIfAuthenticated Middleware (AC: 1) ⚠️ MUST CREATE - FILE DOESN'T EXIST
 
-    -   [ ] 8.1: CREATE app/Http/Middleware/RedirectIfAuthenticated.php (file doesn't exist!)
-    -   [ ] 8.2: Implement handle() method for admin/customer routing
-    -   [ ] 8.3: Register both middleware in bootstrap/app.php
+    -   [x] 8.1: CREATE app/Http/Middleware/RedirectIfAuthenticated.php (file doesn't exist!)
+    -   [x] 8.2: Implement handle() method for admin/customer routing
+    -   [x] 8.3: Register both middleware in bootstrap/app.php
 
--   [ ] Task 9: Update User Model (AC: 2, 6) ⚠️ REQUIRED FOR STORY 1.7
+-   [x] Task 9: Update User Model (AC: 2, 6) ⚠️ REQUIRED FOR STORY 1.7
 
-    -   [ ] 9.1: Add hasRole() helper method to app/Models/User.php
-    -   [ ] 9.2: Add hasAnyRole() helper method to app/Models/User.php
+    -   [x] 9.1: Add hasRole() helper method to app/Models/User.php
+    -   [x] 9.2: Add hasAnyRole() helper method to app/Models/User.php
 
--   [ ] Task 10: Update UserSeeder (AC: All) 💡 ENHANCEMENT
+-   [x] Task 10: Update UserSeeder (AC: All) 💡 ENHANCEMENT
 
-    -   [ ] 10.1: Add Manager test user to database/seeders/UserSeeder.php
-    -   [ ] 10.2: Add Sales test user
-    -   [ ] 10.3: Add Warehouse test user
+    -   [x] 10.1: Add Manager test user to database/seeders/UserSeeder.php
+    -   [x] 10.2: Add Sales test user
+    -   [x] 10.3: Add Warehouse test user
 
--   [ ] Task 11: Write Tests (AC: All)
-    -   [ ] 11.1: Test admin login page displays correctly
-    -   [ ] 11.2: Test successful login redirects to dashboard
-    -   [ ] 11.3: Test failed login shows error message
-    -   [ ] 11.4: Test rate limiting after 5 failed attempts
-    -   [ ] 11.5: Test logout destroys session
-    -   [ ] 11.6: Test unauthenticated access redirects to admin login
-    -   [ ] 11.7: Test dashboard displays user info
-    -   [ ] 11.8: Test authenticated user cannot access login page (redirects to dashboard)
+-   [x] Task 11: Write Tests (AC: All)
+    -   [x] 11.1: Test admin login page displays correctly
+    -   [x] 11.2: Test successful login redirects to dashboard
+    -   [x] 11.3: Test failed login shows error message
+    -   [x] 11.4: Test rate limiting after 5 failed attempts
+    -   [x] 11.5: Test logout destroys session
+    -   [x] 11.6: Test unauthenticated access redirects to admin login
+    -   [x] 11.7: Test dashboard displays user info
+    -   [x] 11.8: Test authenticated user cannot access login page (redirects to dashboard)
 
 ## Dev Notes
 
@@ -1198,38 +1198,53 @@ return back()->withErrors(['email' => 'Email hoặc mật khẩu không đúng']
 
 ### Agent Model Used
 
-{{agent_model_name_version}}
+Claude Sonnet 4 (Kiro)
 
 ### Debug Log References
+
+-   Fixed UserFactory to match project schema (full_name instead of name)
+-   Created RoleFactory for test support
+-   Added HasFactory trait to Role model
+-   Updated tests to use withoutVite() for test environment
 
 ### Completion Notes List
 
 -   Story created via BMAD create-story workflow
 -   Ultimate context engine analysis completed
 -   Comprehensive developer guide created
+-   **2025-12-15: Implementation completed by Dev Agent**
+    -   All 11 tasks completed with 16 passing tests
+    -   Admin login with rate limiting (5 attempts/minute)
+    -   Dashboard with user info and placeholder stats
+    -   Middleware for admin/customer route separation
+    -   User model helper methods (hasRole, hasAnyRole) for Story 1.7
+    -   UserSeeder updated with all 4 role test users
+    -   Full test suite: 90 tests passing, no regressions
+
+### Change Log
+
+-   2025-12-15: Story implementation completed - all ACs satisfied
 
 ### File List
 
-**Files to CREATE:**
+**Files CREATED:**
 
--   app/Http/Controllers/Auth/AdminLoginController.php
--   app/Http/Controllers/Admin/DashboardController.php
--   app/Http/Requests/AdminLoginRequest.php
--   resources/views/layouts/admin.blade.php
--   resources/views/admin/auth/login.blade.php
--   resources/views/admin/dashboard.blade.php
--   tests/Feature/Admin/AuthenticationTest.php
--   ⚠️ app/Http/Middleware/Authenticate.php (MUST CREATE - doesn't exist!)
--   ⚠️ app/Http/Middleware/RedirectIfAuthenticated.php (MUST CREATE - doesn't exist!)
+-   app/Http/Controllers/Auth/AdminLoginController.php ✅
+-   app/Http/Controllers/Admin/DashboardController.php ✅
+-   app/Http/Requests/AdminLoginRequest.php ✅
+-   resources/views/layouts/admin.blade.php ✅
+-   resources/views/admin/auth/login.blade.php ✅
+-   resources/views/admin/dashboard.blade.php ✅
+-   tests/Feature/Admin/AuthenticationTest.php ✅
+-   app/Http/Middleware/Authenticate.php ✅
+-   app/Http/Middleware/RedirectIfAuthenticated.php ✅
+-   database/factories/RoleFactory.php ✅
 
-**Files to MODIFY:**
+**Files MODIFIED:**
 
--   routes/web.php (add admin routes)
--   bootstrap/app.php (register middleware aliases)
--   app/Models/User.php (add hasRole, hasAnyRole helper methods)
--   database/seeders/UserSeeder.php (add Manager, Sales, Warehouse test users)
-
-**Files to VERIFY:**
-
--   app/Models/Role.php (exists)
--   config/auth.php (web and customer guards configured)
+-   routes/web.php (added admin routes) ✅
+-   bootstrap/app.php (registered middleware aliases) ✅
+-   app/Models/User.php (added hasRole, hasAnyRole helper methods) ✅
+-   app/Models/Role.php (added HasFactory trait) ✅
+-   database/seeders/UserSeeder.php (added Manager, Sales, Warehouse test users) ✅
+-   database/factories/UserFactory.php (fixed to match project schema) ✅

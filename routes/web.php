@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Auth\AdminLoginController;
 use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -45,4 +47,27 @@ Route::middleware('auth:customer')->group(function () {
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
+});
+
+// ============================================
+// ADMIN ROUTES
+// ============================================
+
+// Admin Guest Routes (not logged in)
+Route::prefix('admin')->middleware('guest')->group(function () {
+    Route::get('/login', [AdminLoginController::class, 'showLoginForm'])->name('admin.login');
+    Route::post('/login', [AdminLoginController::class, 'login'])->name('admin.login.submit');
+});
+
+// Admin Authenticated Routes
+Route::prefix('admin')->middleware('auth')->group(function () {
+    Route::post('/logout', [AdminLoginController::class, 'logout'])->name('admin.logout');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+
+    // Future admin routes will go here...
+});
+
+// Redirect /admin to /admin/dashboard
+Route::get('/admin', function () {
+    return redirect()->route('admin.dashboard');
 });

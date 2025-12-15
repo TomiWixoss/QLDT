@@ -49,4 +49,22 @@ class User extends Authenticatable
     {
         return $this->hasMany(StockMovement::class);
     }
+
+    /**
+     * Check if user has a specific role
+     * Required for Story 1.7 RBAC implementation
+     */
+    public function hasRole(string $roleName): bool
+    {
+        return $this->role && $this->role->name === $roleName;
+    }
+
+    /**
+     * Check if user has any of the specified roles
+     * Required for Story 1.7 RBAC implementation
+     */
+    public function hasAnyRole(array $roleNames): bool
+    {
+        return $this->role && in_array($this->role->name, $roleNames);
+    }
 }
