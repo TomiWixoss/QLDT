@@ -1,6 +1,13 @@
 <?php
 
+use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\InventoryController;
+use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\Admin\PosController;
+use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\ReportController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\AdminLoginController;
 use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\Auth\LoginController;
@@ -64,7 +71,40 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::post('/logout', [AdminLoginController::class, 'logout'])->name('admin.logout');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
 
-    // Future admin routes will go here...
+    // Products - All staff can view
+    Route::middleware('role:Admin,Manager,Sales,Warehouse')->group(function () {
+        Route::get('/products', [ProductController::class, 'index'])->name('admin.products.index');
+    });
+
+    // Orders - Admin, Manager, Sales
+    Route::middleware('role:Admin,Manager,Sales')->group(function () {
+        Route::get('/orders', [OrderController::class, 'index'])->name('admin.orders.index');
+    });
+
+    // Inventory - Admin, Manager, Warehouse
+    Route::middleware('role:Admin,Manager,Warehouse')->group(function () {
+        Route::get('/inventory', [InventoryController::class, 'index'])->name('admin.inventory.index');
+    });
+
+    // Customers - Admin, Manager, Sales
+    Route::middleware('role:Admin,Manager,Sales')->group(function () {
+        Route::get('/customers', [CustomerController::class, 'index'])->name('admin.customers.index');
+    });
+
+    // POS - Admin, Manager, Sales
+    Route::middleware('role:Admin,Manager,Sales')->group(function () {
+        Route::get('/pos', [PosController::class, 'index'])->name('admin.pos.index');
+    });
+
+    // Reports - Admin, Manager only
+    Route::middleware('role:Admin,Manager')->group(function () {
+        Route::get('/reports', [ReportController::class, 'index'])->name('admin.reports.index');
+    });
+
+    // User Management - Admin only
+    Route::middleware('role:Admin')->group(function () {
+        Route::get('/users', [UserController::class, 'index'])->name('admin.users.index');
+    });
 });
 
 // Redirect /admin to /admin/dashboard

@@ -1,6 +1,6 @@
 # Story 1.7: Role-Based Access Control (RBAC)
 
-Status: ready-for-dev
+Status: Done
 
 ## Story
 
@@ -45,77 +45,77 @@ So that staff members can only access features appropriate for their role.
 
 ## Tasks / Subtasks
 
--   [ ] Task 1: Create CheckRole Middleware (AC: 1, 2, 3, 4, 5, 6)
+-   [x] Task 1: Create CheckRole Middleware (AC: 1, 2, 3, 4, 5, 6)
 
-    -   [ ] 1.1: Create app/Http/Middleware/CheckRole.php
-    -   [ ] 1.2: Implement handle() method with role checking logic
-    -   [ ] 1.3: Return 403 response with Vietnamese message for unauthorized access
-    -   [ ] 1.4: Log unauthorized access attempts for security audit
-    -   [ ] 1.5: Register middleware alias 'role' in bootstrap/app.php
+    -   [x] 1.1: Create app/Http/Middleware/CheckRole.php
+    -   [x] 1.2: Implement handle() method with role checking logic
+    -   [x] 1.3: Return 403 response with Vietnamese message for unauthorized access
+    -   [x] 1.4: Log unauthorized access attempts for security audit
+    -   [x] 1.5: Register middleware alias 'role' in bootstrap/app.php
 
--   [ ] Task 2: Define Gates in AppServiceProvider (AC: All)
+-   [x] Task 2: Define Gates in AppServiceProvider (AC: All)
 
-    -   [ ] 2.1: Add Gate definitions in boot() method of AppServiceProvider
-    -   [ ] 2.2: Define 'manage-users' gate (Admin only)
-    -   [ ] 2.3: Define 'manage-products' gate (Admin, Manager, Warehouse)
-    -   [ ] 2.4: Define 'manage-orders' gate (Admin, Manager, Sales)
-    -   [ ] 2.5: Define 'manage-inventory' gate (Admin, Manager, Warehouse)
-    -   [ ] 2.6: Define 'view-reports' gate (Admin, Manager)
-    -   [ ] 2.7: Define 'access-pos' gate (Admin, Manager, Sales)
-    -   [ ] 2.8: Define 'view-customers' gate (Admin, Manager, Sales)
+    -   [x] 2.1: Add Gate definitions in boot() method of AppServiceProvider
+    -   [x] 2.2: Define 'manage-users' gate (Admin only)
+    -   [x] 2.3: Define 'manage-products' gate (Admin, Manager, Warehouse)
+    -   [x] 2.4: Define 'manage-orders' gate (Admin, Manager, Sales)
+    -   [x] 2.5: Define 'manage-inventory' gate (Admin, Manager, Warehouse)
+    -   [x] 2.6: Define 'view-reports' gate (Admin, Manager)
+    -   [x] 2.7: Define 'access-pos' gate (Admin, Manager, Sales)
+    -   [x] 2.8: Define 'view-customers' gate (Admin, Manager, Sales)
 
--   [ ] Task 3: Create 403 Forbidden Error Page (AC: 2, 4)
+-   [x] Task 3: Create 403 Forbidden Error Page (AC: 2, 4)
 
-    -   [ ] 3.1: Create resources/views/errors/403.blade.php
-    -   [ ] 3.2: Style with DaisyUI admin theme
-    -   [ ] 3.3: Display Vietnamese message "Bạn không có quyền truy cập trang này"
-    -   [ ] 3.4: Add "Quay lại Dashboard" button
+    -   [x] 3.1: Create resources/views/errors/403.blade.php
+    -   [x] 3.2: Style with DaisyUI admin theme
+    -   [x] 3.3: Display Vietnamese message "Bạn không có quyền truy cập trang này"
+    -   [x] 3.4: Add "Quay lại Dashboard" button
 
--   [ ] Task 4: Update Admin Layout Navigation (AC: 1, 3, 5, 6)
+-   [x] Task 4: Update Admin Layout Navigation (AC: 1, 3, 5, 6)
 
-    -   [ ] 4.1: Update resources/views/layouts/admin.blade.php sidebar
-    -   [ ] 4.2: Add @can directives to show/hide menu items based on permissions
-    -   [ ] 4.3: Add placeholder menu items for future features (Products, Orders, Inventory, Users, Reports, POS)
+    -   [x] 4.1: Update resources/views/layouts/admin.blade.php sidebar
+    -   [x] 4.2: Add @can directives to show/hide menu items based on permissions
+    -   [x] 4.3: Add placeholder menu items for future features (Products, Orders, Inventory, Users, Reports, POS)
 
--   [ ] Task 5: Create Placeholder Admin Routes with RBAC (AC: All)
+-   [x] Task 5: Create Placeholder Admin Routes with RBAC (AC: All)
 
-    -   [ ] 5.1: Add placeholder routes for /admin/products (view-products permission)
-    -   [ ] 5.2: Add placeholder routes for /admin/orders (manage-orders permission)
-    -   [ ] 5.3: Add placeholder routes for /admin/inventory (manage-inventory permission)
-    -   [ ] 5.4: Add placeholder routes for /admin/users (manage-users permission - Admin only)
-    -   [ ] 5.5: Add placeholder routes for /admin/reports (view-reports permission)
-    -   [ ] 5.6: Add placeholder routes for /admin/pos (access-pos permission)
-    -   [ ] 5.7: Add placeholder routes for /admin/customers (view-customers permission)
+    -   [x] 5.1: Add placeholder routes for /admin/products (view-products permission)
+    -   [x] 5.2: Add placeholder routes for /admin/orders (manage-orders permission)
+    -   [x] 5.3: Add placeholder routes for /admin/inventory (manage-inventory permission)
+    -   [x] 5.4: Add placeholder routes for /admin/users (manage-users permission - Admin only)
+    -   [x] 5.5: Add placeholder routes for /admin/reports (view-reports permission)
+    -   [x] 5.6: Add placeholder routes for /admin/pos (access-pos permission)
+    -   [x] 5.7: Add placeholder routes for /admin/customers (view-customers permission)
 
--   [ ] Task 6: Create Placeholder Controllers (AC: All)
+-   [x] Task 6: Create Placeholder Controllers (AC: All)
 
-    -   [ ] 6.1: Create app/Http/Controllers/Admin/ProductController.php (placeholder index)
-    -   [ ] 6.2: Create app/Http/Controllers/Admin/OrderController.php (placeholder index)
-    -   [ ] 6.3: Create app/Http/Controllers/Admin/InventoryController.php (placeholder index)
-    -   [ ] 6.4: Create app/Http/Controllers/Admin/UserController.php (placeholder index)
-    -   [ ] 6.5: Create app/Http/Controllers/Admin/ReportController.php (placeholder index)
-    -   [ ] 6.6: Create app/Http/Controllers/Admin/PosController.php (placeholder index)
-    -   [ ] 6.7: Create app/Http/Controllers/Admin/CustomerController.php (placeholder index)
+    -   [x] 6.1: Create app/Http/Controllers/Admin/ProductController.php (placeholder index)
+    -   [x] 6.2: Create app/Http/Controllers/Admin/OrderController.php (placeholder index)
+    -   [x] 6.3: Create app/Http/Controllers/Admin/InventoryController.php (placeholder index)
+    -   [x] 6.4: Create app/Http/Controllers/Admin/UserController.php (placeholder index)
+    -   [x] 6.5: Create app/Http/Controllers/Admin/ReportController.php (placeholder index)
+    -   [x] 6.6: Create app/Http/Controllers/Admin/PosController.php (placeholder index)
+    -   [x] 6.7: Create app/Http/Controllers/Admin/CustomerController.php (placeholder index)
 
--   [ ] Task 7: Create Placeholder Views (AC: All)
+-   [x] Task 7: Create Placeholder Views (AC: All)
 
-    -   [ ] 7.1: Create resources/views/admin/products/index.blade.php (placeholder)
-    -   [ ] 7.2: Create resources/views/admin/orders/index.blade.php (placeholder)
-    -   [ ] 7.3: Create resources/views/admin/inventory/index.blade.php (placeholder)
-    -   [ ] 7.4: Create resources/views/admin/users/index.blade.php (placeholder)
-    -   [ ] 7.5: Create resources/views/admin/reports/index.blade.php (placeholder)
-    -   [ ] 7.6: Create resources/views/admin/pos/index.blade.php (placeholder)
-    -   [ ] 7.7: Create resources/views/admin/customers/index.blade.php (placeholder)
+    -   [x] 7.1: Create resources/views/admin/products/index.blade.php (placeholder)
+    -   [x] 7.2: Create resources/views/admin/orders/index.blade.php (placeholder)
+    -   [x] 7.3: Create resources/views/admin/inventory/index.blade.php (placeholder)
+    -   [x] 7.4: Create resources/views/admin/users/index.blade.php (placeholder)
+    -   [x] 7.5: Create resources/views/admin/reports/index.blade.php (placeholder)
+    -   [x] 7.6: Create resources/views/admin/pos/index.blade.php (placeholder)
+    -   [x] 7.7: Create resources/views/admin/customers/index.blade.php (placeholder)
 
--   [ ] Task 8: Write Tests (AC: All)
-    -   [ ] 8.1: Test Sales can access POS, orders, products view, customers
-    -   [ ] 8.2: Test Sales cannot access user management, reports, inventory
-    -   [ ] 8.3: Test Warehouse can access inventory, stock movements, products view
-    -   [ ] 8.4: Test Warehouse cannot access POS, orders, customers, user management
-    -   [ ] 8.5: Test Manager can access all except user management
-    -   [ ] 8.6: Test Admin can access all routes
-    -   [ ] 8.7: Test 403 page displays correct Vietnamese message
-    -   [ ] 8.8: Test navigation menu shows correct items per role
+-   [x] Task 8: Write Tests (AC: All)
+    -   [x] 8.1: Test Sales can access POS, orders, products view, customers
+    -   [x] 8.2: Test Sales cannot access user management, reports, inventory
+    -   [x] 8.3: Test Warehouse can access inventory, stock movements, products view
+    -   [x] 8.4: Test Warehouse cannot access POS, orders, customers, user management
+    -   [x] 8.5: Test Manager can access all except user management
+    -   [x] 8.6: Test Admin can access all routes
+    -   [x] 8.7: Test 403 page displays correct Vietnamese message
+    -   [x] 8.8: Test navigation menu shows correct items per role
 
 ## Dev Notes
 
@@ -1107,19 +1107,34 @@ php artisan test --filter=test_admin_can_access_all_routes
 
 ### Agent Model Used
 
-<!-- To be filled by dev agent -->
+Claude Sonnet 4 (Kiro)
 
 ### Debug Log References
 
-<!-- To be filled by dev agent -->
+-   Fixed UserFactory phone field length (VARCHAR(15) limit) - changed from fake()->phoneNumber() to fake()->numerify('09########')
+-   All 104 tests passing including 14 new RBAC tests
 
 ### Completion Notes List
 
-<!-- To be filled by dev agent -->
+-   ✅ Implemented CheckRole middleware with role checking and security logging
+-   ✅ Defined 8 Gates in AppServiceProvider for permission management
+-   ✅ Created 403 error page with Vietnamese message and DaisyUI styling
+-   ✅ Updated admin layout with dynamic navigation using @can directives
+-   ✅ Created 7 placeholder admin routes with RBAC middleware protection
+-   ✅ Created 7 placeholder controllers (Product, Order, Inventory, Customer, POS, Report, User)
+-   ✅ Created 7 placeholder views with "coming soon" messages
+-   ✅ Wrote comprehensive test suite (14 tests, 53 assertions)
+-   ✅ All acceptance criteria satisfied
+-   ✅ Full test suite passes (104 tests, 308 assertions)
+
+### Change Log
+
+-   2025-12-15: Story 1.7 RBAC implementation complete
+-   2025-12-15: Code review fixes - Added security log channel, enhanced 403 page styling
 
 ### File List
 
-**Files to Create:**
+**Files Created:**
 
 -   app/Http/Middleware/CheckRole.php
 -   resources/views/errors/403.blade.php
@@ -1139,9 +1154,13 @@ php artisan test --filter=test_admin_can_access_all_routes
 -   resources/views/admin/users/index.blade.php
 -   tests/Feature/Admin/RbacTest.php
 
-**Files to Modify:**
+**Files Modified:**
 
--   app/Providers/AppServiceProvider.php (add Gates)
--   bootstrap/app.php (register CheckRole middleware)
--   routes/web.php (add admin routes with RBAC middleware)
--   resources/views/layouts/admin.blade.php (update navigation with @can directives)
+-   app/Providers/AppServiceProvider.php (added 8 Gate definitions)
+-   bootstrap/app.php (registered CheckRole middleware alias)
+-   routes/web.php (added 7 admin routes with RBAC middleware)
+-   resources/views/layouts/admin.blade.php (updated navigation with @can directives)
+-   database/factories/UserFactory.php (fixed phone field length)
+-   config/logging.php (added security channel for audit logs)
+-   app/Http/Middleware/CheckRole.php (updated to use security log channel)
+-   resources/views/errors/403.blade.php (added grid pattern background)

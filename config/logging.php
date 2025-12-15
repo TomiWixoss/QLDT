@@ -127,6 +127,18 @@ return [
             'path' => storage_path('logs/laravel.log'),
         ],
 
+        // ============================================
+        // SECURITY AUDIT LOG - Story 1.7 RBAC
+        // Separate log for unauthorized access attempts
+        // ============================================
+        'security' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/security.log'),
+            'level' => 'warning',
+            'days' => 30, // Keep 30 days of security logs for audit
+            'replace_placeholders' => true,
+        ],
+
     ],
 
 ];
